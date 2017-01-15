@@ -82,4 +82,11 @@ interface StreamInterface
 	 */
 	public function getStartTime();
 	
+	/**
+	 * Get duration value.
+	 *
+	 * @return float
+	 */
+	public function getDuration();
+	
 }

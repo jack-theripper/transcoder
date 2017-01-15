@@ -53,6 +53,11 @@ trait StreamTrait
 	protected $startTime;
 	
 	/**
+	 * @var float Duration value.
+	 */
+	protected $duration = 0.0;
+	
+	/**
 	 * Get the full path to the file.
 	 *
 	 * @return string
@@ -144,6 +149,16 @@ trait StreamTrait
 	public function getStartTime()
 	{
 		return $this->startTime;
+	}
+	
+	/**
+	 * Get duration value.
+	 *
+	 * @return float
+	 */
+	public function getDuration()
+	{
+		return $this->duration;
 	}
 	
 	/**
