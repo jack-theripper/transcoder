@@ -221,4 +221,24 @@ trait StreamTrait
 		return $this;
 	}
 	
+	/**
+	 * Set duration value.
+	 *
+	 * @param float $duration
+	 *
+	 * @return $this
+	 * @throws \InvalidArgumentException
+	 */
+	protected function setDuration($duration)
+	{
+		if ( ! is_numeric($duration) || $duration < 0)
+		{
+			throw new \InvalidArgumentException('Wrong duration value.');
+		}
+		
+		$this->duration = (float) $duration;
+		
+		return $this;
+	}
+	
 }
