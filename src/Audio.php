@@ -69,7 +69,7 @@ class Audio implements AudioInterface
 		
 		$demuxing = $this->decoder->demuxing($this);
 		
-		if (count($demuxing->streams) < 1 || empty($demuxing->format['format']))
+		if (count($demuxing->streams) < 1 || ( ! $this->isSupportedFileType() && empty($demuxing->format['format'])))
 		{
 			throw new TranscoderException('File type unsupported or the file is corrupted.');
 		}
@@ -194,6 +194,21 @@ class Audio implements AudioInterface
 		$this->mimeType = mime_content_type($this->getFilePath());
 		
 		return $this;
+	}
+	
+	/**
+	 * It supports the type of media.
+	 *
+	 * @return bool
+	 */
+	protected function isSupportedFileType()
+	{
+		if (stripos($this->getMimeType(), 'audio/') !== 0)
+		{
+			return false;
+		}
+		
+		return true;
 	}
 	
 }
