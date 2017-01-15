@@ -45,10 +45,12 @@ class Audio implements AudioInterface
 	 *
 	 * @param string $filePath
 	 * @param array  $options
+	 *
+	 * @throws \InvalidArgumentException
 	 */
 	public function __construct($filePath, array $options = [])
 	{
-		
+		$this->setFilePath($filePath);
 	}
 	
 	/**
@@ -131,6 +133,34 @@ class Audio implements AudioInterface
 	public function getStreams()
 	{
 		return $this->streams;
+	}
+	
+	/**
+	 * Set file path.
+	 *
+	 * @param string $filePath
+	 *
+	 * @return Audio
+	 * @throws \InvalidArgumentException
+	 * @throws TranscoderException
+	 */
+	protected function setFilePath($filePath)
+	{
+		if ( ! is_string($filePath))
+		{
+			throw new \InvalidArgumentException('File path must be a string type.');
+		}
+		
+		$filePath = realpath($filePath);
+		
+		if ( ! is_file($filePath))
+		{
+			throw new TranscoderException('File path not found.');
+		}
+		
+		$this->filePath = $filePath;
+		
+		return $this;
 	}
 	
 }
