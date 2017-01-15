@@ -8,7 +8,7 @@
  * @author    Dmitry Arhitector <dmitry.arhitector@yandex.ru>
  *
  * @license   http://opensource.org/licenses/MIT MIT
- * @copyright Copyright (c) 2016 Dmitry Arhitector <dmitry.arhitector@yandex.ru>
+ * @copyright Copyright (c) 2017 Dmitry Arhitector <dmitry.arhitector@yandex.ru>
  */
 namespace Arhitector\Jumper\Exception;
 
