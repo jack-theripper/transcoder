@@ -48,6 +48,11 @@ class Audio implements AudioInterface
 	protected $decoder;
 	
 	/**
+	 * @var string The MIME Content-type for a file.
+	 */
+	protected $mimeType;
+	
+	/**
 	 * Audio constructor.
 	 *
 	 * @param string $filePath
@@ -153,6 +158,16 @@ class Audio implements AudioInterface
 	}
 	
 	/**
+	 * Gets the MIME Content-type value.
+	 *
+	 * @return string
+	 */
+	public function getMimeType()
+	{
+		return (string) $this->mimeType;
+	}
+	
+	/**
 	 * Set file path.
 	 *
 	 * @param string $filePath
@@ -176,6 +191,7 @@ class Audio implements AudioInterface
 		}
 		
 		$this->filePath = $filePath;
+		$this->mimeType = mime_content_type($this->getFilePath());
 		
 		return $this;
 	}
