@@ -44,7 +44,7 @@ interface AudioInterface extends TranscoderInterface
 	/**
 	 * Get sample frequency value.
 	 *
-	 * @return  int
+	 * @return int
 	 */
 	public function getFrequency();
 	
