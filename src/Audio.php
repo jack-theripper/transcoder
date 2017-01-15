@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the arhitector/jumper library.
  *
@@ -14,6 +15,7 @@ namespace Arhitector\Jumper;
 
 use Arhitector\Jumper\Exception\TranscoderException;
 use Arhitector\Jumper\Format\AudioFormatInterface;
+use Arhitector\Jumper\Service\Decoder;
 use Arhitector\Jumper\Stream\Collection;
 use Arhitector\Jumper\Stream\StreamInterface;
 
@@ -41,16 +43,31 @@ class Audio implements AudioInterface
 	protected $streams;
 	
 	/**
+	 * @var Decoder
+	 */
+	protected $decoder;
+	
+	/**
 	 * Audio constructor.
 	 *
 	 * @param string $filePath
 	 * @param array  $options
 	 *
 	 * @throws \InvalidArgumentException
+	 * @throws \Arhitector\Jumper\Exception\TranscoderException
+	 * @throws \Arhitector\Jumper\Exception\ExecutableNotFoundException
 	 */
 	public function __construct($filePath, array $options = [])
 	{
 		$this->setFilePath($filePath);
+		$this->decoder = new Decoder($options);
+		
+		$demuxing = $this->decoder->demuxing($this);
+		
+		if (count($demuxing->streams) < 1 || empty($demuxing->format['format']))
+		{
+			throw new TranscoderException('File type unsupported or the file is corrupted.');
+		}
 	}
 	
 	/**
