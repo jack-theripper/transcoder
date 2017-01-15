@@ -14,8 +14,8 @@ namespace Arhitector\Jumper;
 
 use Arhitector\Jumper\Exception\TranscoderException;
 use Arhitector\Jumper\Format\FormatInterface;
-use Arhitector\Jumper\Stream\StreamInterface;
 use Arhitector\Jumper\Stream\Collection;
+use Arhitector\Jumper\Stream\StreamInterface;
 
 /**
  * Interface TranscoderInterface.
