@@ -81,7 +81,22 @@ class Audio implements AudioInterface
 		$this->streams = new Collection(array_map(function ($parameters) {
 			if ($parameters['type'] == 'audio')
 			{
-				return new AudioStream($this, $parameters);
+				$stream = new AudioStream($this, $parameters);
+				
+				if ($stream->getChannels() !== null)
+				{
+					$this->getFormat()->setAudioChannels($stream->getChannels());
+				}
+				
+				if ($stream->getFrequency() !== null)
+				{
+					$this->getFormat()->setAudioFrequency($stream->getFrequency());
+				}
+				
+				$this->getFormat()->setAudioBitrate($stream->getBitrate());
+				$this->getFormat()->setAudioCodec($stream->getCodec());
+				
+				return $stream;
 			}
 			
 			throw new TranscoderException('This stream unsupported.');
