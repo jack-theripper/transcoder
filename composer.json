@@ -1,0 +1,20 @@
+{
+    "name": "arhitector/jumper",
+    "description": "Tools to transcoding/encoding audio or video, inspect and convert media formats.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Dmitry Arhitector",
+            "email": "dmitry.arhitector@yandex.ru"
+        }
+    ],
+    "require": {
+        "symfony/process": "3.2.x-dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "Arhitector\\Jumper\\": "src"
+        }
+    }
+}
