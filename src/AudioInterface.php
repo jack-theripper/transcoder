@@ -37,7 +37,7 @@ interface AudioInterface extends TranscoderInterface
 	/**
 	 * Returns the audio codec.
 	 *
-	 * @return Codec
+	 * @return Codec|null
 	 */
 	public function getAudioCodec();
 	
