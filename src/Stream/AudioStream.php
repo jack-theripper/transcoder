@@ -36,11 +36,56 @@ class AudioStream implements AudioStreamInterface
 	/**
 	 * AudioStream constructor.
 	 *
-	 * @param \Arhitector\Jumper\TranscoderInterface $media
+	 * @param TranscoderInterface $media
+	 * @param array               $parameters
+	 *
+	 * @throws \InvalidArgumentException
 	 */
-	public function __construct(TranscoderInterface $media)
+	public function __construct(TranscoderInterface $media, array $parameters)
 	{
+		$this->filePath = $media->getFilePath();
 		
+		if ( ! isset($parameters['index']) || $parameters['index'] < 0)
+		{
+			throw new \InvalidArgumentException('The index value is wrong.');
+		}
+		
+		$this->setIndex($parameters['index']);
+		
+		if (isset($parameters['codec']))
+		{
+			$this->setCodec($parameters['codec']);
+		}
+		
+		if (isset($parameters['profile']))
+		{
+			$this->setProfile((string) $parameters['profile']);
+		}
+		
+		if (isset($parameters['bit_rate']))
+		{
+			$this->setBitrate((int) $parameters['bit_rate']);
+		}
+		
+		if (isset($parameters['start_time']))
+		{
+			$this->setStartTime((float) $parameters['start_time']);
+		}
+		
+		if (isset($parameters['frequency']))
+		{
+			$this->setFrequency((int) $parameters['frequency']);
+		}
+		
+		if (isset($parameters['channels']))
+		{
+			$this->setChannels((int) $parameters['channels']);
+		}
+		
+		if (isset($parameters['duration']))
+		{
+			$this->setDuration((float) $parameters['duration']);
+		}
 	}
 	
 	/**
