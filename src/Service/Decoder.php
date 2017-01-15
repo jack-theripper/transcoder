@@ -46,11 +46,15 @@ class Decoder
 	 *
 	 * @param TranscoderInterface $media
 	 *
-	 * @return array
+	 * @return \stdClass
 	 */
 	public function demuxing(TranscoderInterface $media)
 	{
-		// TODO
+		$result = new \stdClass;
+		$result->format = null;
+		$result->streams = [];
+		
+		return $result;
 	}
 	
 	/**
