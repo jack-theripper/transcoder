@@ -240,6 +240,8 @@ class Audio implements AudioInterface
 		
 		foreach ($processes as $process)
 		{
+			$process->start();
+			
 			if ($process->wait() !== 0)
 			{
 				throw new ProcessFailedException($process);
