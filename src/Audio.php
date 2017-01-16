@@ -22,6 +22,7 @@ use Arhitector\Jumper\Service\Encoder;
 use Arhitector\Jumper\Stream\AudioStream;
 use Arhitector\Jumper\Stream\Collection;
 use Arhitector\Jumper\Stream\StreamInterface;
+use Symfony\Component\Process\Exception\ProcessFailedException;
 
 /**
  * Class Audio.
@@ -211,10 +212,40 @@ class Audio implements AudioInterface
 	 * @param bool            $overwrite
 	 *
 	 * @return float|int Size of the new file or -1
+	 * @throws \Symfony\Component\Process\Exception\RuntimeException
+	 * @throws \Symfony\Component\Process\Exception\LogicException
+	 * @throws \Symfony\Component\Process\Exception\ProcessFailedException
+	 * @throws \Arhitector\Jumper\Exception\TranscoderException
+	 * @throws \InvalidArgumentException
 	 */
 	public function save(FormatInterface $format, $filePath, $overwrite = true)
 	{
-		// TODO
+		if ( ! $format instanceof AudioFormatInterface)
+		{
+			throw new \InvalidArgumentException('Format type is not supported.');
+		}
+		
+		if ( ! is_string($filePath) || empty($filePath))
+		{
+			throw new \InvalidArgumentException('File path must not be an empty string.');
+		}
+		
+		if ( ! $overwrite && file_exists($filePath))
+		{
+			throw new TranscoderException('File path already exists.');
+		}
+		
+		$processes = $this->encoder->transcoding($this, $format, ['path' => $filePath]);
+		
+		foreach ($processes as $process)
+		{
+			if ($process->wait() !== 0)
+			{
+				throw new ProcessFailedException($process);
+			}
+		}
+		
+		return -1;
 	}
 	
 	/**
