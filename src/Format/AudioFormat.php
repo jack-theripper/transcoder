@@ -57,7 +57,7 @@ class AudioFormat implements AudioFormatInterface
 		{
 			if ( ! $audioCodec instanceof Codec)
 			{
-				$audioCodec = new Codec($audioCodec, $audioCodec);
+				$audioCodec = new Codec($audioCodec, '');
 			}
 			
 			$this->setAudioCodec($audioCodec);
