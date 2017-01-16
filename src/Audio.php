@@ -235,7 +235,8 @@ class Audio implements AudioInterface
 			throw new TranscoderException('File path already exists.');
 		}
 		
-		$processes = $this->encoder->transcoding($this, $format, ['path' => $filePath]);
+		/** @noinspection ExceptionsAnnotatingAndHandlingInspection */
+		$processes = $this->encoder->transcoding($this, $format, ['output' => $filePath]);
 		
 		foreach ($processes as $process)
 		{
