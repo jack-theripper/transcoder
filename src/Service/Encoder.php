@@ -50,10 +50,11 @@ class Encoder
 	 *
 	 * @param TranscoderInterface $media  it may be a stream or media wrapper.
 	 * @param FormatInterface     $format new format.
+	 * @param array               $options
 	 *
-	 * @return Iterator|Process[]  returns the instances of 'Process'.
+	 * @return \Iterator|\Symfony\Component\Process\Process[] returns the instances of 'Process'.
 	 */
-	public function transcoding(TranscoderInterface $media, FormatInterface $format)
+	public function transcoding(TranscoderInterface $media, FormatInterface $format, array $options = [])
 	{
 		// TODO
 		return [];
