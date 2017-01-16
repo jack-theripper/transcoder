@@ -18,6 +18,7 @@ use Arhitector\Jumper\Format\AudioFormat;
 use Arhitector\Jumper\Format\AudioFormatInterface;
 use Arhitector\Jumper\Format\FormatInterface;
 use Arhitector\Jumper\Service\Decoder;
+use Arhitector\Jumper\Service\Encoder;
 use Arhitector\Jumper\Stream\AudioStream;
 use Arhitector\Jumper\Stream\Collection;
 use Arhitector\Jumper\Stream\StreamInterface;
@@ -56,6 +57,11 @@ class Audio implements AudioInterface
 	protected $mimeType;
 	
 	/**
+	 * @var Encoder
+	 */
+	protected $encoder;
+	
+	/**
 	 * Audio constructor.
 	 *
 	 * @param string $filePath
@@ -69,6 +75,7 @@ class Audio implements AudioInterface
 	{
 		$this->setFilePath($filePath);
 		$this->decoder = new Decoder($options);
+		$this->encoder = new Encoder($options);
 		
 		/** @noinspection ExceptionsAnnotatingAndHandlingInspection */
 		$demuxing = $this->decoder->demuxing($this);
