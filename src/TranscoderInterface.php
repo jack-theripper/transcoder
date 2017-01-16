@@ -55,4 +55,15 @@ interface TranscoderInterface
 	 */
 	public function getStreams();
 	
+	/**
+	 * Transcoding.
+	 *
+	 * @param FormatInterface $format
+	 * @param string          $filePath
+	 * @param bool            $overwrite
+	 *
+	 * @return float|int Size of the new file or -1
+	 */
+	public function save(FormatInterface $format, $filePath, $overwrite = true);
+	
 }

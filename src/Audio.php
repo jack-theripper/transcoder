@@ -16,6 +16,7 @@ namespace Arhitector\Jumper;
 use Arhitector\Jumper\Exception\TranscoderException;
 use Arhitector\Jumper\Format\AudioFormat;
 use Arhitector\Jumper\Format\AudioFormatInterface;
+use Arhitector\Jumper\Format\FormatInterface;
 use Arhitector\Jumper\Service\Decoder;
 use Arhitector\Jumper\Stream\AudioStream;
 use Arhitector\Jumper\Stream\Collection;
@@ -193,6 +194,20 @@ class Audio implements AudioInterface
 	public function getMimeType()
 	{
 		return (string) $this->mimeType;
+	}
+	
+	/**
+	 * Transcoding.
+	 *
+	 * @param FormatInterface $format
+	 * @param string          $filePath
+	 * @param bool            $overwrite
+	 *
+	 * @return float|int Size of the new file or -1
+	 */
+	public function save(FormatInterface $format, $filePath, $overwrite = true)
+	{
+		// TODO
 	}
 	
 	/**
