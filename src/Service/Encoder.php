@@ -84,8 +84,9 @@ class Encoder
 	protected function resolveOptions(array $options)
 	{
 		return array_merge([
-			'ffprobe.path' => 'ffprobe',
-			'timeout'      => 60
+			'ffmpeg.path'    => 'ffmpeg',
+			'ffmpeg.threads' => 0,
+			'timeout'        => 60
 		], $options);
 	}
 	
