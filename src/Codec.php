@@ -104,7 +104,7 @@ class Codec
 	 */
 	protected function setName($name)
 	{
-		if (empty($name) || ! is_string($name))
+		if ( ! is_string($name))
 		{
 			throw new \InvalidArgumentException('The codec name value must be a string type.');
 		}
