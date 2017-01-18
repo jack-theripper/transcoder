@@ -31,11 +31,6 @@ trait FormatTrait
 	protected $tags = [];
 	
 	/**
-	 * @var bool Modified container.
-	 */
-	protected $modified = false;
-	
-	/**
 	 * @var array List of extensions.
 	 */
 	protected $extensions = [];
@@ -108,16 +103,6 @@ trait FormatTrait
 	public function rewind()
 	{
 		reset($this->tags);
-	}
-	
-	/**
-	 * Modified container.
-	 *
-	 * @return bool
-	 */
-	public function isModified()
-	{
-		return (bool) $this->modified;
 	}
 	
 	/**
