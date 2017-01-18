@@ -151,6 +151,61 @@ trait FormatTrait
 	}
 	
 	/**
+	 * Check the metadata.
+	 *
+	 * @param mixed $tagName
+	 *
+	 * @return boolean
+	 */
+	public function offsetExists($tagName)
+	{
+		return array_key_exists($tagName, $this->tags);
+	}
+	
+	/**
+	 * Get metadata.
+	 *
+	 * @param mixed $tagName
+	 *
+	 * @return mixed
+	 * @throws \OutOfBoundsException
+	 */
+	public function offsetGet($tagName)
+	{
+		if ( ! $this->offsetExists($tagName))
+		{
+			throw new \OutOfBoundsException('Index invalid or out of range');
+		}
+		
+		return $this->tags[$tagName];
+	}
+	
+	/**
+	 * Sets the metadata.
+	 *
+	 * @param string $tagName
+	 * @param mixed  $value The value to set.
+	 *
+	 * @return void
+	 */
+	public function offsetSet($tagName, $value)
+	{
+		$this->tags[$tagName] = $value;
+	}
+	
+	/**
+	 * Removes metadata.
+	 *
+	 * @param mixed $tagName
+	 *
+	 * @return void
+	 */
+	public function offsetUnset($tagName)
+	{
+		unset($this->tags[$tagName]);
+	}
+	
+	/**
 	 * Set the duration value.
 	 *
 	 * @param float $duration
