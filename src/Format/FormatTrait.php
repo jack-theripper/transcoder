@@ -31,6 +31,11 @@ trait FormatTrait
 	protected $tags = [];
 	
 	/**
+	 * @var bool Modified container.
+	 */
+	protected $modified = false;
+	
+	/**
 	 * Get the duration value.
 	 *
 	 * @return float
@@ -48,6 +53,26 @@ trait FormatTrait
 	public function getTags()
 	{
 		return $this->tags;
+	}
+	
+	/**
+	 * Sets the metadata.
+	 *
+	 * @param string $tag
+	 * @param mixed  $value
+	 *
+	 * @return $this
+	 */
+	public function setTagValue($tag, $value)
+	{
+		$this->tags[$tag] = $value;
+		
+		if ( ! $this->isModified())
+		{
+			$this->modified = true;
+		}
+		
+		return $this;
 	}
 	
 	/**
@@ -98,6 +123,16 @@ trait FormatTrait
 	public function rewind()
 	{
 		reset($this->tags);
+	}
+	
+	/**
+	 * Modified container.
+	 *
+	 * @return bool
+	 */
+	public function isModified()
+	{
+		return (bool) $this->modified;
 	}
 	
 	/**

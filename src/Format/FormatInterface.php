@@ -34,4 +34,14 @@ interface FormatInterface extends \Iterator
 	 */
 	public function getTags();
 	
+	/**
+	 * Sets the metadata.
+	 *
+	 * @param string $tag
+	 * @param mixed  $value
+	 *
+	 * @return FormatInterface
+	 */
+	public function setTagValue($tag, $value);
+	
 }
