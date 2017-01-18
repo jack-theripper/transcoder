@@ -35,16 +35,6 @@ interface FormatInterface extends \Iterator, \ArrayAccess
 	public function getTags();
 	
 	/**
-	 * Sets the metadata.
-	 *
-	 * @param string $tag
-	 * @param mixed  $value
-	 *
-	 * @return FormatInterface
-	 */
-	public function setTagValue($tag, $value);
-	
-	/**
 	 * Returns the number of passes.
 	 *
 	 * @return int

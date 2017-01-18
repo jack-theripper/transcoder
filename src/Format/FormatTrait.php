@@ -61,26 +61,6 @@ trait FormatTrait
 	}
 	
 	/**
-	 * Sets the metadata.
-	 *
-	 * @param string $tag
-	 * @param mixed  $value
-	 *
-	 * @return $this
-	 */
-	public function setTagValue($tag, $value)
-	{
-		$this->tags[$tag] = $value;
-		
-		if ( ! $this->isModified())
-		{
-			$this->modified = true;
-		}
-		
-		return $this;
-	}
-	
-	/**
 	 * Return the current element
 	 *
 	 * @return mixed
