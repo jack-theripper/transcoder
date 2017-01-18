@@ -61,15 +61,19 @@ class Encoder
 			'y'      => '',
 			'i'      => [$media->getFilePath()],
 			'strict' => '-2'
-		], $this->getFormatOptions($format), $this->getForceFormatOptions($format));
+		], $options, $this->getFormatOptions($format), $this->getForceFormatOptions($format));
 		
 		if ( ! isset($options['output']))
 		{
 			throw new \RuntimeException('Output file path not found.');
 		}
 		
-		$filePath = $options['output'];
+		if ( ! isset($options['metadata']) && $format->isModified())
+		{
+			$ffmpegOptions['metadata'] = $format->getTags();
+		}
 		
+		$filePath = $options['output'];
 		$options = array_diff_key($ffmpegOptions, array_fill_keys([
 			'disable_audio',
 			'audio_quality',
@@ -79,6 +83,7 @@ class Encoder
 			'audio_channels',
 			'video_codec',
 			'force_format',
+			'metadata',
 			'output',
 			
 			// опции адаптера
@@ -93,6 +98,7 @@ class Encoder
 			         'audio_sample_frequency' => '-ar',
 			         'audio_channels'         => '-ac',
 			         'video_codec'            => '-codec:v',
+			         'metadata'               => '-metadata',
 			         'ffmpeg_force_format'    => '-f'
 		         ] as $option => $value)
 		{
@@ -105,6 +111,11 @@ class Encoder
 					$options[$value] = '';
 				}
 			}
+		}
+		
+		if ( ! empty($ffmpegOptions['metadata']))
+		{
+			$options['map_metadata'] = '-1';
 		}
 		
 		$ffmpegOptions = [];
