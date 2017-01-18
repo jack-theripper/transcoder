@@ -199,6 +199,16 @@ class AudioFormat implements AudioFormatInterface
 	}
 	
 	/**
+	 * Returns the number of passes.
+	 *
+	 * @return int
+	 */
+	public function getPasses()
+	{
+		return 1;
+	}
+	
+	/**
 	 * Sets the options.
 	 *
 	 * @param array $options

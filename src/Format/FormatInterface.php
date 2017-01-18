@@ -44,4 +44,11 @@ interface FormatInterface extends \Iterator
 	 */
 	public function setTagValue($tag, $value);
 	
+	/**
+	 * Returns the number of passes.
+	 *
+	 * @return int
+	 */
+	public function getPasses();
+	
 }
