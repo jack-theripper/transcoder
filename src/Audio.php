@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the arhitector/jumper library.
  *
@@ -21,6 +20,7 @@ use Arhitector\Jumper\Service\Decoder;
 use Arhitector\Jumper\Service\Encoder;
 use Arhitector\Jumper\Stream\AudioStream;
 use Arhitector\Jumper\Stream\Collection;
+use Arhitector\Jumper\Stream\FrameStream;
 use Arhitector\Jumper\Stream\StreamInterface;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
@@ -106,6 +106,11 @@ class Audio implements AudioInterface
 				$this->getFormat()->setAudioCodec($stream->getCodec());
 				
 				return $stream;
+			}
+			
+			if ($parameters['type'] == 'video')
+			{
+				return new FrameStream($this, $parameters);
 			}
 			
 			throw new TranscoderException('This stream unsupported.');
