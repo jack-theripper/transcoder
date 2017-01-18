@@ -68,7 +68,7 @@ class Encoder
 			throw new \RuntimeException('Output file path not found.');
 		}
 		
-		if ( ! isset($options['metadata']) && $format->isModified())
+		if ( ! isset($options['metadata']) && $format->getTags())
 		{
 			$ffmpegOptions['metadata'] = $format->getTags();
 		}
