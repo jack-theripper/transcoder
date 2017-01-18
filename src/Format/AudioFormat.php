@@ -44,6 +44,11 @@ class AudioFormat implements AudioFormatInterface
 	protected $audioFrequency;
 	
 	/**
+	 * @var string[] The list of available audio codecs.
+	 */
+	protected $audioAvailableCodecs = [];
+	
+	/**
 	 * AudioFormat constructor.
 	 *
 	 * @param Codec|string $audioCodec
@@ -195,7 +200,7 @@ class AudioFormat implements AudioFormatInterface
 	 */
 	public function getAvailableAudioCodecs()
 	{
-		return [];
+		return $this->audioAvailableCodecs;
 	}
 	
 	/**
@@ -247,6 +252,20 @@ class AudioFormat implements AudioFormatInterface
 		{
 			$this->tags = array_filter($options['tags'], 'is_scalar');
 		}
+		
+		return $this;
+	}
+	
+	/**
+	 * Sets the list of available audio codecs.
+	 *
+	 * @param array $codecs
+	 *
+	 * @return AudioFormat
+	 */
+	protected function setAvailableAudioCodecs(array $codecs)
+	{
+		$this->audioAvailableCodecs = array_map('strval', $codecs);
 		
 		return $this;
 	}
