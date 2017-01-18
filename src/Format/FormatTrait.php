@@ -170,4 +170,16 @@ trait FormatTrait
 		return $this;
 	}
 	
+	/**
+	 * Sets the extensions value.
+	 *
+	 * @param array $extensions
+	 *
+	 * @return array an array of values that have been set
+	 */
+	protected function setExtensions(array $extensions)
+	{
+		return $this->extensions = array_filter($extensions, 'is_scalar');
+	}
+	
 }
