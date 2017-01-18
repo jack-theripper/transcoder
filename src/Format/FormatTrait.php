@@ -51,6 +51,56 @@ trait FormatTrait
 	}
 	
 	/**
+	 * Return the current element
+	 *
+	 * @return mixed
+	 */
+	public function current()
+	{
+		return current($this->tags);
+	}
+	
+	/**
+	 * Move forward to next element
+	 *
+	 * @return void
+	 */
+	public function next()
+	{
+		next($this->tags);
+	}
+	
+	/**
+	 * Return the key of the current element
+	 *
+	 * @return int
+	 */
+	public function key()
+	{
+		return key($this->tags);
+	}
+	
+	/**
+	 * Checks if current position is valid
+	 *
+	 * @return boolean Returns true on success or false on failure.
+	 */
+	public function valid()
+	{
+		return key($this->tags) !== null;
+	}
+	
+	/**
+	 * Rewind the Iterator to the first element
+	 *
+	 * @return void
+	 */
+	public function rewind()
+	{
+		reset($this->tags);
+	}
+	
+	/**
 	 * Set the duration value.
 	 *
 	 * @param float $duration

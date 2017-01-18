@@ -17,7 +17,7 @@ namespace Arhitector\Jumper\Format;
  *
  * @package Arhitector\Jumper\Format
  */
-interface FormatInterface
+interface FormatInterface extends \Iterator
 {
 	
 	/**
