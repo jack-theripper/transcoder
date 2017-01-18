@@ -36,6 +36,11 @@ trait FormatTrait
 	protected $modified = false;
 	
 	/**
+	 * @var array List of extensions.
+	 */
+	protected $extensions = [];
+	
+	/**
 	 * Get the duration value.
 	 *
 	 * @return float
@@ -133,6 +138,16 @@ trait FormatTrait
 	public function isModified()
 	{
 		return (bool) $this->modified;
+	}
+	
+	/**
+	 * Get the format extensions.
+	 *
+	 * @return array
+	 */
+	public function getExtensions()
+	{
+		return $this->extensions;
 	}
 	
 	/**

@@ -51,4 +51,11 @@ interface FormatInterface extends \Iterator
 	 */
 	public function getPasses();
 	
+	/**
+	 * Get the format extensions.
+	 *
+	 * @return array
+	 */
+	public function getExtensions();
+	
 }
