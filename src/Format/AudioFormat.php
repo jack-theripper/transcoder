@@ -52,11 +52,10 @@ class AudioFormat implements AudioFormatInterface
 	 * AudioFormat constructor.
 	 *
 	 * @param Codec|string $audioCodec
-	 * @param array        $parameters
 	 *
 	 * @throws \InvalidArgumentException
 	 */
-	public function __construct($audioCodec = null, array $parameters = [])
+	public function __construct($audioCodec = null)
 	{
 		if ($audioCodec !== null)
 		{
@@ -69,7 +68,6 @@ class AudioFormat implements AudioFormatInterface
 		}
 		
 		$this->setAudioBitrate(128000);
-		$this->resolveOptions($parameters);
 	}
 	
 	/**
@@ -211,49 +209,6 @@ class AudioFormat implements AudioFormatInterface
 	public function getPasses()
 	{
 		return 1;
-	}
-	
-	/**
-	 * Sets the options.
-	 *
-	 * @param array $options
-	 *
-	 * @return AudioFormat
-	 * @throws \InvalidArgumentException
-	 */
-	protected function resolveOptions(array $options)
-	{
-		if (isset($options['audio_codec']))
-		{
-			$this->setAudioCodec($options['audio_codec']);
-		}
-		
-		if (isset($options['audio_bitrate']))
-		{
-			$this->setAudioBitrate((int) $options['audio_bitrate']);
-		}
-		
-		if ( ! empty($options['channels']))
-		{
-			$this->setAudioChannels((int) $options['channels']);
-		}
-		
-		if (isset($options['frequency']))
-		{
-			$this->setAudioFrequency((int) $options['frequency']);
-		}
-		
-		if (isset($options['duration']))
-		{
-			$this->setDuration((float) $options['duration']);
-		}
-		
-		if (isset($options['tags']) && is_array($options['tags']))
-		{
-			$this->tags = array_filter($options['tags'], 'is_scalar');
-		}
-		
-		return $this;
 	}
 	
 	/**
