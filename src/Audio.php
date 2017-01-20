@@ -89,7 +89,9 @@ class Audio implements AudioInterface
 		
 		/** @var AudioFormat $className */
 		$className = $this->findFormatClass($demuxing->format['format']) ?: AudioFormat::class;
-		$this->format = $className::fromArray($demuxing->format);
+		$this->format = $className::fromArray(array_filter($demuxing->format, function ($value) {
+			return $value !== null;
+		}));
 		
 		$this->streams = new Collection(array_map(function ($parameters) {
 			if ($parameters['type'] == 'audio')
