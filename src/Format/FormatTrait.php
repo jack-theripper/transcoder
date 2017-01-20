@@ -21,6 +21,30 @@ trait FormatTrait
 {
 	
 	/**
+	 * Returns a new format instance.
+	 *
+	 * @param array $options
+	 *
+	 * @return static
+	 */
+	public static function fromArray(array $options)
+	{
+		$self = new static();
+		
+		foreach ($options as $option => $value)
+		{
+			$parameter = str_replace('_', '', 'set'.ucwords($option, '_'));
+			
+			if (method_exists($self, $parameter))
+			{
+				$self->{$parameter}($value);
+			}
+		}
+		
+		return $self;
+	}
+	
+	/**
 	 * @var float Duration value.
 	 */
 	protected $duration = 0.0;
