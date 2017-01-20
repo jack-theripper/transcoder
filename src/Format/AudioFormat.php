@@ -75,7 +75,7 @@ class AudioFormat implements AudioFormatInterface
 	 *
 	 * @return int
 	 */
-	public function getAudioChannels()
+	public function getChannels()
 	{
 		return $this->audioChannels;
 	}
@@ -88,7 +88,7 @@ class AudioFormat implements AudioFormatInterface
 	 * @return AudioFormatInterface
 	 * @throws \InvalidArgumentException
 	 */
-	public function setAudioChannels($channels)
+	public function setChannels($channels)
 	{
 		if ( ! is_numeric($channels) || $channels < 1)
 		{
@@ -166,7 +166,7 @@ class AudioFormat implements AudioFormatInterface
 	 *
 	 * @return int
 	 */
-	public function getAudioFrequency()
+	public function getFrequency()
 	{
 		return $this->audioFrequency;
 	}
@@ -179,7 +179,7 @@ class AudioFormat implements AudioFormatInterface
 	 * @return AudioFormatInterface
 	 * @throws \InvalidArgumentException
 	 */
-	public function setAudioFrequency($frequency)
+	public function setFrequency($frequency)
 	{
 		if ( ! is_numeric($frequency) || $frequency < 1)
 		{

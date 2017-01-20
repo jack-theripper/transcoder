@@ -94,12 +94,12 @@ class Audio implements AudioInterface
 				
 				if ($stream->getChannels() !== null)
 				{
-					$this->getFormat()->setAudioChannels($stream->getChannels());
+					$this->getFormat()->setChannels($stream->getChannels());
 				}
 				
 				if ($stream->getFrequency() !== null)
 				{
-					$this->getFormat()->setAudioFrequency($stream->getFrequency());
+					$this->getFormat()->setFrequency($stream->getFrequency());
 				}
 				
 				$this->getFormat()->setAudioBitrate($stream->getBitrate());
@@ -124,7 +124,7 @@ class Audio implements AudioInterface
 	 */
 	public function getAudioChannels()
 	{
-		return $this->getFormat()->getAudioChannels();
+		return $this->getFormat()->getChannels();
 	}
 	
 	/**
@@ -154,7 +154,7 @@ class Audio implements AudioInterface
 	 */
 	public function getFrequency()
 	{
-		return $this->getFormat()->getAudioFrequency();
+		return $this->getFormat()->getFrequency();
 	}
 	
 	/**

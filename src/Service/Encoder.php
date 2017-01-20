@@ -91,16 +91,16 @@ class Encoder
 		], null));
 		
 		foreach ([
-			         'disable_audio'          => '-an',
-			         'audio_quality'          => '-qscale:a',
-			         'audio_codec'            => '-codec:a',
-			         'audio_bitrate'          => '-b:a',
-			         'audio_sample_frequency' => '-ar',
-			         'audio_channels'         => '-ac',
-			         'video_codec'            => '-codec:v',
-			         'metadata'               => '-metadata',
-			         'ffmpeg_force_format'    => '-f'
-		         ] as $option => $value)
+			'disable_audio'          => '-an',
+			'audio_quality'          => '-qscale:a',
+			'audio_codec'            => '-codec:a',
+			'audio_bitrate'          => '-b:a',
+			'audio_sample_frequency' => '-ar',
+			'audio_channels'         => '-ac',
+			'video_codec'            => '-codec:v',
+			'metadata'               => '-metadata',
+			'ffmpeg_force_format'    => '-f'
+		] as $option => $value)
 		{
 			if (isset($ffmpegOptions[$option]))
 			{
@@ -210,14 +210,14 @@ class Encoder
 				$options['audio_bitrate'] = $format->getAudioBitrate();
 			}
 			
-			if ($format->getAudioFrequency() > 0)
+			if ($format->getFrequency() > 0)
 			{
-				$options['audio_sample_frequency'] = $format->getAudioFrequency();
+				$options['audio_sample_frequency'] = $format->getFrequency();
 			}
 			
-			if ($format->getAudioChannels() > 0)
+			if ($format->getChannels() > 0)
 			{
-				$options['audio_channels'] = $format->getAudioChannels();
+				$options['audio_channels'] = $format->getChannels();
 			}
 		}
 		

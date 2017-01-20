@@ -27,7 +27,7 @@ interface AudioFormatInterface extends FormatInterface
 	 *
 	 * @return int
 	 */
-	public function getAudioChannels();
+	public function getChannels();
 	
 	/**
 	 * Sets the channels value.
@@ -37,7 +37,7 @@ interface AudioFormatInterface extends FormatInterface
 	 * @return AudioFormatInterface
 	 * @throws \InvalidArgumentException
 	 */
-	public function setAudioChannels($channels);
+	public function setChannels($channels);
 	
 	/**
 	 * Get audio codec.
@@ -78,7 +78,7 @@ interface AudioFormatInterface extends FormatInterface
 	 *
 	 * @return int
 	 */
-	public function getAudioFrequency();
+	public function getFrequency();
 	
 	/**
 	 * Set frequency value.
@@ -88,7 +88,7 @@ interface AudioFormatInterface extends FormatInterface
 	 * @return AudioFormatInterface
 	 * @throws \InvalidArgumentException
 	 */
-	public function setAudioFrequency($frequency);
+	public function setFrequency($frequency);
 	
 	/**
 	 * Get available codecs.
