@@ -19,7 +19,7 @@ use Arhitector\Jumper\Exception\TranscoderException;
  *
  * @package Arhitector\Jumper\Stream
  */
-class Collection
+class Collection implements \Iterator
 {
 	
 	/**
@@ -45,6 +45,56 @@ class Collection
 			
 			$this->streams[$stream->getIndex()] = $stream;
 		}
+	}
+	
+	/**
+	 * Return the current stream.
+	 *
+	 * @return StreamInterface
+	 */
+	public function current()
+	{
+		return current($this->streams);
+	}
+	
+	/**
+	 * Move forward to next element.
+	 *
+	 * @return void
+	 */
+	public function next()
+	{
+		next($this->streams);
+	}
+	
+	/**
+	 * Return the key of the current element.
+	 *
+	 * @return int
+	 */
+	public function key()
+	{
+		return key($this->streams);
+	}
+	
+	/**
+	 * Checks if current position is valid.
+	 *
+	 * @return boolean
+	 */
+	public function valid()
+	{
+		return key($this->streams) !== null;
+	}
+	
+	/**
+	 * Rewind the Iterator to the first element.
+	 *
+	 * @return void
+	 */
+	public function rewind()
+	{
+		reset($this->streams);
 	}
 	
 }
