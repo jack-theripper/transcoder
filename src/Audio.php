@@ -22,6 +22,7 @@ use Arhitector\Jumper\Stream\AudioStream;
 use Arhitector\Jumper\Stream\Collection;
 use Arhitector\Jumper\Stream\FrameStream;
 use Arhitector\Jumper\Stream\StreamInterface;
+use Mimey\MimeTypes;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
 /**
@@ -86,7 +87,10 @@ class Audio implements AudioInterface
 			throw new TranscoderException('File type unsupported or the file is corrupted.');
 		}
 		
-		$this->format = new AudioFormat(null, $demuxing->format);
+		/** @var AudioFormat $className */
+		$className = $this->findFormatClass($demuxing->format['format']) ?: AudioFormat::class;
+		$this->format = $className::fromArray($demuxing->format);
+		
 		$this->streams = new Collection(array_map(function ($parameters) {
 			if ($parameters['type'] == 'audio')
 			{
@@ -298,6 +302,51 @@ class Audio implements AudioInterface
 		}
 		
 		return true;
+	}
+	
+	/**
+	 * Find a format class.
+	 *
+	 * @param string $possibleFormat
+	 *
+	 * @return null|string
+	 */
+	protected function findFormatClass($possibleFormat = null)
+	{
+		static $mimeTypes = null;
+		
+		if ($possibleFormat !== null)
+		{
+			$className = __NAMESPACE__.'\\Format\\'.ucfirst($possibleFormat);
+			
+			if (class_exists($className))
+			{
+				return $className;
+			}
+		}
+		
+		if ( ! $mimeTypes)
+		{
+			$mimeTypes = new MimeTypes();
+		}
+		
+		$extension = (new \SplFileInfo($this->getFilePath()))->getExtension();
+		$extensions = $mimeTypes->getAllExtensions($this->getMimeType());
+		
+		if ( ! in_array($extension, $extensions, false))
+		{
+			$extension = $mimeTypes->getExtension($this->getMimeType());
+		}
+		
+		// TODO: foreach an extensions
+		$classString = __NAMESPACE__.'\\Format\\'.ucfirst($extension);
+		
+		if (class_exists($classString))
+		{
+			return $classString;
+		}
+		
+		return null;
 	}
 	
 }
