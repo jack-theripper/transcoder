@@ -25,6 +25,20 @@ trait FormatTrait
 	 *
 	 * @param array $options
 	 *
+	 * <code>
+	 * array (size=6)
+	 *  'audio_codec' => object(Arhitector\Jumper\Codec)[13]
+	 *      protected 'codec' => string 'mp3' (length=3)
+	 *      protected 'name' => string '' (length=0)
+	 *  'audio_bitrate' => int 256000
+	 *  'channels' => int 6
+	 *  'frequency' => int 44100
+	 *  'duration' => int 900
+	 *  'metadata' => array (size=2)
+	 *      'title' => string 'Title' (length=5)
+	 *      'artist' => string 'Artist name' (length=11)
+	 * </code>
+	 *
 	 * @return static
 	 */
 	public static function fromArray(array $options)
