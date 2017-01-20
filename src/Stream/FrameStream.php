@@ -53,4 +53,32 @@ class FrameStream implements FrameStreamInterface
 		return $this->height;
 	}
 	
+	/**
+	 * Set the width value.
+	 *
+	 * @param int $width
+	 *
+	 * @return FrameStream
+	 */
+	protected function setWidth($width)
+	{
+		$this->width = (int) $width;
+		
+		return $this;
+	}
+	
+	/**
+	 * Set the height value.
+	 *
+	 * @param int $height
+	 *
+	 * @return FrameStream
+	 */
+	protected function setHeight($height)
+	{
+		$this->height = (int) $height;
+		
+		return $this;
+	}
+	
 }
