@@ -10,7 +10,8 @@
         }
     ],
     "require": {
-        "symfony/process": "3.2.x-dev"
+        "symfony/process": "3.2.x-dev",
+	    "ralouphie/mimey": "^1.0"
     },
     "autoload": {
         "psr-4": {
