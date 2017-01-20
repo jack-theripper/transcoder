@@ -38,7 +38,7 @@ class Codec
 	 *
 	 * @throws \InvalidArgumentException
 	 */
-	public function __construct($codec, $codecName)
+	public function __construct($codec, $codecName = '')
 	{
 		$this->setCode($codec);
 		$this->setName($codecName);
