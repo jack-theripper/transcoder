@@ -34,56 +34,6 @@ class FrameStream implements FrameStreamInterface
 	protected $height;
 	
 	/**
-	 * FrameStream constructor.
-	 *
-	 * @param TranscoderInterface $media
-	 * @param array               $parameters
-	 *
-	 * @throws \InvalidArgumentException
-	 */
-	public function __construct(TranscoderInterface $media, array $parameters)
-	{
-		$this->filePath = $media->getFilePath();
-		
-		if ( ! isset($parameters['index']) || $parameters['index'] < 0)
-		{
-			throw new \InvalidArgumentException('The index value is wrong.');
-		}
-		
-		$this->setIndex($parameters['index']);
-		
-		if (isset($parameters['codec']))
-		{
-			$this->setCodec($parameters['codec']);
-		}
-		
-		if (isset($parameters['profile']))
-		{
-			$this->setProfile((string) $parameters['profile']);
-		}
-		
-		if (isset($parameters['bit_rate']))
-		{
-			$this->setBitrate((int) $parameters['bit_rate']);
-		}
-		
-		if (isset($parameters['start_time']))
-		{
-			$this->setStartTime((float) $parameters['start_time']);
-		}
-		
-		if (isset($parameters['width']))
-		{
-			$this->width = (int) $parameters['width'];
-		}
-		
-		if (isset($parameters['height']))
-		{
-			$this->height = (int) $parameters['height'];
-		}
-	}
-	
-	/**
 	 * Get width value.
 	 *
 	 * @return int

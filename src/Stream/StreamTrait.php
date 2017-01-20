@@ -13,6 +13,7 @@
 namespace Arhitector\Jumper\Stream;
 
 use Arhitector\Jumper\Codec;
+use Arhitector\Jumper\TranscoderInterface;
 
 /**
  * Class StreamTrait.
@@ -21,6 +22,46 @@ use Arhitector\Jumper\Codec;
  */
 trait StreamTrait
 {
+	
+	/**
+	 * Returns a new format instance.
+	 *
+	 * @param TranscoderInterface $media
+	 * @param array               $options
+	 *
+	 * <code>
+	 * array (size=8)
+	 *  'channels' => int 2
+	 *  'frequency' => int 44100
+	 *  'codec' => object(Arhitector\Jumper\Codec)[13]
+	 *      protected 'codec' => string 'mp3' (length=3)
+	 *      protected 'name' => string 'MP3 (MPEG audio layer 3)' (length=24)
+	 *  'index' => int 1
+	 *  'profile' => string 'base' (length=4)
+	 *  'bitrate' => int 320000
+	 *  'start_time' => float 0.025057
+	 *  'duration' => float 208.53551
+	 * </code>
+	 *
+	 * @return static
+	 * @throws \InvalidArgumentException
+	 */
+	public static function create(TranscoderInterface $media, array $options = [])
+	{
+		$self = new static($media);
+		
+		foreach ($options as $option => $value)
+		{
+			$parameter = str_replace('_', '', 'set'.ucwords($option, '_'));
+			
+			if (method_exists($self, $parameter))
+			{
+				$self->{$parameter}($value);
+			}
+		}
+		
+		return $self;
+	}
 	
 	/**
 	 * @var string  The full path to the file.
@@ -56,6 +97,18 @@ trait StreamTrait
 	 * @var float Duration value.
 	 */
 	protected $duration = 0.0;
+	
+	/**
+	 * Stream constructor.
+	 *
+	 * @param TranscoderInterface $media
+	 *
+	 * @throws \InvalidArgumentException
+	 */
+	private function __construct(TranscoderInterface $media)
+	{
+		$this->filePath = $media->getFilePath();
+	}
 	
 	/**
 	 * Get the full path to the file.
