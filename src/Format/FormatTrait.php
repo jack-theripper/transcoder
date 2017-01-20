@@ -202,4 +202,19 @@ trait FormatTrait
 		return $this->extensions = array_filter($extensions, 'is_scalar');
 	}
 	
+	/**
+	 * Sets the tags.
+	 *
+	 * @param array $tags
+	 *
+	 * @return $this
+	 */
+	protected function setMetadata(array $tags)
+	{
+		$this->tags = array_filter($tags, 'is_scalar');
+		
+		return $this;
+	}
+	
+	
 }
