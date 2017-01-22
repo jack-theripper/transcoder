@@ -124,7 +124,11 @@ class Encoder
 		{
 			$ffmpegOptions[] = '-'.ltrim($option, '-');
 			
-			if (is_array($value))
+			if (stripos($option, 'filter') !== false)
+			{
+				$ffmpegOptions[] = implode(', ', (array) $value);
+			}
+			else if (is_array($value))
 			{
 				array_pop($ffmpegOptions);
 				

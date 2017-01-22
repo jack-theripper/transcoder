@@ -12,7 +12,11 @@
  */
 namespace Arhitector\Jumper;
 
+use Arhitector\Jumper\Exception\InvalidFilterException;
 use Arhitector\Jumper\Exception\TranscoderException;
+use Arhitector\Jumper\Filter\AudioFilterInterface;
+use Arhitector\Jumper\Filter\Collection as FiltersCollection;
+use Arhitector\Jumper\Filter\FilterInterface;
 use Arhitector\Jumper\Format\AudioFormat;
 use Arhitector\Jumper\Format\AudioFormatInterface;
 use Arhitector\Jumper\Format\FormatInterface;
@@ -64,6 +68,11 @@ class Audio implements AudioInterface
 	protected $encoder;
 	
 	/**
+	 * @var \Arhitector\Jumper\Filter\Collection List of filters.
+	 */
+	protected $filters;
+	
+	/**
 	 * Audio constructor.
 	 *
 	 * @param string $filePath
@@ -96,7 +105,7 @@ class Audio implements AudioInterface
 		$this->streams = new Collection(array_map(function ($parameters) {
 			if ($parameters['type'] == 'audio')
 			{
-				$stream = new AudioStream($this, $parameters);
+				$stream = AudioStream::create($this, $parameters);
 				
 				if ($stream->getChannels() !== null)
 				{
@@ -116,11 +125,13 @@ class Audio implements AudioInterface
 			
 			if ($parameters['type'] == 'video')
 			{
-				return new FrameStream($this, $parameters);
+				return FrameStream::create($this, $parameters);
 			}
 			
 			throw new TranscoderException('This stream unsupported.');
 		}, $demuxing->streams));
+		
+		$this->filters = new FiltersCollection();
 	}
 	
 	/**
@@ -231,23 +242,27 @@ class Audio implements AudioInterface
 	 */
 	public function save(FormatInterface $format, $filePath, $overwrite = true)
 	{
-		if ( ! $format instanceof AudioFormatInterface)
-		{
-			throw new \InvalidArgumentException('Format type is not supported.');
-		}
-		
 		if ( ! is_string($filePath) || empty($filePath))
 		{
 			throw new \InvalidArgumentException('File path must not be an empty string.');
 		}
-		
+	
 		if ( ! $overwrite && file_exists($filePath))
 		{
 			throw new TranscoderException('File path already exists.');
 		}
 		
+		$options = ['output' => $filePath];
+		
+		foreach (clone $this->filters as $filter)
+		{
+			$options = array_merge($options, $filter->apply($this, $format));
+		}
+	
 		/** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-		$processes = $this->encoder->transcoding($this, $format, ['output' => $filePath]);
+		$processes = $this->encoder->transcoding($this, $format, [
+			'output' => $filePath
+		]);
 		
 		foreach ($processes as $process)
 		{
@@ -259,7 +274,47 @@ class Audio implements AudioInterface
 			}
 		}
 		
-		return -1;
+		return filesize($filePath);
+	}
+	
+	/**
+	 * Add a new filter.
+	 *
+	 * @param FilterInterface $filter
+	 * @param int             $priority range 0-99.
+	 *
+	 * @return TranscoderInterface
+	 * @throws \RangeException
+	 * @throws InvalidFilterException
+	 */
+	public function addFilter(FilterInterface $filter, $priority = 0)
+	{
+		if ( ! $filter instanceof AudioFilterInterface)
+		{
+			throw new InvalidFilterException('Filter type is not supported.');
+		}
+		
+		if ($priority > 99)
+		{
+			throw new \RangeException('Priority should be in the range from 0 to 99.');
+		}
+		
+		$this->filters->insert($filter, $priority);
+		
+		return $this;
+	}
+	
+	/**
+	 * Reset filters.
+	 *
+	 * @return AudioInterface
+	 */
+	public function withoutFilters()
+	{
+		$self = clone $this;
+		$self->filters = new FiltersCollection();
+			
+		return $self;
 	}
 	
 	/**

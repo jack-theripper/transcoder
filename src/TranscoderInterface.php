@@ -12,7 +12,9 @@
  */
 namespace Arhitector\Jumper;
 
+use Arhitector\Jumper\Exception\InvalidFilterException;
 use Arhitector\Jumper\Exception\TranscoderException;
+use Arhitector\Jumper\Filter\FilterInterface;
 use Arhitector\Jumper\Format\FormatInterface;
 use Arhitector\Jumper\Stream\Collection;
 use Arhitector\Jumper\Stream\StreamInterface;
@@ -65,5 +67,23 @@ interface TranscoderInterface
 	 * @return float|int Size of the new file or -1
 	 */
 	public function save(FormatInterface $format, $filePath, $overwrite = true);
+	
+	/**
+	 * Add a new filter.
+	 *
+	 * @param FilterInterface $filter
+	 * @param int             $priority range 0-99.
+	 *
+	 * @return TranscoderInterface
+	 * @throws InvalidFilterException
+	 */
+	public function addFilter(FilterInterface $filter, $priority = 0);
+	
+	/**
+	 * Reset filters.
+	 *
+	 * @return TranscoderInterface
+	 */
+	public function withoutFilters();
 	
 }
