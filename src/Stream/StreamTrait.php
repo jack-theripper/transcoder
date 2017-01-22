@@ -13,7 +13,11 @@
 namespace Arhitector\Jumper\Stream;
 
 use Arhitector\Jumper\Codec;
+use Arhitector\Jumper\Exception\TranscoderException;
+use Arhitector\Jumper\Filter\SimpleFilter;
+use Arhitector\Jumper\Format\FormatInterface;
 use Arhitector\Jumper\TranscoderInterface;
+use Symfony\Component\Process\Exception\ProcessFailedException;
 
 /**
  * Class StreamTrait.
@@ -99,6 +103,11 @@ trait StreamTrait
 	protected $duration = 0.0;
 	
 	/**
+	 * @var TranscoderInterface
+	 */
+	protected $media;
+	
+	/**
 	 * Stream constructor.
 	 *
 	 * @param TranscoderInterface $media
@@ -108,6 +117,7 @@ trait StreamTrait
 	private function __construct(TranscoderInterface $media)
 	{
 		$this->filePath = $media->getFilePath();
+		$this->media = $media;
 	}
 	
 	/**
@@ -212,6 +222,29 @@ trait StreamTrait
 	public function getDuration()
 	{
 		return $this->duration;
+	}
+	
+	/**
+	 * Stream save.
+	 *
+	 * @param FormatInterface $format
+	 * @param string          $filePath
+	 * @param bool            $overwrite
+	 *
+	 * @return bool
+	 * @throws \Arhitector\Jumper\Exception\InvalidFilterException
+	 * @throws \Symfony\Component\Process\Exception\ProcessFailedException
+	 * @throws \Arhitector\Jumper\Exception\TranscoderException
+	 * @throws \InvalidArgumentException
+	 */
+	public function save(FormatInterface $format, $filePath, $overwrite = true)
+	{
+		$media = $this->media->withoutFilters();
+		$media->addFilter(new SimpleFilter([
+			'map' => sprintf('0:%s', $this->getIndex())
+		]));
+		
+		return $media->save($format, $filePath, $overwrite);
 	}
 	
 	/**

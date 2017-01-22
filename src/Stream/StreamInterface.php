@@ -13,6 +13,7 @@
 namespace Arhitector\Jumper\Stream;
 
 use Arhitector\Jumper\Codec;
+use Arhitector\Jumper\Format\FormatInterface;
 
 /**
  * Interface StreamInterface.
@@ -88,5 +89,16 @@ interface StreamInterface
 	 * @return float
 	 */
 	public function getDuration();
+	
+	/**
+	 * Stream save.
+	 *
+	 * @param FormatInterface $format
+	 * @param string          $filePath
+	 * @param bool            $overwrite
+	 *
+	 * @return bool
+	 */
+	public function save(FormatInterface $format, $filePath, $overwrite = true);
 	
 }
