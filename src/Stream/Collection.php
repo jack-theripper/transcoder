@@ -60,11 +60,13 @@ class Collection implements \Iterator
 	/**
 	 * Move forward to next element.
 	 *
-	 * @return void
+	 * @return Collection
 	 */
 	public function next()
 	{
 		next($this->streams);
+		
+		return $this;
 	}
 	
 	/**
@@ -90,11 +92,13 @@ class Collection implements \Iterator
 	/**
 	 * Rewind the Iterator to the first element.
 	 *
-	 * @return void
+	 * @return Collection
 	 */
 	public function rewind()
 	{
 		reset($this->streams);
+		
+		return $this;
 	}
 	
 }
