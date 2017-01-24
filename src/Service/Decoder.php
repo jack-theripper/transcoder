@@ -17,6 +17,7 @@ use Arhitector\Jumper\Codec;
 use Arhitector\Jumper\Exception\ExecutableNotFoundException;
 use Arhitector\Jumper\Exception\TranscoderException;
 use Arhitector\Jumper\TranscoderInterface;
+use Symfony\Component\Process\ExecutableFinder;
 use Symfony\Component\Process\Process;
 
 /**
@@ -91,10 +92,22 @@ class Decoder
 	 */
 	protected function resolveOptions(array $options)
 	{
-		return array_merge([
+		$options += [
 			'ffprobe.path' => 'ffprobe',
 			'timeout'      => 60
-		], $options);
+		];
+		
+		if ( ! file_exists($options['ffprobe.path']) || ! is_executable($options['ffprobe.path']))
+		{
+			$options['ffprobe.path'] = (new ExecutableFinder())->find('ffprobe', false);
+			
+			if ( ! $options['ffprobe.path'])
+			{
+				throw new ExecutableNotFoundException('Executable not found, proposed ffprobe', 'ffprobe');
+			}
+		}
+		
+		return $options;
 	}
 	
 	/**
