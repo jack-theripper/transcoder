@@ -16,6 +16,7 @@ use Arhitector\Jumper\Exception\ExecutableNotFoundException;
 use Arhitector\Jumper\Format\AudioFormatInterface;
 use Arhitector\Jumper\Format\FormatInterface;
 use Arhitector\Jumper\TranscoderInterface;
+use Symfony\Component\Process\ExecutableFinder;
 use Symfony\Component\Process\ProcessBuilder;
 
 /**
@@ -156,11 +157,23 @@ class Encoder
 	 */
 	protected function resolveOptions(array $options)
 	{
-		return array_merge([
+		$options += [
 			'ffmpeg.path'    => 'ffmpeg',
 			'ffmpeg.threads' => 0,
 			'timeout'        => 60
-		], $options);
+		];
+		
+		if ( ! file_exists($options['ffmpeg.path']) || ! is_executable($options['ffmpeg.path']))
+		{
+			$options['ffmpeg.path'] = (new ExecutableFinder())->find('ffmpeg', false);
+			
+			if ( ! $options['ffmpeg.path'])
+			{
+				throw new ExecutableNotFoundException('Executable not found, proposed ffmpeg', 'ffmpeg');
+			}
+		}
+		
+		return $options;
 	}
 	
 	/**
