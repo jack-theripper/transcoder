@@ -47,6 +47,21 @@ class Decoder
 	 * @param TranscoderInterface $media
 	 *
 	 * @return \stdClass
+	 *
+	 * <code>
+	 * object(stdClass)[5]
+	 *  public 'format' => array (size=13)
+	 *      'start_time' => string '0.025056' (length=8)
+	 *      'duration' => string '208.535510' (length=10)
+	 *  public 'streams' => array (size=2)
+	 *      0 => array (size=24)
+	 *          'frequency' => int 44100
+	 *          'channels' => int 2
+	 *          'index' => int 0
+	 *          'type' => string 'audio' (length=5)
+	 *  ...
+	 * </code>
+	 *
 	 * @throws \InvalidArgumentException
 	 * @throws \Symfony\Component\Process\Exception\ProcessFailedException
 	 * @throws \Symfony\Component\Process\Exception\RuntimeException
@@ -121,14 +136,14 @@ class Decoder
 	{
 		// defaults keys for transforming
 		$properties += [
-			'bit_rate'    => 0,
+		    'bit_rate'    => 0,
 			'duration'    => 0.0,
 			'format_name' => '',
-			'format'      => null,
+			'format'      => false,
 			'tags'        => []
 		];
-		
-		$properties['tags'] = (array) $properties['tags'];
+
+		$properties['metadata'] = (array) $properties['tags'];
 		$properties['format'] = $properties['format_name'];
 		
 		return $properties;
@@ -145,26 +160,19 @@ class Decoder
 	protected function resolveStreamProperties(array $properties)
 	{
 		// defaults keys for transforming
-		$defaults = [
-			'frequency'   => 0,
-			'channels'    => 1,
-			'sample_rate' => 0,
-			'index'      => 0,
-			'type'       => $properties['codec_type'],
-			'profile'    => '',
-			'bit_rate'   => 0,
-			'start_time' => 0.0,
-			'duration'   => 0.0,
-			'tags'       => [],
-			'properties' => []
+		$properties += [
+			'tags'            => [],
+			'sample_rate'     => 0,
+			'codec_name'      => null,
+			'codec_long_name' => '',
+			'type'            => $properties['codec_type'],
+			'frequency'       => 0,
+			'channels'        => 1
 		];
 		
-		$properties = array_merge($defaults, $properties);
-		$properties['properties'] = (array) $properties['tags'];
+		$properties['metadata'] = (array) $properties['tags'];
 		$properties['frequency'] = (int) $properties['sample_rate'];
 		$properties['codec'] = new Codec($properties['codec_name'], $properties['codec_long_name']);
-		
-		unset($properties['sample_rate'], $properties['disposition'], $properties['tags']);
 		
 		return $properties;
 	}
