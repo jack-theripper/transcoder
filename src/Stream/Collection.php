@@ -19,7 +19,7 @@ use Arhitector\Jumper\Exception\TranscoderException;
  *
  * @package Arhitector\Jumper\Stream
  */
-class Collection implements \Iterator
+class Collection implements \Iterator, \Countable
 {
 	
 	/**
@@ -99,6 +99,16 @@ class Collection implements \Iterator
 		reset($this->streams);
 		
 		return $this;
+	}
+	
+	/**
+	 * Count streams of an collection.
+	 *
+	 * @return int
+	 */
+	public function count()
+	{
+		return count($this->streams);
 	}
 	
 }
