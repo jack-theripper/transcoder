@@ -26,11 +26,7 @@ use Symfony\Component\Process\Process;
  */
 class Decoder
 {
-	
-	/**
-	 * @var array The options.
-	 */
-	protected $options;
+	use OptionsAwareTrait;
 	
 	/**
 	 * Decoder constructor.
@@ -83,20 +79,6 @@ class Decoder
 		}
 		
 		return $result;
-	}
-	
-	/**
-	 * Sets the options value.
-	 *
-	 * @param array $options
-	 *
-	 * @return Decoder
-	 */
-	protected function setOptions(array $options)
-	{
-		$this->options = $options;
-		
-		return $this;
 	}
 	
 	/**

@@ -1,0 +1,52 @@
+<?php
+/**
+ * This file is part of the arhitector/jumper library.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ * @author    Dmitry Arhitector <dmitry.arhitector@yandex.ru>
+ *
+ * @license   http://opensource.org/licenses/MIT MIT
+ * @copyright Copyright (c) 2017 Dmitry Arhitector <dmitry.arhitector@yandex.ru>
+ */
+namespace Arhitector\Jumper\Service;
+
+/**
+ * Class OptionsAwareTrait.
+ *
+ * @package Arhitector\Jumper\Service
+ */
+trait OptionsAwareTrait
+{
+	
+	/**
+	 * @var array The options.
+	 */
+	protected $options;
+	
+	/**
+	 * Gets the options.
+	 *
+	 * @return array
+	 */
+	public function getOptions()
+	{
+		return $this->options;
+	}
+	
+	/**
+	 * Sets the options value.
+	 *
+	 * @param array $options
+	 *
+	 * @return $this
+	 */
+	public function setOptions(array $options)
+	{
+		$this->options = $options;
+		
+		return $this;
+	}
+	
+}

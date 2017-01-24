@@ -25,11 +25,7 @@ use Symfony\Component\Process\ProcessBuilder;
  */
 class Encoder
 {
-	
-	/**
-	 * @var array The options.
-	 */
-	protected $options;
+	use OptionsAwareTrait;
 	
 	/**
 	 * Encoder constructor.
@@ -148,20 +144,6 @@ class Encoder
 		$ffmpegOptions[] = $filePath;
 		
 		yield (new ProcessBuilder($ffmpegOptions))->setPrefix($this->options['ffmpeg.path'])->getProcess();
-	}
-	
-	/**
-	 * Sets the options value.
-	 *
-	 * @param array $options
-	 *
-	 * @return Encoder
-	 */
-	protected function setOptions(array $options)
-	{
-		$this->options = $options;
-		
-		return $this;
 	}
 	
 	/**
