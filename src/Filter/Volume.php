@@ -39,6 +39,37 @@ class Volume implements AudioFilterInterface
 	const PRECISION_DOUBLE = 'double';
 	
 	/**
+	 * @const string Remove ReplayGain side data, ignoring its contents.
+	 */
+	const REPLAY_GAIN_DROP = 'drop';
+	
+	/**
+	 * @const string Ignore ReplayGain side data, but leave it in the frame.
+	 */
+	const REPLAY_GAIN_IGNORE = 'ignore';
+	
+	/**
+	 * @const string Prefer the track gain, if present.
+	 */
+	const REPLAY_GAIN_TRACK = 'track';
+	
+	/**
+	 * @const string Prefer the album gain, if present.
+	 */
+	const REPLAY_GAIN_ALBUM = 'album';
+	
+	/**
+	 * @const string Only evaluate expression once during the filter initialization, or when the ‘volume’ command is
+	 *        sent.
+	 */
+	const EVAL_ONCE = 'once';
+	
+	/**
+	 * @const string Evaluate expression for each incoming frame.
+	 */
+	const EVAL_FRAME = 'frame';
+	
+	/**
 	 * @var mixed The audio volume expression.
 	 */
 	protected $volume = 1.0;
@@ -46,7 +77,22 @@ class Volume implements AudioFilterInterface
 	/**
 	 * @var string This parameter represents the mathematical precision.
 	 */
-	private $precision = self::PRECISION_FLOAT;
+	protected $precision = self::PRECISION_FLOAT;
+	
+	/**
+	 * @var string Choose the behaviour on encountering ReplayGain side data in input frames.
+	 */
+	protected $replayGain = self::REPLAY_GAIN_DROP;
+	
+	/**
+	 * @var float Pre-amplification gain in dB to apply to the selected replayGain gain.
+	 */
+	protected $replayGainPreamp = 0.0;
+	
+	/**
+	 * @var string Set when the volume expression is evaluated.
+	 */
+	protected $eval = self::EVAL_ONCE;
 	
 	/**
 	 * AudioVolume constructor.
@@ -77,8 +123,11 @@ class Volume implements AudioFilterInterface
 		return [
 			'filter:a' => [
 				'volume' => http_build_query([
-					'volume'    => $this->getVolume(),
-					'precision' => $this->getPrecision()
+					'volume'            => $this->getVolume(),
+					'precision'         => $this->getPrecision(),
+					'replaygain'        => $this->getReplayGain(),
+					'replaygain_preamp' => $this->getReplayGainPreamp(),
+					'eval'              => $this->getEval()
 				], null, ':')
 			]
 		];
@@ -87,7 +136,7 @@ class Volume implements AudioFilterInterface
 	/**
 	 * Get the volume value.
 	 *
-	 * @return float
+	 * @return float|string
 	 */
 	public function getVolume()
 	{
@@ -100,10 +149,16 @@ class Volume implements AudioFilterInterface
 	 * @param mixed $volume
 	 *
 	 * @return Volume
+	 * @throws \InvalidArgumentException
 	 */
 	public function setVolume($volume)
 	{
-		// TODO
+		if ( ! is_scalar($volume))
+		{
+			throw new \InvalidArgumentException('The volume value must be a scalar.');
+		}
+		
+		$this->volume = $volume;
 		
 		return $this;
 	}
@@ -137,6 +192,102 @@ class Volume implements AudioFilterInterface
 		}
 		
 		$this->precision = (string) $precision;
+		
+		return $this;
+	}
+	
+	/**
+	 * Get the replay gain value.
+	 *
+	 * @return string
+	 */
+	public function getReplayGain()
+	{
+		return $this->replayGain;
+	}
+	
+	/**
+	 * Set the replay gain value.
+	 *
+	 * @param string $replayGain
+	 *
+	 * @return Volume
+	 * @throws \InvalidArgumentException
+	 */
+	public function setReplayGain($replayGain)
+	{
+		$values = [self::REPLAY_GAIN_DROP, self::REPLAY_GAIN_IGNORE, self::REPLAY_GAIN_TRACK, self::REPLAY_GAIN_ALBUM];
+		
+		if ( ! is_scalar($replayGain) || ! in_array($replayGain, $values, false))
+		{
+			throw new \InvalidArgumentException(sprintf('Wrong replayGain value for %s, available values are %s',
+				(string) $replayGain, implode(', ', $values)));
+		}
+		
+		$this->replayGain = (string) $replayGain;
+		
+		return $this;
+	}
+	
+	/**
+	 * Get the pre-amplification gain value.
+	 *
+	 * @return float
+	 */
+	public function getReplayGainPreamp()
+	{
+		return $this->replayGainPreamp;
+	}
+	
+	/**
+	 * Set the pre-amplification gain value.
+	 *
+	 * @param float $replayGainPreamp
+	 *
+	 * @return Volume
+	 * @throws \InvalidArgumentException
+	 */
+	public function setReplayGainPreamp($replayGainPreamp)
+	{
+		if ( ! is_float($replayGainPreamp))
+		{
+			throw new \InvalidArgumentException('The replayGainPream must be a float type.');
+		}
+		
+		$this->replayGainPreamp = $replayGainPreamp;
+		
+		return $this;
+	}
+	
+	/**
+	 * Get the eval value.
+	 *
+	 * @return string
+	 */
+	public function getEval()
+	{
+		return $this->eval;
+	}
+	
+	/**
+	 * Set the eval value.
+	 *
+	 * @param string $eval
+	 *
+	 * @return Volume
+	 * @throws \InvalidArgumentException
+	 */
+	public function setEval($eval)
+	{
+		$available = [self::EVAL_ONCE, self::EVAL_FRAME];
+		
+		if ( ! is_scalar($eval) || ! in_array($eval, $available, false))
+		{
+			throw new \InvalidArgumentException(sprintf('Wrong eval value for %s, available values are %s',
+				(string) $eval, implode(', ', $available)));
+		}
+		
+		$this->eval = (string) $eval;
 		
 		return $this;
 	}
