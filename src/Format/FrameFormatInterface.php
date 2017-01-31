@@ -46,12 +46,12 @@ interface FrameFormatInterface extends FormatInterface
 	/**
 	 * Sets the video/frame codec, should be in the available ones, otherwise an exception is thrown.
 	 *
-	 * @param Codec $videoCodec
+	 * @param Codec $codec
 	 *
 	 * @return FrameFormatInterface
 	 * @throws \InvalidArgumentException
 	 */
-	public function setFrameCodec(Codec $videoCodec);
+	public function setFrameCodec(Codec $codec);
 	
 	/**
 	 * Get available codecs.
