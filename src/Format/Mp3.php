@@ -23,11 +23,6 @@ class Mp3 extends AudioFormat
 {
 	
 	/**
-	 * @var array List of extensions.
-	 */
-	protected $extensions = ['mp2', 'mp3', 'm2a'];
-	
-	/**
 	 * AudioFormat constructor.
 	 *
 	 * @param Codec|string $audioCodec
@@ -36,6 +31,7 @@ class Mp3 extends AudioFormat
 	 */
 	public function __construct($audioCodec = 'libmp3lame')
 	{
+		$this->setExtensions(['mp2', 'mp3', 'm2a']);
 		$this->setAvailableAudioCodecs(['libmp3lame', 'libshine', 'mp3', 'mp3pro', 'lame']);
 		
 		parent::__construct($audioCodec);
