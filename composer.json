@@ -9,13 +9,26 @@
             "email": "dmitry.arhitector@yandex.ru"
         }
     ],
+	"autoload": {
+		"psr-4": {
+			"Arhitector\\Jumper\\": "src"
+		}
+	},
+	"autoload-dev": {
+		"Arhitector\\Jumper\\Tests\\": "tests"
+	},
     "require": {
+	    "php": ">=5.6",
         "symfony/process": "3.2.x-dev",
 	    "ralouphie/mimey": "^1.0"
     },
-    "autoload": {
-        "psr-4": {
-            "Arhitector\\Jumper\\": "src"
-        }
-    }
+    "require-dev": {
+        "phpunit/phpunit": "5.*"
+    },
+	"config": {
+		"bin-dir": "vendor/bin"
+	},
+	"scripts": {
+		"test": "phpunit"
+	}
 }
