@@ -36,13 +36,47 @@ class CodecTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * Getters testing.
 	 */
-	public function testGetter()
+	public function testGetters()
 	{
 		$codec = new Codec('codec', 'codec name');
 		
 		$this->assertEquals('codec', $codec->getCode());
 		$this->assertEquals('codec name', $codec->getName());
 		$this->assertEquals('codec', (string) $codec);
+	}
+	
+	public function testSetters()
+	{
+		$codec = new Codec('codec');
+		$methodSetCode = new \ReflectionMethod(Codec::class, 'setCode');
+		$methodSetCode->setAccessible(true);
+		
+		$methodSetCode->invoke($codec, 'codec string');
+		$this->assertEquals($codec->getCode(), 'codec string');
+		
+		try
+		{
+			$methodSetCode->invoke($codec, new \stdClass);
+		}
+		catch (\Exception $exception)
+		{
+			$this->assertInstanceOf(\InvalidArgumentException::class, $exception);
+		}
+		
+		$methodSetName = new \ReflectionMethod(Codec::class, 'setName');
+		$methodSetName->setAccessible(true);
+		
+		$methodSetName->invoke($codec, 'codec name');
+		$this->assertEquals($codec->getName(), 'codec name');
+		
+		try
+		{
+			$methodSetName->invoke($codec, new \stdClass);
+		}
+		catch (\Exception $exception)
+		{
+			$this->assertInstanceOf(\InvalidArgumentException::class, $exception);
+		}
 	}
 	
 }
