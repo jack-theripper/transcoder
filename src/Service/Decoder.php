@@ -25,7 +25,7 @@ use Symfony\Component\Process\Process;
  *
  * @package Arhitector\Jumper\Service
  */
-class Decoder
+class Decoder implements DecoderInterface
 {
 	use OptionsAwareTrait;
 	

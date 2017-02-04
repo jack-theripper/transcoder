@@ -24,7 +24,7 @@ use Symfony\Component\Process\ProcessBuilder;
  *
  * @package Arhitector\Jumper\Service
  */
-class Encoder
+class Encoder implements EncoderInterface
 {
 	use OptionsAwareTrait;
 	
@@ -42,8 +42,6 @@ class Encoder
 	
 	/**
 	 * Constructs and returns the iterator with instances of 'Process'.
-	 * If the value $media instance of 'TranscoderInterface' then it is full media or instance of 'StreamInterface'
-	 * then it is stream.
 	 *
 	 * @param TranscoderInterface $media  it may be a stream or media wrapper.
 	 * @param FormatInterface     $format new format.
