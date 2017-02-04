@@ -36,11 +36,7 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
  */
 class Audio implements AudioInterface
 {
-	
-	/**
-	 * @var string  The full path to the file.
-	 */
-	protected $filePath;
+	use Traits\FilePathAwareTrait;
 	
 	/**
 	 * @var AudioFormatInterface
@@ -85,6 +81,7 @@ class Audio implements AudioInterface
 	public function __construct($filePath, array $options = [])
 	{
 		$this->setFilePath($filePath);
+		$this->mimeType = mime_content_type($this->getFilePath());
 		$this->decoder = new Decoder($options);
 		$this->encoder = new Encoder($options);
 		
@@ -172,16 +169,6 @@ class Audio implements AudioInterface
 	public function getFrequency()
 	{
 		return $this->getFormat()->getFrequency();
-	}
-	
-	/**
-	 * Get the full path to the file.
-	 *
-	 * @return string
-	 */
-	public function getFilePath()
-	{
-		return $this->filePath;
 	}
 	
 	/**
@@ -315,35 +302,6 @@ class Audio implements AudioInterface
 		$self->filters = new FiltersCollection();
 			
 		return $self;
-	}
-	
-	/**
-	 * Set file path.
-	 *
-	 * @param string $filePath
-	 *
-	 * @return Audio
-	 * @throws \InvalidArgumentException
-	 * @throws TranscoderException
-	 */
-	protected function setFilePath($filePath)
-	{
-		if ( ! is_string($filePath))
-		{
-			throw new \InvalidArgumentException('File path must be a string type.');
-		}
-		
-		$filePath = realpath($filePath);
-		
-		if ( ! is_file($filePath))
-		{
-			throw new TranscoderException('File path not found.');
-		}
-		
-		$this->filePath = $filePath;
-		$this->mimeType = mime_content_type($this->getFilePath());
-		
-		return $this;
 	}
 	
 	/**
