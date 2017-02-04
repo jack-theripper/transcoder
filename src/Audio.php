@@ -20,12 +20,11 @@ use Arhitector\Jumper\Filter\FilterInterface;
 use Arhitector\Jumper\Format\AudioFormat;
 use Arhitector\Jumper\Format\AudioFormatInterface;
 use Arhitector\Jumper\Format\FormatInterface;
-use Arhitector\Jumper\Service\Decoder;
-use Arhitector\Jumper\Service\Encoder;
+use Arhitector\Jumper\Service\ServiceFactory;
+use Arhitector\Jumper\Service\ServiceFactoryInterface;
 use Arhitector\Jumper\Stream\AudioStream;
 use Arhitector\Jumper\Stream\Collection;
 use Arhitector\Jumper\Stream\FrameStream;
-use Arhitector\Jumper\Stream\StreamInterface;
 use Mimey\MimeTypes;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
@@ -36,32 +35,19 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
  */
 class Audio implements AudioInterface
 {
-	use Traits\FilePathAwareTrait;
+	use Traits\FilePathAwareTrait, TranscoderTrait {
+		TranscoderTrait::getFormat as private _getFormat;
+	}
 	
 	/**
-	 * @var AudioFormatInterface
+	 * @var ServiceFactoryInterface Service factory instance.
 	 */
-	protected $format;
-	
-	/**
-	 * @var Collection
-	 */
-	protected $streams;
-	
-	/**
-	 * @var Decoder
-	 */
-	protected $decoder;
+	protected $service;
 	
 	/**
 	 * @var string The MIME Content-type for a file.
 	 */
 	protected $mimeType;
-	
-	/**
-	 * @var Encoder
-	 */
-	protected $encoder;
 	
 	/**
 	 * @var \Arhitector\Jumper\Filter\Collection List of filters.
@@ -71,22 +57,20 @@ class Audio implements AudioInterface
 	/**
 	 * Audio constructor.
 	 *
-	 * @param string $filePath
-	 * @param array  $options
+	 * @param string                  $filePath
+	 * @param ServiceFactoryInterface $service
 	 *
-	 * @throws \InvalidArgumentException
 	 * @throws \Arhitector\Jumper\Exception\TranscoderException
-	 * @throws \Arhitector\Jumper\Exception\ExecutableNotFoundException
+	 * @throws \InvalidArgumentException
 	 */
-	public function __construct($filePath, array $options = [])
+	public function __construct($filePath, ServiceFactoryInterface $service = null)
 	{
 		$this->setFilePath($filePath);
 		$this->mimeType = mime_content_type($this->getFilePath());
-		$this->decoder = new Decoder($options);
-		$this->encoder = new Encoder($options);
+		$this->service = $service ?: new ServiceFactory();
 		
 		/** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-		$demuxing = $this->decoder->demuxing($this);
+		$demuxing = $this->service->getDecoderService()->demuxing($this);
 		
 		if (count($demuxing->streams) < 1 || ( ! $this->isSupportedFileType() && empty($demuxing->format['format'])))
 		{
@@ -184,23 +168,11 @@ class Audio implements AudioInterface
 	/**
 	 * Get current format.
 	 *
-	 * @return AudioFormatInterface
-	 * @throws TranscoderException
+	 * @return AudioFormatInterface|\Arhitector\Jumper\Format\FormatInterface
 	 */
 	public function getFormat()
 	{
-		return $this->format;
-	}
-	
-	/**
-	 * Get a list of streams.
-	 *
-	 * @return Collection|StreamInterface[]
-	 * @throws TranscoderException
-	 */
-	public function getStreams()
-	{
-		return $this->streams;
+		return $this->_getFormat();
 	}
 	
 	/**
@@ -247,7 +219,7 @@ class Audio implements AudioInterface
 		}
 	
 		/** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-		$processes = $this->encoder->transcoding($this, $format, [
+		$processes = $this->service->getEncoderService()->transcoding($this, $format, [
 			'output' => $filePath
 		]);
 		
