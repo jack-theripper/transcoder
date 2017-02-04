@@ -45,7 +45,6 @@ interface TranscoderInterface
 	 * Get current format.
 	 *
 	 * @return FormatInterface
-	 * @throws TranscoderException
 	 */
 	public function getFormat();
 	
@@ -53,7 +52,6 @@ interface TranscoderInterface
 	 * Get a list of streams.
 	 *
 	 * @return Collection|StreamInterface[]
-	 * @throws TranscoderException
 	 */
 	public function getStreams();
 	
