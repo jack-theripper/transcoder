@@ -15,6 +15,7 @@ namespace Arhitector\Jumper\Service;
 use Arhitector\Jumper\Exception\ExecutableNotFoundException;
 use Arhitector\Jumper\Format\AudioFormatInterface;
 use Arhitector\Jumper\Format\FormatInterface;
+use Arhitector\Jumper\Traits\OptionsAwareTrait;
 use Arhitector\Jumper\TranscoderInterface;
 use Symfony\Component\Process\ExecutableFinder;
 use Symfony\Component\Process\ProcessBuilder;

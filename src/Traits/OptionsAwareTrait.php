@@ -10,12 +10,12 @@
  * @license   http://opensource.org/licenses/MIT MIT
  * @copyright Copyright (c) 2017 Dmitry Arhitector <dmitry.arhitector@yandex.ru>
  */
-namespace Arhitector\Jumper\Service;
+namespace Arhitector\Jumper\Traits;
 
 /**
  * Class OptionsAwareTrait.
  *
- * @package Arhitector\Jumper\Service
+ * @package Arhitector\Jumper\Traits
  */
 trait OptionsAwareTrait
 {

@@ -16,6 +16,7 @@ namespace Arhitector\Jumper\Service;
 use Arhitector\Jumper\Codec;
 use Arhitector\Jumper\Exception\ExecutableNotFoundException;
 use Arhitector\Jumper\Exception\TranscoderException;
+use Arhitector\Jumper\Traits\OptionsAwareTrait;
 use Arhitector\Jumper\TranscoderInterface;
 use Symfony\Component\Process\ExecutableFinder;
 use Symfony\Component\Process\Process;
