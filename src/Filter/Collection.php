@@ -43,4 +43,34 @@ class Collection extends SplPriorityQueue
 		return $this;
 	}
 	
+	/**
+	 * Return current node pointed by the iterator.
+	 *
+	 * @return FilterInterface
+	 */
+	public function current()
+	{
+		return parent::current();
+	}
+	
+	/**
+	 * Peeks at the node from the top of the queue.
+	 *
+	 * @return FilterInterface
+	 */
+	public function top()
+	{
+		return parent::top();
+	}
+	
+	/**
+	 * Extracts a node from top of the heap and sift up.
+	 *
+	 * @return FilterInterface
+	 */
+	public function extract()
+	{
+		return parent::extract();
+	}
+	
 }
