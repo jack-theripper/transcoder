@@ -22,4 +22,25 @@ use SplPriorityQueue;
 class Collection extends SplPriorityQueue
 {
 	
+	/**
+	 * Inserts an element in the queue by sifting it up.
+	 *
+	 * @param FilterInterface $filter
+	 * @param mixed           $priority The associated priority.
+	 *
+	 * @return Collection
+	 * @throws \InvalidArgumentException
+	 */
+	public function insert($filter, $priority)
+	{
+		if ( ! $filter instanceof FilterInterface)
+		{
+			throw new \InvalidArgumentException('The filter must be an instance of FilterInterface.');
+		}
+		
+		parent::insert($filter, $priority);
+		
+		return $this;
+	}
+	
 }
