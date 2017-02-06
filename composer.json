@@ -29,6 +29,6 @@
 		"bin-dir": "vendor/bin"
 	},
 	"scripts": {
-		"test": "phpunit"
+		"test": "phpunit --colors=auto"
 	}
 }
