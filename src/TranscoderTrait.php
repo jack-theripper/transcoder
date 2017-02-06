@@ -108,10 +108,11 @@ trait TranscoderTrait
 	 * Find a format class.
 	 *
 	 * @param string $possibleFormat
+	 * @param mixed  $default
 	 *
-	 * @return null|string
+	 * @return string|mixed
 	 */
-	protected function findFormatClass($possibleFormat = null)
+	protected function findFormatClass($possibleFormat = null, $default = null)
 	{
 		static $mimeTypes = null;
 		
@@ -149,7 +150,7 @@ trait TranscoderTrait
 			}
 		}
 
-		return null;
+		return $default;
 	}
 	
 }
