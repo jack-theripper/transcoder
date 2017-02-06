@@ -14,6 +14,7 @@ namespace Arhitector\Jumper\Stream;
 
 use Arhitector\Jumper\Codec;
 use Arhitector\Jumper\Format\FormatInterface;
+use Arhitector\Jumper\TranscoderInterface;
 
 /**
  * Interface StreamInterface.
@@ -22,6 +23,31 @@ use Arhitector\Jumper\Format\FormatInterface;
  */
 interface StreamInterface
 {
+	
+	/**
+	 * Returns a new format instance.
+	 *
+	 * @param TranscoderInterface $media
+	 * @param array               $options
+	 *
+	 * <code>
+	 * array (size=8)
+	 *  'channels' => int 2
+	 *  'frequency' => int 44100
+	 *  'codec' => object(Arhitector\Jumper\Codec)[13]
+	 *      protected 'codec' => string 'mp3' (length=3)
+	 *      protected 'name' => string 'MP3 (MPEG audio layer 3)' (length=24)
+	 *  'index' => int 1
+	 *  'profile' => string 'base' (length=4)
+	 *  'bitrate' => int 320000
+	 *  'start_time' => float 0.025057
+	 *  'duration' => float 208.53551
+	 * </code>
+	 *
+	 * @return static
+	 * @throws \InvalidArgumentException
+	 */
+	public static function create(TranscoderInterface $media, array $options = []);
 	
 	/**
 	 * Get the full path to the file.
