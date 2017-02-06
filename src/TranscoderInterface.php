@@ -16,6 +16,7 @@ use Arhitector\Jumper\Exception\InvalidFilterException;
 use Arhitector\Jumper\Exception\TranscoderException;
 use Arhitector\Jumper\Filter\FilterInterface;
 use Arhitector\Jumper\Format\FormatInterface;
+use Arhitector\Jumper\Service\ServiceFactoryInterface;
 use Arhitector\Jumper\Stream\Collection;
 use Arhitector\Jumper\Stream\StreamInterface;
 
@@ -83,5 +84,12 @@ interface TranscoderInterface
 	 * @return TranscoderInterface
 	 */
 	public function withoutFilters();
+	
+	/**
+	 * Get the service instance.
+	 *
+	 * @return ServiceFactoryInterface
+	 */
+	public function getService();
 	
 }

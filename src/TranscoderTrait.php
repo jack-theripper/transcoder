@@ -13,13 +13,13 @@
 namespace Arhitector\Jumper;
 
 use Arhitector\Jumper\Format\FormatInterface;
+use Arhitector\Jumper\Service\ServiceFactoryInterface;
 use Arhitector\Jumper\Stream\StreamInterface;
 
 /**
  * Class TranscoderTrait.
  *
  * @package Arhitector\Jumper
- * @mixin TranscoderInterface
  */
 trait TranscoderTrait
 {
@@ -33,6 +33,11 @@ trait TranscoderTrait
 	 * @var \Arhitector\Jumper\Stream\Collection
 	 */
 	protected $streams;
+	
+	/**
+	 * @var ServiceFactoryInterface Service factory instance.
+	 */
+	protected $service;
 	
 	/**
 	 * Get current format.
@@ -52,6 +57,30 @@ trait TranscoderTrait
 	public function getStreams()
 	{
 		return $this->streams;
+	}
+	
+	/**
+	 * Get the service instance.
+	 *
+	 * @return ServiceFactoryInterface
+	 */
+	public function getService()
+	{
+		return $this->service;
+	}
+	
+	/**
+	 * Set the service instance.
+	 *
+	 * @param ServiceFactoryInterface $service
+	 *
+	 * @return TranscoderTrait
+	 */
+	protected function setService(ServiceFactoryInterface $service)
+	{
+		$this->service = $service;
+		
+		return $this;
 	}
 	
 }
