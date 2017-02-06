@@ -15,6 +15,7 @@ namespace Arhitector\Jumper;
 use Arhitector\Jumper\Format\FormatInterface;
 use Arhitector\Jumper\Service\ServiceFactoryInterface;
 use Arhitector\Jumper\Stream\StreamInterface;
+use Mimey\MimeTypes;
 
 /**
  * Class TranscoderTrait.
@@ -101,6 +102,54 @@ trait TranscoderTrait
 		}
 		
 		return (string) $this->mimeType;
+	}
+	
+	/**
+	 * Find a format class.
+	 *
+	 * @param string $possibleFormat
+	 *
+	 * @return null|string
+	 */
+	protected function findFormatClass($possibleFormat = null)
+	{
+		static $mimeTypes = null;
+		
+		if ($possibleFormat !== null)
+		{
+			$className = __NAMESPACE__.'\\Format\\'.ucfirst($possibleFormat);
+			
+			if (class_exists($className))
+			{
+				return $className;
+			}
+		}
+		
+		if ( ! $mimeTypes)
+		{
+			$mimeTypes = new MimeTypes();
+		}
+		
+		$extension = pathinfo($this->getFilePath(), PATHINFO_EXTENSION);
+		
+		if ($extension)
+		{
+			$extensions = $mimeTypes->getAllExtensions($this->getMimeType());
+			
+			if ( ! in_array($extension, $extensions, false))
+			{
+				$extension = reset($extensions);
+			}
+			
+			$classString = __NAMESPACE__.'\\Format\\'.ucfirst($extension);
+			
+			if (class_exists($classString))
+			{
+				return $classString;
+			}
+		}
+
+		return null;
 	}
 	
 }
