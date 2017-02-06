@@ -40,6 +40,11 @@ trait TranscoderTrait
 	protected $service;
 	
 	/**
+	 * @var string The MIME Content-type for a file.
+	 */
+	protected $mimeType;
+	
+	/**
 	 * Get current format.
 	 *
 	 * @return FormatInterface
@@ -81,6 +86,21 @@ trait TranscoderTrait
 		$this->service = $service;
 		
 		return $this;
+	}
+	
+	/**
+	 * Gets the MIME Content-type value.
+	 *
+	 * @return string
+	 */
+	protected function getMimeType()
+	{
+		if ( ! $this->mimeType)
+		{
+			$this->mimeType = mime_content_type($this->getFilePath());
+		}
+		
+		return (string) $this->mimeType;
 	}
 	
 }

@@ -25,6 +25,7 @@ use Arhitector\Jumper\Service\ServiceFactoryInterface;
 use Arhitector\Jumper\Stream\AudioStream;
 use Arhitector\Jumper\Stream\Collection;
 use Arhitector\Jumper\Stream\FrameStream;
+use Arhitector\Jumper\Traits\FilePathAwareTrait;
 use Mimey\MimeTypes;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
@@ -38,11 +39,6 @@ class Audio implements AudioInterface
 	use Traits\FilePathAwareTrait, TranscoderTrait {
 		TranscoderTrait::getFormat as private _getFormat;
 	}
-	
-	/**
-	 * @var string The MIME Content-type for a file.
-	 */
-	protected $mimeType;
 	
 	/**
 	 * @var \Arhitector\Jumper\Filter\Collection List of filters.
@@ -61,7 +57,6 @@ class Audio implements AudioInterface
 	public function __construct($filePath, ServiceFactoryInterface $service = null)
 	{
 		$this->setFilePath($filePath);
-		$this->mimeType = mime_content_type($this->getFilePath());
 		$this->setService($service ?: new ServiceFactory());
 		
 		/** @noinspection ExceptionsAnnotatingAndHandlingInspection */
@@ -168,16 +163,6 @@ class Audio implements AudioInterface
 	public function getFormat()
 	{
 		return $this->_getFormat();
-	}
-	
-	/**
-	 * Gets the MIME Content-type value.
-	 *
-	 * @return string
-	 */
-	public function getMimeType()
-	{
-		return (string) $this->mimeType;
 	}
 	
 	/**
