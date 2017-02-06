@@ -65,7 +65,7 @@ class Audio implements AudioInterface
 			throw new TranscoderException('File type unsupported or the file is corrupted.');
 		}
 		
-		$this->createFormat($demuxing);
+		$this->_createCollections($demuxing);
 		$this->filters = new FiltersCollection();
 	}
 	
@@ -236,16 +236,23 @@ class Audio implements AudioInterface
 	}
 	
 	/**
+	 * Ensure streams etc.
+	 *
 	 * @param \stdClass $demuxing
 	 *
 	 * @throws \Arhitector\Jumper\Exception\TranscoderException
 	 * @throws \InvalidArgumentException
 	 */
-	private function createFormat($demuxing)
+	protected function _createCollections($demuxing)
 	{
-		// TODO: проверить что это действительно AudioFormatInterface
 		/** @var AudioFormatInterface $className */
 		$className = $this->findFormatClass($demuxing->format['format'], AudioFormat::class);
+		
+		if ( ! $className instanceof AudioFormatInterface)
+		{
+			$className = AudioFormat::class;
+		}
+		
 		$this->format = $className::fromArray(array_filter($demuxing->format, function ($value) {
 			return $value !== null;
 		}));
