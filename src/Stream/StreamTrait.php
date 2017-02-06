@@ -50,6 +50,7 @@ trait StreamTrait
 	 * </code>
 	 *
 	 * @return static
+	 * @throws \Arhitector\Jumper\Exception\TranscoderException
 	 * @throws \InvalidArgumentException
 	 */
 	public static function create(TranscoderInterface $media, array $options = [])
@@ -233,6 +234,26 @@ trait StreamTrait
 		]));
 		
 		return $media->save($format, $filePath, $overwrite);
+	}
+	
+	/**
+	 * Get array of values.
+	 *
+	 * @return array
+	 */
+	public function toArray()
+	{
+		$result = [];
+		
+		foreach (get_class_methods($this) as $method)
+		{
+			if (stripos($method, 'get') === 0)
+			{
+				$result[substr($method, 3)] = $this->{$method}();
+			}
+		}
+		
+		return $result;
 	}
 	
 	/**

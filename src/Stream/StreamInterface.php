@@ -127,4 +127,11 @@ interface StreamInterface
 	 */
 	public function save(FormatInterface $format, $filePath, $overwrite = true);
 	
+	/**
+	 * Get array of values.
+	 *
+	 * @return array
+	 */
+	public function toArray();
+	
 }
