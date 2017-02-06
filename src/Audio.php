@@ -65,41 +65,7 @@ class Audio implements AudioInterface
 			throw new TranscoderException('File type unsupported or the file is corrupted.');
 		}
 		
-		/** @var AudioFormat $className */
-		$className = $this->findFormatClass($demuxing->format['format']) ?: AudioFormat::class;
-		$this->format = $className::fromArray(array_filter($demuxing->format, function ($value) {
-			return $value !== null;
-		}));
-		
-		$this->streams = new Collection(array_map(function ($parameters) {
-			if ($parameters['type'] == 'audio')
-			{
-				$stream = AudioStream::create($this, $parameters);
-				
-				if ($stream->getChannels() !== null)
-				{
-					$this->getFormat()->setChannels($stream->getChannels());
-				}
-				
-				if ($stream->getFrequency() !== null)
-				{
-					$this->getFormat()->setFrequency($stream->getFrequency());
-				}
-				
-				$this->getFormat()->setAudioBitrate($stream->getBitrate());
-				$this->getFormat()->setAudioCodec($stream->getCodec());
-				
-				return $stream;
-			}
-			
-			if ($parameters['type'] == 'video')
-			{
-				return FrameStream::create($this, $parameters);
-			}
-			
-			throw new TranscoderException('This stream unsupported.');
-		}, $demuxing->streams));
-		
+		$this->createFormat($demuxing);
 		$this->filters = new FiltersCollection();
 	}
 	
@@ -267,6 +233,51 @@ class Audio implements AudioInterface
 		}
 		
 		return true;
+	}
+	
+	/**
+	 * @param \stdClass $demuxing
+	 *
+	 * @throws \Arhitector\Jumper\Exception\TranscoderException
+	 * @throws \InvalidArgumentException
+	 */
+	private function createFormat($demuxing)
+	{
+		// TODO: проверить что это действительно AudioFormatInterface
+		/** @var AudioFormatInterface $className */
+		$className = $this->findFormatClass($demuxing->format['format'], AudioFormat::class);
+		$this->format = $className::fromArray(array_filter($demuxing->format, function ($value) {
+			return $value !== null;
+		}));
+		
+		$this->streams = new Collection(array_map(function ($parameters) {
+			if ($parameters['type'] == 'audio')
+			{
+				$stream = AudioStream::create($this, $parameters);
+				
+				if ($stream->getChannels() !== null)
+				{
+					$this->getFormat()->setChannels($stream->getChannels());
+				}
+				
+				if ($stream->getFrequency() !== null)
+				{
+					$this->getFormat()->setFrequency($stream->getFrequency());
+				}
+				
+				$this->getFormat()->setAudioBitrate($stream->getBitrate());
+				$this->getFormat()->setAudioCodec($stream->getCodec());
+				
+				return $stream;
+			}
+			
+			if ($parameters['type'] == 'video')
+			{
+				return FrameStream::create($this, $parameters);
+			}
+			
+			throw new TranscoderException('This stream unsupported.');
+		}, $demuxing->streams));
 	}
 	
 }
