@@ -16,6 +16,7 @@ use Arhitector\Jumper\Codec;
 use Arhitector\Jumper\Exception\TranscoderException;
 use Arhitector\Jumper\Filter\SimpleFilter;
 use Arhitector\Jumper\Format\FormatInterface;
+use Arhitector\Jumper\Traits\FilePathAwareTrait;
 use Arhitector\Jumper\TranscoderInterface;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
@@ -26,6 +27,7 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
  */
 trait StreamTrait
 {
+	use FilePathAwareTrait;
 	
 	/**
 	 * Returns a new format instance.
@@ -68,11 +70,6 @@ trait StreamTrait
 	}
 	
 	/**
-	 * @var string  The full path to the file.
-	 */
-	protected $filePath;
-	
-	/**
 	 * @var Codec Codec instance.
 	 */
 	protected $codec;
@@ -113,21 +110,12 @@ trait StreamTrait
 	 * @param TranscoderInterface $media
 	 *
 	 * @throws \InvalidArgumentException
+	 * @throws \Arhitector\Jumper\Exception\TranscoderException
 	 */
 	private function __construct(TranscoderInterface $media)
 	{
-		$this->filePath = $media->getFilePath();
+		$this->setFilePath($media->getFilePath());
 		$this->media = $media;
-	}
-	
-	/**
-	 * Get the full path to the file.
-	 *
-	 * @return string
-	 */
-	public function getFilePath()
-	{
-		return $this->filePath;
 	}
 	
 	/**
