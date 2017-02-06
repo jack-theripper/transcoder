@@ -40,11 +40,6 @@ class Audio implements AudioInterface
 	}
 	
 	/**
-	 * @var ServiceFactoryInterface Service factory instance.
-	 */
-	protected $service;
-	
-	/**
 	 * @var string The MIME Content-type for a file.
 	 */
 	protected $mimeType;
@@ -67,10 +62,10 @@ class Audio implements AudioInterface
 	{
 		$this->setFilePath($filePath);
 		$this->mimeType = mime_content_type($this->getFilePath());
-		$this->service = $service ?: new ServiceFactory();
+		$this->setService($service ?: new ServiceFactory());
 		
 		/** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-		$demuxing = $this->service->getDecoderService()->demuxing($this);
+		$demuxing = $this->getService()->getDecoderService()->demuxing($this);
 		
 		if (count($demuxing->streams) < 1 || ( ! $this->isSupportedFileType() && empty($demuxing->format['format'])))
 		{
@@ -219,7 +214,7 @@ class Audio implements AudioInterface
 		}
 	
 		/** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-		$processes = $this->service->getEncoderService()->transcoding($this, $format, [
+		$processes = $this->getService()->getEncoderService()->transcoding($this, $format, [
 			'output' => $filePath
 		]);
 		
