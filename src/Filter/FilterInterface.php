@@ -13,7 +13,7 @@
 namespace Arhitector\Jumper\Filter;
 
 use Arhitector\Jumper\Format\FormatInterface;
-use Arhitector\Jumper\TranscoderInterface;
+use Arhitector\Jumper\TranscodeInterface;
 
 /**
  * Interface FilterInterface.
@@ -26,11 +26,11 @@ interface FilterInterface
 	/**
 	 * Apply filter.
 	 *
-	 * @param TranscoderInterface $media
-	 * @param FormatInterface     $format
+	 * @param TranscodeInterface $media
+	 * @param FormatInterface    $format
 	 *
 	 * @return array
 	 */
-	public function apply(TranscoderInterface $media, FormatInterface $format);
+	public function apply(TranscodeInterface $media, FormatInterface $format);
 	
 }

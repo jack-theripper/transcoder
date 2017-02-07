@@ -22,7 +22,7 @@ use Mimey\MimeTypes;
  *
  * @package Arhitector\Jumper
  */
-trait TranscoderTrait
+trait TranscodeTrait
 {
 	
 	/**
@@ -80,7 +80,7 @@ trait TranscoderTrait
 	 *
 	 * @param ServiceFactoryInterface $service
 	 *
-	 * @return TranscoderTrait
+	 * @return TranscodeTrait
 	 */
 	protected function setService(ServiceFactoryInterface $service)
 	{

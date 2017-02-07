@@ -34,8 +34,8 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
  */
 class Audio implements AudioInterface
 {
-	use Traits\FilePathAwareTrait, TranscoderTrait {
-		TranscoderTrait::getFormat as private _getFormat;
+	use Traits\FilePathAwareTrait, TranscodeTrait {
+		TranscodeTrait::getFormat as private _getFormat;
 	}
 	
 	/**
@@ -186,7 +186,7 @@ class Audio implements AudioInterface
 	 * @param FilterInterface $filter
 	 * @param int             $priority range 0-99.
 	 *
-	 * @return TranscoderInterface
+	 * @return TranscodeInterface
 	 * @throws \RangeException
 	 * @throws InvalidFilterException
 	 */

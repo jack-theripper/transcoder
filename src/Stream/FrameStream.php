@@ -12,7 +12,7 @@
  */
 namespace Arhitector\Jumper\Stream;
 
-use Arhitector\Jumper\TranscoderInterface;
+use Arhitector\Jumper\TranscodeInterface;
 
 /**
  * Class FrameStream.

@@ -17,7 +17,7 @@ namespace Arhitector\Jumper;
  *
  * @package Arhitector\Jumper
  */
-interface AudioInterface extends TranscoderInterface
+interface AudioInterface extends TranscodeInterface
 {
 	
 	/**

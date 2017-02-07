@@ -14,7 +14,7 @@ namespace Arhitector\Jumper\Tests\Stream;
 
 use Arhitector\Jumper\Codec;
 use Arhitector\Jumper\Stream\StreamTrait;
-use Arhitector\Jumper\TranscoderInterface;
+use Arhitector\Jumper\TranscodeInterface;
 use PHPUnit_Framework_Error;
 
 /**
@@ -82,7 +82,7 @@ class StreamTraitTest extends \PHPUnit_Framework_TestCase
 	
 	public function dataConstructSuccess()
 	{
-		$transcoderMock = $this->getMockBuilder(TranscoderInterface::class)
+		$transcoderMock = $this->getMockBuilder(TranscodeInterface::class)
 			->getMock();
 		
 		$transcoderMock->expects($this->any())

@@ -16,7 +16,7 @@ use Arhitector\Jumper\Exception\ExecutableNotFoundException;
 use Arhitector\Jumper\Format\AudioFormatInterface;
 use Arhitector\Jumper\Format\FormatInterface;
 use Arhitector\Jumper\Traits\OptionsAwareTrait;
-use Arhitector\Jumper\TranscoderInterface;
+use Arhitector\Jumper\TranscodeInterface;
 use Symfony\Component\Process\ExecutableFinder;
 use Symfony\Component\Process\ProcessBuilder;
 
@@ -44,14 +44,14 @@ class Encoder implements EncoderInterface
 	/**
 	 * Constructs and returns the iterator with instances of 'Process'.
 	 *
-	 * @param TranscoderInterface $media  it may be a stream or media wrapper.
-	 * @param FormatInterface     $format new format.
-	 * @param array               $options
+	 * @param TranscodeInterface $media  it may be a stream or media wrapper.
+	 * @param FormatInterface    $format new format.
+	 * @param array              $options
 	 *
 	 * @return \Iterator|\Symfony\Component\Process\Process[] returns the instances of 'Process'.
 	 * @throws \RuntimeException
 	 */
-	public function transcoding(TranscoderInterface $media, FormatInterface $format, array $options = [])
+	public function transcoding(TranscodeInterface $media, FormatInterface $format, array $options = [])
 	{
 		$ffmpegOptions = array_merge([
 			'y'      => '',

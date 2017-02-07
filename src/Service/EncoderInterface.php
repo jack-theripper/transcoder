@@ -13,7 +13,7 @@
 namespace Arhitector\Jumper\Service;
 
 use Arhitector\Jumper\Format\FormatInterface;
-use Arhitector\Jumper\TranscoderInterface;
+use Arhitector\Jumper\TranscodeInterface;
 
 /**
  * Interface EncoderInterface.
@@ -26,13 +26,13 @@ interface EncoderInterface
 	/**
 	 * Constructs and returns the iterator with instances of 'Process'.
 	 *
-	 * @param TranscoderInterface $media  it may be a stream or media wrapper.
-	 * @param FormatInterface     $format new format.
-	 * @param array               $options
+	 * @param TranscodeInterface $media  it may be a stream or media wrapper.
+	 * @param FormatInterface    $format new format.
+	 * @param array              $options
 	 *
 	 * @return \Iterator|\Symfony\Component\Process\Process[]
 	 */
-	public function transcoding(TranscoderInterface $media, FormatInterface $format, array $options = []);
+	public function transcoding(TranscodeInterface $media, FormatInterface $format, array $options = []);
 	
 	/**
 	 * Gets the options.

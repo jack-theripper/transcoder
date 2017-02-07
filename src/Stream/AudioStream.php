@@ -12,8 +12,6 @@
  */
 namespace Arhitector\Jumper\Stream;
 
-use Arhitector\Jumper\TranscoderInterface;
-
 /**
  * Class AudioStream.
  *

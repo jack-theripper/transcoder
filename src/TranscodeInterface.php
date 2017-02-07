@@ -25,7 +25,7 @@ use Arhitector\Jumper\Stream\StreamInterface;
  *
  * @package Arhitector\Jumper
  */
-interface TranscoderInterface
+interface TranscodeInterface
 {
 	
 	/**
@@ -73,7 +73,7 @@ interface TranscoderInterface
 	 * @param FilterInterface $filter
 	 * @param int             $priority range 0-99.
 	 *
-	 * @return TranscoderInterface
+	 * @return TranscodeInterface
 	 * @throws InvalidFilterException
 	 */
 	public function addFilter(FilterInterface $filter, $priority = 0);
@@ -81,7 +81,7 @@ interface TranscoderInterface
 	/**
 	 * Reset filters.
 	 *
-	 * @return TranscoderInterface
+	 * @return TranscodeInterface
 	 */
 	public function withoutFilters();
 	

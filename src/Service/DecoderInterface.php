@@ -12,7 +12,7 @@
  */
 namespace Arhitector\Jumper\Service;
 
-use Arhitector\Jumper\TranscoderInterface;
+use Arhitector\Jumper\TranscodeInterface;
 
 /**
  * Interface DecoderInterface.
@@ -25,11 +25,11 @@ interface DecoderInterface
 	/**
 	 * Demultiplexing.
 	 *
-	 * @param TranscoderInterface $media
+	 * @param TranscodeInterface $media
 	 *
 	 * @return \stdClass
 	 */
-	public function demuxing(TranscoderInterface $media);
+	public function demuxing(TranscodeInterface $media);
 	
 	/**
 	 * Gets the options.

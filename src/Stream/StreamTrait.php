@@ -17,7 +17,7 @@ use Arhitector\Jumper\Exception\TranscoderException;
 use Arhitector\Jumper\Filter\SimpleFilter;
 use Arhitector\Jumper\Format\FormatInterface;
 use Arhitector\Jumper\Traits\FilePathAwareTrait;
-use Arhitector\Jumper\TranscoderInterface;
+use Arhitector\Jumper\TranscodeInterface;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
 /**
@@ -32,8 +32,8 @@ trait StreamTrait
 	/**
 	 * Returns a new format instance.
 	 *
-	 * @param TranscoderInterface $media
-	 * @param array               $options
+	 * @param TranscodeInterface $media
+	 * @param array              $options
 	 *
 	 * <code>
 	 * array (size=8)
@@ -53,7 +53,7 @@ trait StreamTrait
 	 * @throws \Arhitector\Jumper\Exception\TranscoderException
 	 * @throws \InvalidArgumentException
 	 */
-	public static function create(TranscoderInterface $media, array $options = [])
+	public static function create(TranscodeInterface $media, array $options = [])
 	{
 		$self = new static($media);
 		
@@ -101,19 +101,19 @@ trait StreamTrait
 	protected $duration = 0.0;
 	
 	/**
-	 * @var TranscoderInterface
+	 * @var TranscodeInterface
 	 */
 	protected $media;
 	
 	/**
 	 * Stream constructor.
 	 *
-	 * @param TranscoderInterface $media
+	 * @param TranscodeInterface $media
 	 *
 	 * @throws \InvalidArgumentException
 	 * @throws \Arhitector\Jumper\Exception\TranscoderException
 	 */
-	private function __construct(TranscoderInterface $media)
+	private function __construct(TranscodeInterface $media)
 	{
 		$this->setFilePath($media->getFilePath());
 		$this->media = $media;

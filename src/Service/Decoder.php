@@ -17,7 +17,7 @@ use Arhitector\Jumper\Codec;
 use Arhitector\Jumper\Exception\ExecutableNotFoundException;
 use Arhitector\Jumper\Exception\TranscoderException;
 use Arhitector\Jumper\Traits\OptionsAwareTrait;
-use Arhitector\Jumper\TranscoderInterface;
+use Arhitector\Jumper\TranscodeInterface;
 use Symfony\Component\Process\ExecutableFinder;
 use Symfony\Component\Process\Process;
 
@@ -45,7 +45,7 @@ class Decoder implements DecoderInterface
 	/**
 	 * Demultiplexing.
 	 *
-	 * @param TranscoderInterface $media
+	 * @param TranscodeInterface $media
 	 *
 	 * @return \stdClass
 	 *
@@ -69,7 +69,7 @@ class Decoder implements DecoderInterface
 	 * @throws \Symfony\Component\Process\Exception\LogicException
 	 * @throws \Arhitector\Jumper\Exception\TranscoderException
 	 */
-	public function demuxing(TranscoderInterface $media)
+	public function demuxing(TranscodeInterface $media)
 	{
 		$output = (new Process(sprintf('%s -loglevel quiet -print_format json -show_format -show_streams -show_error -i %s',
 			$this->options['ffprobe.path'], $media->getFilePath()), null, null, null, $this->options['timeout']))

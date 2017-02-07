@@ -13,7 +13,7 @@
 namespace Arhitector\Jumper\Filter;
 
 use Arhitector\Jumper\Format\FormatInterface;
-use Arhitector\Jumper\TranscoderInterface;
+use Arhitector\Jumper\TranscodeInterface;
 
 /**
  * Delay one or more audio channels.
@@ -59,12 +59,12 @@ class AudioDelay implements AudioFilterInterface
 	/**
 	 * Apply filter.
 	 *
-	 * @param TranscoderInterface $media
-	 * @param FormatInterface     $format
+	 * @param TranscodeInterface $media
+	 * @param FormatInterface    $format
 	 *
 	 * @return array
 	 */
-	public function apply(TranscoderInterface $media, FormatInterface $format)
+	public function apply(TranscodeInterface $media, FormatInterface $format)
 	{
 		return [
 			'filter:a' => [

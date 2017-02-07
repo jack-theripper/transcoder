@@ -14,7 +14,7 @@ namespace Arhitector\Jumper\Stream;
 
 use Arhitector\Jumper\Codec;
 use Arhitector\Jumper\Format\FormatInterface;
-use Arhitector\Jumper\TranscoderInterface;
+use Arhitector\Jumper\TranscodeInterface;
 
 /**
  * Interface StreamInterface.
@@ -27,8 +27,8 @@ interface StreamInterface
 	/**
 	 * Returns a new format instance.
 	 *
-	 * @param TranscoderInterface $media
-	 * @param array               $options
+	 * @param TranscodeInterface $media
+	 * @param array              $options
 	 *
 	 * <code>
 	 * array (size=8)
@@ -47,7 +47,7 @@ interface StreamInterface
 	 * @return static
 	 * @throws \InvalidArgumentException
 	 */
-	public static function create(TranscoderInterface $media, array $options = []);
+	public static function create(TranscodeInterface $media, array $options = []);
 	
 	/**
 	 * Get the full path to the file.
