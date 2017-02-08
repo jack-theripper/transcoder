@@ -125,7 +125,7 @@ class VideoFormat extends AudioFormat implements VideoFormatInterface
 	 */
 	public function setFrameCodec(Codec $codec)
 	{
-		if (class_parents($this) && ! in_array($codec, $this->getAvailableFrameCodecs(), false))
+		if (__CLASS__ != get_class($this) && ! in_array($codec, $this->getAvailableFrameCodecs(), false))
 		{
 			throw new \InvalidArgumentException(sprintf('Wrong video codec value for %s, available values are %s',
 				$codec, implode(', ', $this->getAvailableFrameCodecs())));
@@ -222,6 +222,26 @@ class VideoFormat extends AudioFormat implements VideoFormatInterface
 		}
 		
 		$this->videoFrameRate = $frameRate;
+		
+		return $this;
+	}
+	
+	/**
+	 * Sets the audio codec, Should be in the available ones, otherwise an exception is thrown.
+	 *
+	 * @param Codec $codec
+	 *
+	 * @return VideoFormat
+	 * @throws \InvalidArgumentException
+	 */
+	public function setAudioCodec(Codec $codec)
+	{
+		if (get_class($this) == __CLASS__)
+		{
+			$this->setAvailableAudioCodecs(array_merge($this->getAvailableAudioCodecs(), [$codec->getCode()]));
+		}
+		
+		parent::setAudioCodec($codec);
 		
 		return $this;
 	}

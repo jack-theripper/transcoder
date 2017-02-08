@@ -113,20 +113,20 @@ class AudioFormat implements AudioFormatInterface
 	/**
 	 * Sets the audio codec, Should be in the available ones, otherwise an exception is thrown.
 	 *
-	 * @param Codec $audioCodec
+	 * @param Codec $codec
 	 *
 	 * @return AudioFormatInterface
 	 * @throws \InvalidArgumentException
 	 */
-	public function setAudioCodec(Codec $audioCodec)
+	public function setAudioCodec(Codec $codec)
 	{
-		if (class_parents($this) && ! in_array((string) $audioCodec, $this->getAvailableAudioCodecs(), false))
+		if (__CLASS__ != get_class($this) && ! in_array((string) $codec, $this->getAvailableAudioCodecs(), false))
 		{
 			throw new \InvalidArgumentException(sprintf('Wrong audio codec value for %s, available values are %s',
-				$audioCodec, implode(', ', $this->getAvailableAudioCodecs())));
+				$codec, implode(', ', $this->getAvailableAudioCodecs())));
 		}
 		
-		$this->audioCodec = $audioCodec;
+		$this->audioCodec = $codec;
 		
 		return $this;
 	}
