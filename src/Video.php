@@ -12,7 +12,10 @@
  */
 namespace Arhitector\Transcoder;
 
+use Arhitector\Transcoder\Exception\InvalidFilterException;
 use Arhitector\Transcoder\Exception\TranscoderException;
+use Arhitector\Transcoder\Filter\FilterInterface;
+use Arhitector\Transcoder\Filter\FrameFilterInterface;
 use Arhitector\Transcoder\Format\VideoFormat;
 use Arhitector\Transcoder\Format\VideoFormatInterface;
 use Arhitector\Transcoder\Service\ServiceFactoryInterface;
@@ -100,6 +103,34 @@ class Video extends Audio implements VideoInterface
 	public function getFrameRate()
 	{
 		return $this->getFormat()->getFrameRate();
+	}
+	
+	/**
+	 * Add a new filter.
+	 *
+	 * @param FilterInterface $filter
+	 * @param int             $priority range 0-99.
+	 *
+	 * @return TranscodeInterface
+	 * @throws \InvalidArgumentException
+	 * @throws \RangeException
+	 * @throws InvalidFilterException
+	 */
+	public function addFilter(FilterInterface $filter, $priority = 0)
+	{
+		if ( ! $filter instanceof FrameFilterInterface)
+		{
+			throw new InvalidFilterException('Filter type is not supported.');
+		}
+		
+		if ($priority > 99)
+		{
+			throw new \RangeException('Priority should be in the range from 0 to 99.');
+		}
+		
+		$this->filters->insert($filter, $priority);
+		
+		return $this;
 	}
 	
 	/**
