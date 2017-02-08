@@ -158,9 +158,7 @@ class Audio implements AudioInterface
 		}
 	
 		/** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-		$processes = $this->getService()->getEncoderService()->transcoding($this, $format, [
-			'output' => $filePath
-		]);
+		$processes = $this->getService()->getEncoderService()->transcoding($this, $format, $options);
 		
 		foreach ($processes as $process)
 		{
