@@ -15,6 +15,8 @@ namespace Arhitector\Transcoder\Service;
 use Arhitector\Transcoder\Exception\ExecutableNotFoundException;
 use Arhitector\Transcoder\Format\AudioFormatInterface;
 use Arhitector\Transcoder\Format\FormatInterface;
+use Arhitector\Transcoder\Format\FrameFormatInterface;
+use Arhitector\Transcoder\Format\VideoFormatInterface;
 use Arhitector\Transcoder\Traits\OptionsAwareTrait;
 use Arhitector\Transcoder\TranscodeInterface;
 use Symfony\Component\Process\ExecutableFinder;
@@ -217,6 +219,36 @@ class Encoder implements EncoderInterface
 			{
 				$options['audio_channels'] = $format->getChannels();
 			}
+		}
+		
+		if ($format instanceof FrameFormatInterface)
+		{
+			$options['video_codec'] = (string) $format->getFrameCodec() ?: 'copy';
+		}
+		
+		if ($format instanceof VideoFormatInterface)
+		{
+			if ($format->getFrameRate() > 0)
+			{
+				$options['video_frame_rate'] = $format->getFrameRate();
+			}
+			
+			if ($format->getVideoBitrate() > 0)
+			{
+				$options['video_bitrate'] = $format->getVideoBitrate();
+			}
+			
+			$options['refs'] = 6;
+			$options['coder'] = 1;
+			$options['sc_threshold'] = 40;
+			$options['flags'] = '+loop';
+			$options['movflags'] = '+faststart';
+			$options['me_range'] = 16;
+			$options['subq'] = 7;
+			$options['i_qfactor'] = .71;
+			$options['qcomp'] = .6;
+			$options['qdiff'] = 4;
+			$options['trellis'] = 1;
 		}
 		
 		return $options;
