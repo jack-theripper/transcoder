@@ -49,7 +49,7 @@ class Rotate implements FrameFilterInterface
 	{
 		if ($angle !== null)
 		{
-			$this->setAngleDegrees($this->angle);
+			$this->setAngleDegrees($angle);
 		}
 	}
 	
