@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the arhitector/jumper library.
+ * This file is part of the arhitector/transcoder library.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -10,20 +10,20 @@
  * @license   http://opensource.org/licenses/MIT MIT
  * @copyright Copyright (c) 2017 Dmitry Arhitector <dmitry.arhitector@yandex.ru>
  */
-namespace Arhitector\Jumper\Stream;
+namespace Arhitector\Transcoder\Stream;
 
-use Arhitector\Jumper\Codec;
-use Arhitector\Jumper\Exception\TranscoderException;
-use Arhitector\Jumper\Filter\SimpleFilter;
-use Arhitector\Jumper\Format\FormatInterface;
-use Arhitector\Jumper\Traits\FilePathAwareTrait;
-use Arhitector\Jumper\TranscodeInterface;
+use Arhitector\Transcoder\Codec;
+use Arhitector\Transcoder\Exception\TranscoderException;
+use Arhitector\Transcoder\Filter\SimpleFilter;
+use Arhitector\Transcoder\Format\FormatInterface;
+use Arhitector\Transcoder\Traits\FilePathAwareTrait;
+use Arhitector\Transcoder\TranscodeInterface;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
 /**
  * Class StreamTrait.
  *
- * @package Arhitector\Jumper\Stream
+ * @package Arhitector\Transcoder\Stream
  */
 trait StreamTrait
 {
@@ -39,7 +39,7 @@ trait StreamTrait
 	 * array (size=8)
 	 *  'channels' => int 2
 	 *  'frequency' => int 44100
-	 *  'codec' => object(Arhitector\Jumper\Codec)[13]
+	 *  'codec' => object(Arhitector\Transcoder\Codec)[13]
 	 *      protected 'codec' => string 'mp3' (length=3)
 	 *      protected 'name' => string 'MP3 (MPEG audio layer 3)' (length=24)
 	 *  'index' => int 1
@@ -50,7 +50,7 @@ trait StreamTrait
 	 * </code>
 	 *
 	 * @return static
-	 * @throws \Arhitector\Jumper\Exception\TranscoderException
+	 * @throws \Arhitector\Transcoder\Exception\TranscoderException
 	 * @throws \InvalidArgumentException
 	 */
 	public static function create(TranscodeInterface $media, array $options = [])
@@ -111,7 +111,7 @@ trait StreamTrait
 	 * @param TranscodeInterface $media
 	 *
 	 * @throws \InvalidArgumentException
-	 * @throws \Arhitector\Jumper\Exception\TranscoderException
+	 * @throws \Arhitector\Transcoder\Exception\TranscoderException
 	 */
 	private function __construct(TranscodeInterface $media)
 	{
@@ -221,9 +221,9 @@ trait StreamTrait
 	 * @param bool            $overwrite
 	 *
 	 * @return bool
-	 * @throws \Arhitector\Jumper\Exception\InvalidFilterException
+	 * @throws \Arhitector\Transcoder\Exception\InvalidFilterException
 	 * @throws \Symfony\Component\Process\Exception\ProcessFailedException
-	 * @throws \Arhitector\Jumper\Exception\TranscoderException
+	 * @throws \Arhitector\Transcoder\Exception\TranscoderException
 	 * @throws \InvalidArgumentException
 	 */
 	public function save(FormatInterface $format, $filePath, $overwrite = true)

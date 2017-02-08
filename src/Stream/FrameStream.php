@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the arhitector/jumper library.
+ * This file is part of the arhitector/transcoder library.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -10,14 +10,14 @@
  * @license   http://opensource.org/licenses/MIT MIT
  * @copyright Copyright (c) 2017 Dmitry Arhitector <dmitry.arhitector@yandex.ru>
  */
-namespace Arhitector\Jumper\Stream;
+namespace Arhitector\Transcoder\Stream;
 
-use Arhitector\Jumper\TranscodeInterface;
+use Arhitector\Transcoder\TranscodeInterface;
 
 /**
  * Class FrameStream.
  *
- * @package Arhitector\Jumper\Stream
+ * @package Arhitector\Transcoder\Stream
  */
 class FrameStream implements FrameStreamInterface
 {

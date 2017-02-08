@@ -11,11 +11,11 @@
     ],
 	"autoload": {
 		"psr-4": {
-			"Arhitector\\Jumper\\": "src"
+			"Arhitector\\Transcoder\\": "src"
 		}
 	},
 	"autoload-dev": {
-		"Arhitector\\Jumper\\Tests\\": "tests"
+		"Arhitector\\Transcoder\\Tests\\": "tests"
 	},
     "require": {
 	    "php": ">=5.6",

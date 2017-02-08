@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the arhitector/jumper library.
+ * This file is part of the arhitector/transcoder library.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -10,20 +10,20 @@
  * @license   http://opensource.org/licenses/MIT MIT
  * @copyright Copyright (c) 2017 Dmitry Arhitector <dmitry.arhitector@yandex.ru>
  */
-namespace Arhitector\Jumper\Service;
+namespace Arhitector\Transcoder\Service;
 
-use Arhitector\Jumper\Exception\ExecutableNotFoundException;
-use Arhitector\Jumper\Format\AudioFormatInterface;
-use Arhitector\Jumper\Format\FormatInterface;
-use Arhitector\Jumper\Traits\OptionsAwareTrait;
-use Arhitector\Jumper\TranscodeInterface;
+use Arhitector\Transcoder\Exception\ExecutableNotFoundException;
+use Arhitector\Transcoder\Format\AudioFormatInterface;
+use Arhitector\Transcoder\Format\FormatInterface;
+use Arhitector\Transcoder\Traits\OptionsAwareTrait;
+use Arhitector\Transcoder\TranscodeInterface;
 use Symfony\Component\Process\ExecutableFinder;
 use Symfony\Component\Process\ProcessBuilder;
 
 /**
  * Class Encoder.
  *
- * @package Arhitector\Jumper\Service
+ * @package Arhitector\Transcoder\Service
  */
 class Encoder implements EncoderInterface
 {
@@ -152,7 +152,7 @@ class Encoder implements EncoderInterface
 	 * @param array $options
 	 *
 	 * @return array
-	 * @throws \Arhitector\Jumper\Exception\ExecutableNotFoundException
+	 * @throws \Arhitector\Transcoder\Exception\ExecutableNotFoundException
 	 */
 	protected function resolveOptions(array $options)
 	{

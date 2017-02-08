@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the arhitector/jumper library.
+ * This file is part of the arhitector/transcoder library.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -10,20 +10,20 @@
  * @license   http://opensource.org/licenses/MIT MIT
  * @copyright Copyright (c) 2017 Dmitry Arhitector <dmitry.arhitector@yandex.ru>
  */
-namespace Arhitector\Jumper;
+namespace Arhitector\Transcoder;
 
-use Arhitector\Jumper\Exception\TranscoderException;
-use Arhitector\Jumper\Format\VideoFormat;
-use Arhitector\Jumper\Format\VideoFormatInterface;
-use Arhitector\Jumper\Service\ServiceFactoryInterface;
-use Arhitector\Jumper\Stream\AudioStream;
-use Arhitector\Jumper\Stream\Collection;
-use Arhitector\Jumper\Stream\VideoStream;
+use Arhitector\Transcoder\Exception\TranscoderException;
+use Arhitector\Transcoder\Format\VideoFormat;
+use Arhitector\Transcoder\Format\VideoFormatInterface;
+use Arhitector\Transcoder\Service\ServiceFactoryInterface;
+use Arhitector\Transcoder\Stream\AudioStream;
+use Arhitector\Transcoder\Stream\Collection;
+use Arhitector\Transcoder\Stream\VideoStream;
 
 /**
  * Class Video.
  *
- * @package Arhitector\Jumper
+ * @package Arhitector\Transcoder
  */
 class Video extends Audio implements VideoInterface
 {
@@ -34,7 +34,7 @@ class Video extends Audio implements VideoInterface
 	 * @param string                  $filePath
 	 * @param ServiceFactoryInterface $service
 	 *
-	 * @throws \Arhitector\Jumper\Exception\TranscoderException
+	 * @throws \Arhitector\Transcoder\Exception\TranscoderException
 	 * @throws \InvalidArgumentException
 	 */
 	public function __construct($filePath, ServiceFactoryInterface $service = null)
@@ -45,7 +45,7 @@ class Video extends Audio implements VideoInterface
 	/**
 	 * Get current format.
 	 *
-	 * @return VideoFormatInterface|\Arhitector\Jumper\Format\FormatInterface
+	 * @return VideoFormatInterface|\Arhitector\Transcoder\Format\FormatInterface
 	 */
 	public function getFormat()
 	{
@@ -117,7 +117,7 @@ class Video extends Audio implements VideoInterface
 	 *
 	 * @param \stdClass $demuxing
 	 *
-	 * @throws \Arhitector\Jumper\Exception\TranscoderException
+	 * @throws \Arhitector\Transcoder\Exception\TranscoderException
 	 * @throws \InvalidArgumentException
 	 */
 	protected function _createCollections($demuxing)

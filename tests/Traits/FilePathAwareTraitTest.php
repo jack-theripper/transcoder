@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the arhitector/jumper library.
+ * This file is part of the arhitector/transcoder library.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -10,14 +10,14 @@
  * @license   http://opensource.org/licenses/MIT MIT
  * @copyright Copyright (c) 2017 Dmitry Arhitector <dmitry.arhitector@yandex.ru>
  */
-namespace Arhitector\Jumper\Tests\Traits;
+namespace Arhitector\Transcoder\Tests\Traits;
 
-use Arhitector\Jumper\Traits\FilePathAwareTrait;
+use Arhitector\Transcoder\Traits\FilePathAwareTrait;
 
 /**
  * Class FilePathAwareTraitTest.
  *
- * @package Arhitector\Jumper\Tests\Traits
+ * @package Arhitector\Transcoder\Tests\Traits
  */
 class FilePathAwareTraitTest extends \PHPUnit_Framework_TestCase
 {
@@ -40,7 +40,7 @@ class FilePathAwareTraitTest extends \PHPUnit_Framework_TestCase
 	
 	/**
 	 * @expectedException \InvalidArgumentException
-	 * @expectedException \Arhitector\Jumper\Exception\TranscoderException
+	 * @expectedException \Arhitector\Transcoder\Exception\TranscoderException
 	 */
 	public function testFailure()
 	{

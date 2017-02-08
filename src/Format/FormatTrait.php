@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the arhitector/jumper library.
+ * This file is part of the arhitector/transcoder library.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -10,12 +10,12 @@
  * @license   http://opensource.org/licenses/MIT MIT
  * @copyright Copyright (c) 2017 Dmitry Arhitector <dmitry.arhitector@yandex.ru>
  */
-namespace Arhitector\Jumper\Format;
+namespace Arhitector\Transcoder\Format;
 
 /**
  * Class FormatTrait.
  *
- * @package Arhitector\Jumper\Format
+ * @package Arhitector\Transcoder\Format
  */
 trait FormatTrait
 {
@@ -27,7 +27,7 @@ trait FormatTrait
 	 *
 	 * <code>
 	 * array (size=6)
-	 *  'audio_codec' => object(Arhitector\Jumper\Codec)[13]
+	 *  'audio_codec' => object(Arhitector\Transcoder\Codec)[13]
 	 *      protected 'codec' => string 'mp3' (length=3)
 	 *      protected 'name' => string '' (length=0)
 	 *  'audio_bitrate' => int 256000

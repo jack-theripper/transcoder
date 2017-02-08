@@ -1,7 +1,6 @@
 <?php
-
 /**
- * This file is part of the arhitector/jumper library.
+ * This file is part of the arhitector/transcoder library.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -11,20 +10,20 @@
  * @license   http://opensource.org/licenses/MIT MIT
  * @copyright Copyright (c) 2017 Dmitry Arhitector <dmitry.arhitector@yandex.ru>
  */
-namespace Arhitector\Jumper\Service;
+namespace Arhitector\Transcoder\Service;
 
-use Arhitector\Jumper\Codec;
-use Arhitector\Jumper\Exception\ExecutableNotFoundException;
-use Arhitector\Jumper\Exception\TranscoderException;
-use Arhitector\Jumper\Traits\OptionsAwareTrait;
-use Arhitector\Jumper\TranscodeInterface;
+use Arhitector\Transcoder\Codec;
+use Arhitector\Transcoder\Exception\ExecutableNotFoundException;
+use Arhitector\Transcoder\Exception\TranscoderException;
+use Arhitector\Transcoder\Traits\OptionsAwareTrait;
+use Arhitector\Transcoder\TranscodeInterface;
 use Symfony\Component\Process\ExecutableFinder;
 use Symfony\Component\Process\Process;
 
 /**
  * Class Decoder.
  *
- * @package Arhitector\Jumper\Service
+ * @package Arhitector\Transcoder\Service
  */
 class Decoder implements DecoderInterface
 {
@@ -67,7 +66,7 @@ class Decoder implements DecoderInterface
 	 * @throws \Symfony\Component\Process\Exception\ProcessFailedException
 	 * @throws \Symfony\Component\Process\Exception\RuntimeException
 	 * @throws \Symfony\Component\Process\Exception\LogicException
-	 * @throws \Arhitector\Jumper\Exception\TranscoderException
+	 * @throws \Arhitector\Transcoder\Exception\TranscoderException
 	 */
 	public function demuxing(TranscodeInterface $media)
 	{
@@ -104,7 +103,7 @@ class Decoder implements DecoderInterface
 	 * @param array $options
 	 *
 	 * @return array
-	 * @throws \Arhitector\Jumper\Exception\ExecutableNotFoundException
+	 * @throws \Arhitector\Transcoder\Exception\ExecutableNotFoundException
 	 */
 	protected function resolveOptions(array $options)
 	{

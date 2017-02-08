@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the arhitector/jumper library.
+ * This file is part of the arhitector/transcoder library.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -10,17 +10,17 @@
  * @license   http://opensource.org/licenses/MIT MIT
  * @copyright Copyright (c) 2017 Dmitry Arhitector <dmitry.arhitector@yandex.ru>
  */
-namespace Arhitector\Jumper\Tests\Stream;
+namespace Arhitector\Transcoder\Tests\Stream;
 
-use Arhitector\Jumper\Codec;
-use Arhitector\Jumper\Stream\StreamTrait;
-use Arhitector\Jumper\TranscodeInterface;
+use Arhitector\Transcoder\Codec;
+use Arhitector\Transcoder\Stream\StreamTrait;
+use Arhitector\Transcoder\TranscodeInterface;
 use PHPUnit_Framework_Error;
 
 /**
  * Class StreamTraitTest.
  *
- * @package Arhitector\Jumper\Tests\Stream
+ * @package Arhitector\Transcoder\Tests\Stream
  */
 class StreamTraitTest extends \PHPUnit_Framework_TestCase
 {

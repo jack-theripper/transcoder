@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the arhitector/jumper library.
+ * This file is part of the arhitector/transcoder library.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -10,15 +10,15 @@
  * @license   http://opensource.org/licenses/MIT MIT
  * @copyright Copyright (c) 2017 Dmitry Arhitector <dmitry.arhitector@yandex.ru>
  */
-namespace Arhitector\Jumper\Tests\Format;
+namespace Arhitector\Transcoder\Tests\Format;
 
-use Arhitector\Jumper\Codec;
-use Arhitector\Jumper\Format\AudioFormat;
+use Arhitector\Transcoder\Codec;
+use Arhitector\Transcoder\Format\AudioFormat;
 
 /**
  * Class AudioFormatTest.
  *
- * @package Arhitector\Jumper\Tests\Format
+ * @package Arhitector\Transcoder\Tests\Format
  */
 class AudioFormatTest extends \PHPUnit_Framework_TestCase
 {

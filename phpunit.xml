@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ This file is part of the arhitector/jumper library.
+  ~ This file is part of the arhitector/transcoder library.
   ~
   ~ For the full copyright and license information, please view the LICENSE
   ~ file that was distributed with this source code.
@@ -12,7 +12,7 @@
   -->
 <phpunit colors="true" bootstrap="vendor/autoload.php">
     <testsuites>
-        <testsuite name="Arhitector\Jumper test">
+        <testsuite name="Arhitector\Transcoder test">
             <directory>tests/</directory>
         </testsuite>
     </testsuites>

@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the arhitector/jumper library.
+ * This file is part of the arhitector/transcoder library.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -10,16 +10,16 @@
  * @license   http://opensource.org/licenses/MIT MIT
  * @copyright Copyright (c) 2017 Dmitry Arhitector <dmitry.arhitector@yandex.ru>
  */
-namespace Arhitector\Jumper\Stream;
+namespace Arhitector\Transcoder\Stream;
 
-use Arhitector\Jumper\Codec;
-use Arhitector\Jumper\Format\FormatInterface;
-use Arhitector\Jumper\TranscodeInterface;
+use Arhitector\Transcoder\Codec;
+use Arhitector\Transcoder\Format\FormatInterface;
+use Arhitector\Transcoder\TranscodeInterface;
 
 /**
  * Interface StreamInterface.
  *
- * @package Arhitector\Jumper\Stream
+ * @package Arhitector\Transcoder\Stream
  */
 interface StreamInterface
 {
@@ -34,7 +34,7 @@ interface StreamInterface
 	 * array (size=8)
 	 *  'channels' => int 2
 	 *  'frequency' => int 44100
-	 *  'codec' => object(Arhitector\Jumper\Codec)[13]
+	 *  'codec' => object(Arhitector\Transcoder\Codec)[13]
 	 *      protected 'codec' => string 'mp3' (length=3)
 	 *      protected 'name' => string 'MP3 (MPEG audio layer 3)' (length=24)
 	 *  'index' => int 1

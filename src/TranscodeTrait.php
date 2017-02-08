@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the arhitector/jumper library.
+ * This file is part of the arhitector/transcoder library.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -10,17 +10,17 @@
  * @license   http://opensource.org/licenses/MIT MIT
  * @copyright Copyright (c) 2017 Dmitry Arhitector <dmitry.arhitector@yandex.ru>
  */
-namespace Arhitector\Jumper;
+namespace Arhitector\Transcoder;
 
-use Arhitector\Jumper\Format\FormatInterface;
-use Arhitector\Jumper\Service\ServiceFactoryInterface;
-use Arhitector\Jumper\Stream\StreamInterface;
+use Arhitector\Transcoder\Format\FormatInterface;
+use Arhitector\Transcoder\Service\ServiceFactoryInterface;
+use Arhitector\Transcoder\Stream\StreamInterface;
 use Mimey\MimeTypes;
 
 /**
  * Class TranscoderTrait.
  *
- * @package Arhitector\Jumper
+ * @package Arhitector\Transcoder
  */
 trait TranscodeTrait
 {
@@ -31,7 +31,7 @@ trait TranscodeTrait
 	protected $format;
 	
 	/**
-	 * @var \Arhitector\Jumper\Stream\Collection
+	 * @var \Arhitector\Transcoder\Stream\Collection
 	 */
 	protected $streams;
 	
@@ -46,6 +46,11 @@ trait TranscodeTrait
 	protected $mimeType;
 	
 	/**
+	 * @var \Arhitector\Transcoder\Filter\Collection List of filters.
+	 */
+	protected $filters;
+	
+	/**
 	 * Get current format.
 	 *
 	 * @return FormatInterface
@@ -58,7 +63,7 @@ trait TranscodeTrait
 	/**
 	 * Get a list of streams.
 	 *
-	 * @return \Arhitector\Jumper\Stream\Collection|StreamInterface[]
+	 * @return \Arhitector\Transcoder\Stream\Collection|StreamInterface[]
 	 */
 	public function getStreams()
 	{
@@ -73,6 +78,18 @@ trait TranscodeTrait
 	public function getService()
 	{
 		return $this->service;
+	}
+	
+	/**
+	 * Add a new stream.
+	 *
+	 * @param StreamInterface $stream
+	 *
+	 * @return TranscodeInterface
+	 */
+	public function addStream(StreamInterface $stream)
+	{
+		
 	}
 	
 	/**

@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the arhitector/jumper library.
+ * This file is part of the arhitector/transcoder library.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -10,27 +10,27 @@
  * @license   http://opensource.org/licenses/MIT MIT
  * @copyright Copyright (c) 2017 Dmitry Arhitector <dmitry.arhitector@yandex.ru>
  */
-namespace Arhitector\Jumper;
+namespace Arhitector\Transcoder;
 
-use Arhitector\Jumper\Exception\InvalidFilterException;
-use Arhitector\Jumper\Exception\TranscoderException;
-use Arhitector\Jumper\Filter\AudioFilterInterface;
-use Arhitector\Jumper\Filter\Collection as FiltersCollection;
-use Arhitector\Jumper\Filter\FilterInterface;
-use Arhitector\Jumper\Format\AudioFormat;
-use Arhitector\Jumper\Format\AudioFormatInterface;
-use Arhitector\Jumper\Format\FormatInterface;
-use Arhitector\Jumper\Service\ServiceFactory;
-use Arhitector\Jumper\Service\ServiceFactoryInterface;
-use Arhitector\Jumper\Stream\AudioStream;
-use Arhitector\Jumper\Stream\Collection;
-use Arhitector\Jumper\Stream\FrameStream;
+use Arhitector\Transcoder\Exception\InvalidFilterException;
+use Arhitector\Transcoder\Exception\TranscoderException;
+use Arhitector\Transcoder\Filter\AudioFilterInterface;
+use Arhitector\Transcoder\Filter\Collection as FiltersCollection;
+use Arhitector\Transcoder\Filter\FilterInterface;
+use Arhitector\Transcoder\Format\AudioFormat;
+use Arhitector\Transcoder\Format\AudioFormatInterface;
+use Arhitector\Transcoder\Format\FormatInterface;
+use Arhitector\Transcoder\Service\ServiceFactory;
+use Arhitector\Transcoder\Service\ServiceFactoryInterface;
+use Arhitector\Transcoder\Stream\AudioStream;
+use Arhitector\Transcoder\Stream\Collection;
+use Arhitector\Transcoder\Stream\FrameStream;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
 /**
  * Class Audio.
  *
- * @package Arhitector\Jumper
+ * @package Arhitector\Transcoder
  */
 class Audio implements AudioInterface
 {
@@ -39,17 +39,12 @@ class Audio implements AudioInterface
 	}
 	
 	/**
-	 * @var \Arhitector\Jumper\Filter\Collection List of filters.
-	 */
-	protected $filters;
-	
-	/**
 	 * Audio constructor.
 	 *
 	 * @param string                  $filePath
 	 * @param ServiceFactoryInterface $service
 	 *
-	 * @throws \Arhitector\Jumper\Exception\TranscoderException
+	 * @throws \Arhitector\Transcoder\Exception\TranscoderException
 	 * @throws \InvalidArgumentException
 	 */
 	public function __construct($filePath, ServiceFactoryInterface $service = null)
@@ -122,7 +117,7 @@ class Audio implements AudioInterface
 	/**
 	 * Get current format.
 	 *
-	 * @return AudioFormatInterface|\Arhitector\Jumper\Format\FormatInterface
+	 * @return AudioFormatInterface|\Arhitector\Transcoder\Format\FormatInterface
 	 */
 	public function getFormat()
 	{
@@ -140,7 +135,7 @@ class Audio implements AudioInterface
 	 * @throws \Symfony\Component\Process\Exception\RuntimeException
 	 * @throws \Symfony\Component\Process\Exception\LogicException
 	 * @throws \Symfony\Component\Process\Exception\ProcessFailedException
-	 * @throws \Arhitector\Jumper\Exception\TranscoderException
+	 * @throws \Arhitector\Transcoder\Exception\TranscoderException
 	 * @throws \InvalidArgumentException
 	 */
 	public function save(FormatInterface $format, $filePath, $overwrite = true)
@@ -240,7 +235,7 @@ class Audio implements AudioInterface
 	 *
 	 * @param \stdClass $demuxing
 	 *
-	 * @throws \Arhitector\Jumper\Exception\TranscoderException
+	 * @throws \Arhitector\Transcoder\Exception\TranscoderException
 	 * @throws \InvalidArgumentException
 	 */
 	protected function _createCollections($demuxing)
