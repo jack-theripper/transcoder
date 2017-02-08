@@ -20,7 +20,7 @@ use Arhitector\Transcoder\TranscodeInterface;
  *
  * @package Arhitector\Transcoder\Filter
  */
-class SimpleFilter implements AudioFilterInterface, \ArrayAccess
+class SimpleFilter implements AudioFilterInterface, FrameFilterInterface, \ArrayAccess
 {
 	
 	/**
