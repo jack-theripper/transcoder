@@ -124,6 +124,11 @@ class Encoder implements EncoderInterface
 			
 			if (stripos($option, 'filter') !== false)
 			{
+				foreach ($value as $key => &$item)
+				{
+					$item = $key.'='.$item;
+				}
+				
 				$ffmpegOptions[] = implode(', ', (array) $value);
 			}
 			else if (is_array($value))
