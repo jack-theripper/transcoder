@@ -15,6 +15,7 @@ namespace Arhitector\Transcoder;
 use Arhitector\Transcoder\Format\FormatInterface;
 use Arhitector\Transcoder\Service\ServiceFactoryInterface;
 use Arhitector\Transcoder\Stream\StreamInterface;
+use Arhitector\Transcoder\Traits\FilePathAwareTrait;
 use Mimey\MimeTypes;
 
 /**
@@ -24,6 +25,7 @@ use Mimey\MimeTypes;
  */
 trait TranscodeTrait
 {
+	use FilePathAwareTrait;
 	
 	/**
 	 * @var FormatInterface

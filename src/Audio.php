@@ -34,7 +34,7 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
  */
 class Audio implements AudioInterface
 {
-	use Traits\FilePathAwareTrait, TranscodeTrait {
+	use TranscodeTrait {
 		TranscodeTrait::getFormat as private _getFormat;
 	}
 	
