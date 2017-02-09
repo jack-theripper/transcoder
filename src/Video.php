@@ -14,6 +14,7 @@ namespace Arhitector\Transcoder;
 
 use Arhitector\Transcoder\Exception\InvalidFilterException;
 use Arhitector\Transcoder\Exception\TranscoderException;
+use Arhitector\Transcoder\Filter\AudioFilterInterface;
 use Arhitector\Transcoder\Filter\FilterInterface;
 use Arhitector\Transcoder\Filter\FrameFilterInterface;
 use Arhitector\Transcoder\Format\VideoFormat;
@@ -118,7 +119,7 @@ class Video extends Audio implements VideoInterface
 	 */
 	public function addFilter(FilterInterface $filter, $priority = 0)
 	{
-		if ( ! $filter instanceof FrameFilterInterface)
+		if ( ! $filter instanceof FrameFilterInterface && ! $filter instanceof AudioFilterInterface)
 		{
 			throw new InvalidFilterException('Filter type is not supported.');
 		}
