@@ -13,6 +13,7 @@
 namespace Arhitector\Transcoder\Service;
 
 use Arhitector\Transcoder\Exception\ExecutableNotFoundException;
+use Arhitector\Transcoder\Exception\TranscoderException;
 use Arhitector\Transcoder\Format\AudioFormatInterface;
 use Arhitector\Transcoder\Format\FormatInterface;
 use Arhitector\Transcoder\Format\FrameFormatInterface;
@@ -44,6 +45,34 @@ class Encoder implements EncoderInterface
 	}
 	
 	/**
+	 * The alias of options.
+	 *
+	 * @return array
+	 */
+	public function getAliasOptions()
+	{
+		return [
+			'disable_audio'          => '-an',
+			'disable_video'          => '-vn',
+			'disable_subtitle'       => '-sn',
+			'audio_quality'          => '-qscale:a',
+			'audio_codec'            => '-codec:a',
+			'audio_bitrate'          => '-b:a',
+			'audio_sample_frequency' => '-ar',
+			'audio_channels'         => '-ac',
+			'video_quality'          => '-qscale:v',
+			'video_codec'            => '-codec:v',
+			'video_aspect_ratio'     => '-aspect',
+			'video_frame_rate'       => '-r',
+			'video_max_frames'       => '-vframes',
+			'video_bitrate'          => '-b:v',
+			'video_pixel_format'     => '-pix_fmt',
+			'metadata'               => '-metadata',
+			'force_format'           => '-f'
+		];
+	}
+	
+	/**
 	 * Constructs and returns the iterator with instances of 'Process'.
 	 *
 	 * @param TranscodeInterface $media  it may be a stream or media wrapper.
@@ -55,114 +84,99 @@ class Encoder implements EncoderInterface
 	 */
 	public function transcoding(TranscodeInterface $media, FormatInterface $format, array $options = [])
 	{
-		$ffmpegOptions = array_merge([
+		$_options = array_merge([
 			'y'      => '',
 			'i'      => [$media->getFilePath()],
 			'strict' => '-2'
-		], $options, $this->getFormatOptions($format), $this->getForceFormatOptions($format));
+		], $options, $this->getForceFormatOptions($format), $this->getFormatOptions($format));
 		
 		if ( ! isset($options['output']))
 		{
-			throw new \RuntimeException('Output file path not found.');
-		}
-		
-		if ( ! isset($options['metadata']) && $format->getTags())
-		{
-			$ffmpegOptions['metadata'] = $format->getTags();
+			throw new TranscoderException('Output file path not found.');
 		}
 		
 		$filePath = $options['output'];
-		$options = array_diff_key($ffmpegOptions, array_fill_keys([
-			'disable_audio',
-			'audio_quality',
-			'audio_codec',
-			'audio_bitrate',
-			'audio_sample_frequency',
-			'audio_channels',
-			'video_codec',
-			'video_quality',
-			'video_aspect_ratio',
-			'video_frame_rate',
-			'video_max_frames',
-			'video_bitrate',
-			'video_pixel_format',
-			'force_format',
-			'metadata',
-			'output',
-			
-			// опции адаптера
-			'ffmpeg_force_format',
-		], null));
 		
-		foreach ([
-			'disable_audio'          => '-an',
-			'audio_quality'          => '-qscale:a',
-			'audio_codec'            => '-codec:a',
-			'audio_bitrate'          => '-b:a',
-			'audio_sample_frequency' => '-ar',
-			'audio_channels'         => '-ac',
-			'video_codec'            => '-codec:v',
-			'video_quality'          => '-qscale:v',
-			'video_aspect_ratio'     => '-aspect',
-			'video_frame_rate'       => '-r',
-			'video_max_frames'       => '-vframes',
-			'video_bitrate'          => '-b:v',
-			'video_pixel_format'     => '-pix_fmt',
-			'metadata'               => '-metadata',
-			'ffmpeg_force_format'    => '-f'
-		] as $option => $value)
+		if ( ! isset($options['metadata']) && $format->getTags())
 		{
-			if (isset($ffmpegOptions[$option]))
+			$_options['metadata'] = $format->getTags();
+		}
+		
+		// получаем чистый массив опций без псевдонимов.
+		$options = array_diff_key($_options, $this->getAliasOptions() + ['output' => null]);
+		
+		foreach ($this->getAliasOptions() as $option => $value)
+		{
+			if (isset($_options[$option]))
 			{
-				$options[$value] = $ffmpegOptions[$option];
+				$options[$value] = $_options[$option];
 				
-				if (is_bool($ffmpegOptions[$option]))
+				if (is_bool($_options[$option]))
 				{
 					$options[$value] = '';
 				}
 			}
 		}
 		
-		if ( ! empty($ffmpegOptions['metadata']))
+		if ( ! empty($_options['metadata']))
 		{
 			$options['map_metadata'] = '-1';
 		}
 		
-		$ffmpegOptions = [];
+		$_options = [];
 		
 		foreach ($options as $option => $value)
 		{
-			$ffmpegOptions[] = '-'.ltrim($option, '-');
+			$_options[] = $option[0] == '-' ? $option : '-'.$option;
 			
-			if (stripos($option, 'filter') !== false)
+			if ( ! is_scalar($value))
 			{
-				foreach ($value as $key => &$item)
+				if (stripos($option, 'filter') === 0)
 				{
-					$item = $key.'='.$item;
+					$_options[] = implode(', ', array_map(function ($option, $value){
+						return $value.'='.$option; // <filter name> = <filter params>
+					}, $value, array_keys($value)));
 				}
-				
-				$ffmpegOptions[] = implode(', ', (array) $value);
-			}
-			else if (is_array($value))
-			{
-				array_pop($ffmpegOptions);
-				
-				foreach ($value as $key => $val)
+				else
 				{
-					$ffmpegOptions[] = '-'.ltrim($option, '-');
-					$ffmpegOptions[] = is_int($key) ? $val : "{$key}={$val}";
+					array_pop($_options);
+					
+					foreach ((array) $value as $_option => $_value)
+					{
+						$_options[] = $option[0] == '-' ? $option : '-'.$option;
+						$_options[] = is_int($_option) ? $_value : sprintf('%s=%s', $_option, $_value);
+					}
 				}
-				
 			}
 			else if ($value)
 			{
-				$ffmpegOptions[] = $value;
+				$_options[] = $value;
 			}
 		}
 		
-		$ffmpegOptions[] = $filePath;
+		if ($format->getPasses() > 1)
+		{
+			// TODO: FFMpeg создает файлы вида <filename>-0.log, чтобы их очистить проще создать папку.
+			$_options[] = '-passlogfile';
+			$_options[] = tempnam(sys_get_temp_dir(), 'ffmpeg');
+		}
 		
-		yield (new ProcessBuilder($ffmpegOptions))->setPrefix($this->options['ffmpeg.path'])->getProcess();
+		for ($pass = 1; $pass <= $format->getPasses(); ++$pass)
+		{
+			$options = $_options;
+			
+			if ($format->getPasses() > 1)
+			{
+				$options[] = '-pass';
+				$options[] = $pass;
+			}
+			
+			$options[] = $filePath;
+			
+			yield (new ProcessBuilder($options))
+				->setPrefix($this->options['ffmpeg.path'])
+				->getProcess();
+		}
 	}
 	
 	/**
@@ -203,6 +217,26 @@ class Encoder implements EncoderInterface
 	 */
 	protected function getForceFormatOptions(FormatInterface $format)
 	{
+		$formatExtensions = $format->getExtensions();
+		
+		if (count($formatExtensions) > 0)
+		{
+			if ( ! file_exists(__DIR__.'/../../bin/ffmpeg_fmt.php'))
+			{
+				return [];
+			}
+			
+			$ffmpeg_fmt = (array) require __DIR__.'/../../bin/ffmpeg_fmt.php';
+			
+			foreach ($ffmpeg_fmt as $format_string => $extensions)
+			{
+				if (array_intersect($formatExtensions, $extensions))
+				{
+					return ['force_format' => $format_string];
+				}
+			}
+		}
+		
 		return [];
 	}
 	
