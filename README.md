@@ -1,5 +1,13 @@
 ## Tools to transcoding/encoding audio or video, inspect and convert media formats.
 
+## Установка
+
+```bash
+$ composer require arhitector/jumper dev-master
+```
+
+## Использование
+
 ```php
 // Это список всех поддерживаемых опций.
 // Конечно эти опции можно опустить если ffmpeg доступен из 'Path'.
