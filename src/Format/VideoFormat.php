@@ -247,6 +247,16 @@ class VideoFormat extends AudioFormat implements VideoFormatInterface
 	}
 	
 	/**
+	 * Returns the number of passes.
+	 *
+	 * @return int
+	 */
+	public function getPasses()
+	{
+		return $this->passes;
+	}
+	
+	/**
 	 * Set the width value.
 	 *
 	 * @param int $width
