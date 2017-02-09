@@ -1,42 +1,99 @@
 ## Tools to transcoding/encoding audio or video, inspect and convert media formats.
 
 ```php
+// Это список всех поддерживаемых опций.
+// Конечно эти опции можно опустить если ffmpeg доступен из 'Path'.
 $options = [
-	'ffprobe.path' => 'E:\devtools\bin\ffprobe.exe',
-	'ffmpeg.path'  => 'E:\devtools\bin\ffmpeg.exe'
+	'ffprobe.path'   => 'E:\devtools\bin\ffprobe.exe',
+	'ffmpeg.path'    => 'E:\devtools\bin\ffmpeg.exe',
+	'ffmpeg.threads' => 2,
+	'timeout'        => 30
 ];
 
-$audio = new \Arhitector\Jumper\Audio(__DIR__.'/audio.mp3');
+$factory = new \Arhitector\Transcoder\Service\ServiceFactory($options);
+```
 
-//or
-$factory = new \Arhitector\Jumper\Service\ServiceFactory($options);
-$audio = new \Arhitector\Jumper\Audio(__DIR__.'/audio.mp3', $factory);
+### Извлечение информации из видеофайла, аудио файла и т.д.
 
-// or video
-$audio = new \Arhitector\Jumper\Video(__DIR__.'/file.mp4', $factory);
+```php
+use Arhitector\Transcoder\Video;
+use Arhitector\Transcoder\Audio;
+
+$video = new Video('sample.avi');
+
+var_dump($video->getWidth(), $video->getHeight());
+
+$audio = new Audio(__DIR__.'/audio.mp3', $factory);
 
 var_dump($audio->getAudioChannels());
 var_dump($audio->getFormat()->getTags());
-
-$format = new \Arhitector\Jumper\Format\AudioFormat('mp3');
-$format->setAudioBitrate(92000);
-$format->setTagValue('artist', 'Performer 0123456789');
-
-$audio->save($format, $audio->getFilePath().'_transcoding.mp3');
-
 ```
 
-## Filters
+### Извлечение звука из видеофайла с последующим сохранением в формате MP3
 
-### Audio filters
+Этот простой пример показывает лишь принцип, таким же способом можно сохранить субтитры или обложку из Mp3-файла и т.д.
 
-- **Volume**
+```php
+use Arhitector\Transcoder\Video;
+use Arhitector\Transcoder\Stream\AudioStreamInterface;
+use Arhitector\Transcoder\Format\Mp3;
+
+$video = new Video('sample.mp4');
+
+foreach ($video->getStreams() as $stream)
+{
+	// тут выбираем только аудио канал
+	if ($stream instanceof AudioStreamInterface)
+	{
+		$stream->save(new Mp3(), __DIR__.'/only-audio.mp3');
+		
+		break; // видео может иметь несколько аудио потоков
+	}
+}
+```
+
+### Преобразование из одного формата в любой другой
+
+```php
+use Arhitector\Transcoder\Audio;
+use Arhitector\Transcoder\Format\Mp3;
+
+$audio = new Audio('audio-file.wav');
+$audio->save(new Mp3(), 'audio-file.mp3');
+
+use Arhitector\Transcoder\Video;
+use Arhitector\Transcoder\Format\VideoFormat;
+
+$video = new Video('video-file.avi');
+$video->save(new VideoFormat('aac', 'h264'), 'video-file.mp4');
+```
+
+### Добавление/Изменение метаинформации
+
+```php
+use Arhitector\Transcoder\Audio;
+
+$audio = new Audio('file.mp3');
+
+$format = $audio->getFormat();
+$format['artist'] = 'Новый артист';
+
+$auiod->save($format, 'new-file.mp3');
+```
+
+## Фильтры
+
+### Айдио фильтры
+
+- Фильтр **Volume**
+
+Фильтр изменяет громкость аудио потока.
 
 ```php
 use \Arhitector\Jumper\Filter\Volume;
 ```
 
-Halve the input audio volume.
+Пример показывает как уменьшить громкость аудио.
 
 ```php
 $filter = new Volume(0.5);
