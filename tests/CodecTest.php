@@ -120,7 +120,13 @@ class CodecTest extends \PHPUnit_Framework_TestCase
 			['setCode', 1],
 			['setCode', 1.1],
 			['setCode', ['array']],
-			['setCode', (object) ['object' => true]]
+			['setCode', (object) ['object' => true]],
+		    ['setName', true],
+		    ['setName', false],
+		    ['setName', 1],
+		    ['setName', 1.1],
+		    ['setName', ['array']],
+		    ['setName', (object) ['object' => true]]
 		];
 	}
 	
