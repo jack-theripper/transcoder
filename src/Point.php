@@ -65,6 +65,19 @@ class Point
 	}
 	
 	/**
+	 * Return the array of coordinates.
+	 *
+	 * @return array
+	 */
+	public function toArray()
+	{
+		return [
+			'x' => $this->getX(),
+		    'y' => $this->getY()
+		];
+	}
+	
+	/**
 	 * Set X value.
 	 *
 	 * @param int $x
