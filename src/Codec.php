@@ -41,7 +41,11 @@ class Codec
 	public function __construct($codec, $codecName = '')
 	{
 		$this->setCode($codec);
-		$this->setName($codecName);
+		
+		if ($codecName !== null)
+		{
+			$this->setName($codecName);
+		}
 	}
 	
 	/**
@@ -61,7 +65,7 @@ class Codec
 	 */
 	public function getName()
 	{
-		return $this->name;
+		return (string) $this->name;
 	}
 	
 	/**
