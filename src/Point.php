@@ -87,7 +87,7 @@ class Point
 	 */
 	protected function setX($x)
 	{
-		if ($x < 0)
+		if ( ! is_numeric($x) || $x < 0)
 		{
 			throw new \InvalidArgumentException('The value of x must be a positive numeric.');
 		}
@@ -107,7 +107,7 @@ class Point
 	 */
 	protected function setY($y)
 	{
-		if ($y < 0)
+		if ( ! is_numeric($y) || $y < 0)
 		{
 			throw new \InvalidArgumentException('The value of y must be a positive numeric.');
 		}
