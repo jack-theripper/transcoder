@@ -21,6 +21,28 @@ class Dimension
 {
 	
 	/**
+	 * Create instance Dimension from string.
+	 *
+	 * @param string $dimension For example, '100x200', '500:400', '320,180', '768;360', '200X100'
+	 *
+	 * <code>
+	 *  $dimension = Dimension::fromString('200X100');
+	 * </code>
+	 *
+	 * @return Dimension
+	 * @throws \InvalidArgumentException
+	 */
+	public static function fromString($dimension)
+	{
+		if ( ! preg_match('/(\d+)\s?[:xX,;]{1}\s?(\d+)/', $dimension, $matches))
+		{
+			throw new \InvalidArgumentException('Dimension string has an unsupported format.');
+		}
+		
+		return new self($matches[1], $matches[2]);
+	}
+	
+	/**
 	 * @var int
 	 */
 	protected $width;
