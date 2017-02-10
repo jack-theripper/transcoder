@@ -23,60 +23,144 @@ class CodecTest extends \PHPUnit_Framework_TestCase
 {
 	
 	/**
-	 * @expectedException \InvalidArgumentException
+	 * Testing constructor on successful.
+	 *
+	 * @dataProvider dataValidConstructor
+	 *
+	 * @param mixed $code
+	 * @param mixed $name
 	 */
-	public function testConstructor()
+	public function testConstructorSuccessful($code, $name)
 	{
-		$this->assertEquals('codec string', (new Codec('codec string'))->getCode());
-		$this->assertEquals('codec name', (new Codec('codec string', 'codec name'))->getName());
+		$codec = new Codec($code);
+		$this->assertEquals($code, $codec->getCode());
 		
-		new Codec([]);
+		$codec = new Codec($code, $name);
+		$this->assertEquals($code, $codec->getCode());
+		$this->assertEquals($name, $codec->getName());
+	}
+	
+	public function dataValidConstructor()
+	{
+		return [
+			['codec value', null],
+			['codec value', 'name'],
+			['codec value', '']
+		];
 	}
 	
 	/**
-	 * Getters testing.
+	 * Testing constructor on failure.
+	 *
+	 * @dataProvider dataInvalidConstructor
+	 *
+	 * @param mixed $code
+	 * @param mixed $name
 	 */
-	public function testGetters()
+	public function testConstructorFailure($code, $name)
 	{
-		$codec = new Codec('codec', 'codec name');
-		
-		$this->assertEquals('codec', $codec->getCode());
-		$this->assertEquals('codec name', $codec->getName());
-		$this->assertEquals('codec', (string) $codec);
+		$this->expectException(\InvalidArgumentException::class);
+		new Codec($code, $name);
 	}
 	
-	public function testSetters()
+	public function dataInvalidConstructor()
 	{
-		$codec = new Codec('codec');
-		$methodSetCode = new \ReflectionMethod(Codec::class, 'setCode');
-		$methodSetCode->setAccessible(true);
+		return [
+			// for 'code'
+			['', 'valid value'],
+			[null, 'valid value'],
+			[true, 'valid value'],
+			[false, 'valid value'],
+			[1, 'valid value'],
+			[1.1, 'valid value'],
+			[['array'], 'valid value'],
+			[(object) ['object' => true], 'valid value'],
+			
+			// for 'name'
+			['valid value', true],
+			['valid value', false],
+			['valid value', 1],
+			['valid value', 1.1],
+			['valid value', ['array']],
+			['valid value', (object) ['object' => true]]
+		];
+	}
+	
+	public function testCanSerializeToString()
+	{
+		$expected = 'abcdefghijklmnopqrstuvwxyz';
+		$codec = new Codec($expected);
+		$this->assertEquals($expected, $codec);
+	}
+	
+	/**
+	 * @dataProvider dataSettersFailure
+	 *
+	 * @param string $setter
+	 * @param mixed  $value
+	 */
+	public function testSettersFailure($setter, $value)
+	{
+		$codec = $this->getInstanceWithoutConstructor();
 		
-		$methodSetCode->invoke($codec, 'codec string');
-		$this->assertEquals($codec->getCode(), 'codec string');
+		$setterReflection = new \ReflectionMethod(Codec::class, $setter);
+		$setterReflection->setAccessible(true);
 		
-		try
-		{
-			$methodSetCode->invoke($codec, new \stdClass);
-		}
-		catch (\Exception $exception)
-		{
-			$this->assertInstanceOf(\InvalidArgumentException::class, $exception);
-		}
+		$this->expectException(\InvalidArgumentException::class);
+		$setterReflection->invoke($codec, $value);
+	}
+	
+	public function dataSettersFailure()
+	{
+		return [
+			['setCode', ''],
+			['setCode', null],
+			['setCode', true],
+			['setCode', false],
+			['setCode', 1],
+			['setCode', 1.1],
+			['setCode', ['array']],
+			['setCode', (object) ['object' => true]]
+		];
+	}
+	
+	/**
+	 * @dataProvider dataSettersAndGettersSuccessful
+	 *
+	 * @param string $setter
+	 * @param string $getter
+	 * @param mixed  $value
+	 */
+	public function testSettersAndGettersSuccessful($setter, $getter, $value)
+	{
+		$codec = $this->getInstanceWithoutConstructor();
 		
-		$methodSetName = new \ReflectionMethod(Codec::class, 'setName');
-		$methodSetName->setAccessible(true);
+		$setterReflection = new \ReflectionMethod(Codec::class, $setter);
+		$setterReflection->setAccessible(true);
+		$setterReflection->invoke($codec, $value);
 		
-		$methodSetName->invoke($codec, 'codec name');
-		$this->assertEquals($codec->getName(), 'codec name');
+		$getterReflection = new \ReflectionMethod(Codec::class, $getter);
+		$getterReflection->setAccessible(true);
 		
-		try
-		{
-			$methodSetName->invoke($codec, new \stdClass);
-		}
-		catch (\Exception $exception)
-		{
-			$this->assertInstanceOf(\InvalidArgumentException::class, $exception);
-		}
+		$this->assertEquals($value, $getterReflection->invoke($codec));
+	}
+	
+	public function dataSettersAndGettersSuccessful()
+	{
+		return [
+			['setCode', 'getCode', 'valid value'],
+			['setName', 'getName', 'valid value'],
+			['setName', 'getName', '']
+		];
+	}
+	
+	/**
+	 * @return Codec|object
+	 */
+	protected function getInstanceWithoutConstructor()
+	{
+		return (new \ReflectionClass(Codec::class))
+			->newInstanceWithoutConstructor();
 	}
 	
 }
