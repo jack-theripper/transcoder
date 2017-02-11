@@ -44,8 +44,8 @@ class PointTest extends \PHPUnit_Framework_TestCase
 			[0, 0],
 			[0, 100],
 			[150, 0],
-		    ['150', '150'],
-		    ['1.6', 1.1, 1, 1]
+			['150', '150'],
+			['1.6', 1.1, 1, 1]
 		];
 	}
 	
@@ -65,14 +65,90 @@ class PointTest extends \PHPUnit_Framework_TestCase
 	{
 		return [
 			[-1, 0],
-		    ['string', 0],
-		    [['array'], 0],
-		    [(object) ['object'], 0],
-		    [0, -1],
-		    [0, 'string'],
-		    [0, ['array']],
-		    [0, (object) ['object']]
+			['string', 0],
+			[['array'], 0],
+			[(object) ['object'], 0],
+			[0, -1],
+			[0, 'string'],
+			[0, ['array']],
+			[0, (object) ['object']]
 		];
+	}
+	
+	/**
+	 * @dataProvider dataSettersFailure
+	 *
+	 * @param string $method
+	 * @param mixed  $value
+	 */
+	public function testSettersFailure($method, $value)
+	{
+		$point = $this->getInstanceWithoutConstructor();
+		
+		$methodReflection = new \ReflectionMethod(Point::class, $method);
+		$methodReflection->setAccessible(true);
+		
+		$this->expectException(\InvalidArgumentException::class);
+		$methodReflection->invoke($point, $value);
+	}
+	
+	public function dataSettersFailure()
+	{
+		return [
+			['setX', -1],
+			['setX', 'string'],
+			['setX', ['array']],
+			['setX', (object) ['object']],
+			['setY', -1],
+			['setY', 'string'],
+			['setY', ['array']],
+			['setY', (object) ['object']],
+		];
+	}
+	
+	/** @noinspection MoreThanThreeArgumentsInspection */
+	
+	/**
+	 * @dataProvider dataSettersAndGettersSuccessful
+	 *
+	 * @param string $methodSetter
+	 * @param string $methodGetter
+	 * @param mixed  $value
+	 * @param mixed  $expectedValue
+	 */
+	public function testSettersAndGettersSuccessful($methodSetter, $methodGetter, $value, $expectedValue)
+	{
+		$point = $this->getInstanceWithoutConstructor();
+		
+		$setterReflection = new \ReflectionMethod(Point::class, $methodSetter);
+		$setterReflection->setAccessible(true);
+		$setterReflection->invoke($point, $value);
+		
+		$getterReflection = new \ReflectionMethod(Point::class, $methodGetter);
+		$getterReflection->setAccessible(true);
+		
+		$this->assertEquals($expectedValue, $getterReflection->invoke($point));
+	}
+	
+	public function dataSettersAndGettersSuccessful()
+	{
+		return [
+			['setX', 'getX', 0, 0],
+			['setX', 'getX', '100', 100],
+			['setX', 'getX', 2.9, 2],
+			['setY', 'getY', 0, 0],
+			['setY', 'getY', '100', 100],
+			['setY', 'getY', 2.9, 2],
+		];
+	}
+	
+	/**
+	 * @return Point|object
+	 */
+	protected function getInstanceWithoutConstructor()
+	{
+		return (new \ReflectionClass(Point::class))
+			->newInstanceWithoutConstructor();
 	}
 	
 }
