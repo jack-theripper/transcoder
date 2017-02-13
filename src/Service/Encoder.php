@@ -175,6 +175,7 @@ class Encoder implements EncoderInterface
 			
 			yield (new ProcessBuilder($options))
 				->setPrefix($this->options['ffmpeg.path'])
+				->setTimeout($this->options['timeout'])
 				->getProcess();
 		}
 	}
@@ -192,7 +193,7 @@ class Encoder implements EncoderInterface
 		$options += [
 			'ffmpeg.path'    => 'ffmpeg',
 			'ffmpeg.threads' => 0,
-			'timeout'        => 60
+			'timeout'        => 0
 		];
 		
 		if ( ! file_exists($options['ffmpeg.path']) || ! is_executable($options['ffmpeg.path']))
