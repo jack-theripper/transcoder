@@ -154,18 +154,6 @@ class Video extends Audio implements VideoInterface
 	 */
 	protected function _createCollections($demuxing)
 	{
-		/** @var VideoFormatInterface $className */
-		$className = $this->findFormatClass($demuxing->format['format'], VideoFormat::class);
-		
-		if ( ! $className instanceof VideoFormatInterface)
-		{
-			$className = VideoFormat::class;
-		}
-		
-		$this->format = $className::fromArray(array_filter($demuxing->format, function ($value) {
-			return $value !== null;
-		}));
-		
 		$this->streams = new Collection(array_map(function ($parameters) {
 			if ($parameters['type'] == 'audio')
 			{
@@ -179,6 +167,20 @@ class Video extends Audio implements VideoInterface
 			
 			throw new TranscoderException('This stream unsupported.');
 		}, $demuxing->streams));
+		
+		/** @var VideoFormatInterface $className */
+		$className = $this->findFormatClass($demuxing->format['format'], VideoFormat::class);
+		
+		if ( ! $className instanceof VideoFormatInterface)
+		{
+			$className = VideoFormat::class;
+		}
+		
+		$demuxing->format += $this->getStreams()[0]->toArray();
+		$this->format = $className::fromArray(array_filter($demuxing->format, function ($value) {
+			return $value !== null;
+		}));
+		
 	}
 	
 }
