@@ -29,6 +29,7 @@ class Graph extends SplPriorityQueue
 	 * @param mixed           $priority The associated priority.
 	 *
 	 * @return Graph
+	 * @throws \Arhitector\Transcoder\Exception\InvalidFilterException
 	 * @throws \InvalidArgumentException
 	 */
 	public function insert($filter, $priority)
@@ -36,6 +37,12 @@ class Graph extends SplPriorityQueue
 		if ( ! $filter instanceof FilterInterface)
 		{
 			throw new \InvalidArgumentException('The filter must be an instance of FilterInterface.');
+		}
+		
+		if ( ! $filter instanceof FilterChainInterface)
+		{
+			/** @noinspection CallableParameterUseCaseInTypeContextInspection */
+			$filter = new FilterChain($filter);
 		}
 		
 		parent::insert($filter, $priority);
