@@ -21,6 +21,15 @@ interface FormatInterface extends \Iterator, \ArrayAccess
 {
 	
 	/**
+	 * Returns a new format instance.
+	 *
+	 * @param array $options
+	 *
+	 * @return static
+	 */
+	public static function fromArray(array $options);
+	
+	/**
 	 * Get the duration value.
 	 *
 	 * @return float
