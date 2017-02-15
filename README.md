@@ -114,3 +114,11 @@ Increase input audio power by 6 decibels using fixed-point precision.
 ```php
 $filter = new Volume('6dB', Volume::PRECISION_FIXED);
 ```
+
+- Фильтр **Fade**
+
+Фильтр накладывает еффект затухания звука.
+
+```php
+use \Arhitector\Jumper\Filter\Fade;
+```
