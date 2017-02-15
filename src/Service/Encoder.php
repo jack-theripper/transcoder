@@ -133,9 +133,7 @@ class Encoder implements EncoderInterface
 			{
 				if (stripos($option, 'filter') === 0)
 				{
-					$_options[] = implode(', ', array_map(function ($option, $value){
-						return $value.'='.$option; // <filter name> = <filter params>
-					}, $value, array_keys($value)));
+					$_options[] = implode('; ', (array) $value);
 				}
 				else
 				{
