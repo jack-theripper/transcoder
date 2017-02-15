@@ -19,7 +19,7 @@ use Arhitector\Transcoder\Exception\TranscoderException;
  *
  * @package Arhitector\Transcoder\Stream
  */
-class Collection implements \Iterator, \Countable
+class Collection implements \Iterator, \Countable, \ArrayAccess
 {
 	
 	/**
@@ -109,6 +109,74 @@ class Collection implements \Iterator, \Countable
 	public function count()
 	{
 		return count($this->streams);
+	}
+	
+	/**
+	 * Whether a index exists.
+	 *
+	 * @param int $index
+	 *
+	 * @return bool
+	 */
+	public function offsetExists($index)
+	{
+		return isset($this->streams[$index]);
+	}
+	
+	/**
+	 * Offset to retrieve.
+	 *
+	 * @param int $index
+	 *
+	 * @return StreamInterface
+	 * @throws \OutOfBoundsException
+	 */
+	public function offsetGet($index)
+	{
+		if ( ! $this->offsetExists($index))
+		{
+			throw new \OutOfBoundsException('Index invalid or out of range.');
+		}
+		
+		return $this->streams[$index];
+	}
+	
+	/**
+	 * Sets a new stream instance at a specified index.
+	 *
+	 * @param int             $index The index being set.
+	 * @param StreamInterface $value The new value for the index.
+	 *
+	 * @return Collection
+	 * @throws TranscoderException
+	 */
+	public function offsetSet($index, $value)
+	{
+		if ( ! $value instanceof StreamInterface)
+		{
+			throw new TranscoderException(sprintf('The new value must be an instance of %s', StreamInterface::class));
+		}
+		
+		$this->streams[$index] = $value;
+		
+		return $this;
+	}
+	
+	/**
+	 * Offset to unset stream instance.
+	 *
+	 * @param int $index
+	 *
+	 * @return Collection
+	 */
+	public function offsetUnset($index)
+	{
+		if ($this->offsetExists($index))
+		{
+			unset($this->streams[$index]);
+		}
+		
+		return $this;
 	}
 	
 }
