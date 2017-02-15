@@ -15,8 +15,8 @@ namespace Arhitector\Transcoder;
 use Arhitector\Transcoder\Exception\InvalidFilterException;
 use Arhitector\Transcoder\Exception\TranscoderException;
 use Arhitector\Transcoder\Filter\AudioFilterInterface;
-use Arhitector\Transcoder\Filter\Collection as FiltersCollection;
 use Arhitector\Transcoder\Filter\FilterInterface;
+use Arhitector\Transcoder\Filter\Graph;
 use Arhitector\Transcoder\Format\AudioFormat;
 use Arhitector\Transcoder\Format\AudioFormatInterface;
 use Arhitector\Transcoder\Format\FormatInterface;
@@ -61,7 +61,7 @@ class Audio implements AudioInterface
 		}
 		
 		$this->_createCollections($demuxing);
-		$this->filters = new FiltersCollection();
+		$this->filters = new Graph();
 	}
 	
 	/**
@@ -208,7 +208,7 @@ class Audio implements AudioInterface
 	public function withoutFilters()
 	{
 		$self = clone $this;
-		$self->filters = new FiltersCollection();
+		$self->filters = new Graph();
 			
 		return $self;
 	}

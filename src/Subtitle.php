@@ -18,7 +18,7 @@ use Arhitector\Transcoder\Filter\FilterInterface;
 use Arhitector\Transcoder\Format\FormatInterface;
 use Arhitector\Transcoder\Service\ServiceFactory;
 use Arhitector\Transcoder\Service\ServiceFactoryInterface;
-use Arhitector\Transcoder\Filter\Collection as FiltersCollection;
+use Arhitector\Transcoder\Filter\Graph;
 
 /**
  * Class Subtitle.
@@ -52,7 +52,7 @@ class Subtitle implements SubtitleInterface
 		}
 		
 		$this->_createCollections($demuxing);
-		$this->filters = new FiltersCollection();
+		$this->filters = new Graph();
 	}
 	
 	/**

@@ -19,7 +19,7 @@ use SplPriorityQueue;
  *
  * @package Arhitector\Transcoder\Filter
  */
-class Collection extends SplPriorityQueue
+class Graph extends SplPriorityQueue
 {
 	
 	/**
@@ -28,7 +28,7 @@ class Collection extends SplPriorityQueue
 	 * @param FilterInterface $filter
 	 * @param mixed           $priority The associated priority.
 	 *
-	 * @return Collection
+	 * @return Graph
 	 * @throws \InvalidArgumentException
 	 */
 	public function insert($filter, $priority)

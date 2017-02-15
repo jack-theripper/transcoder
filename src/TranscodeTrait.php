@@ -48,7 +48,7 @@ trait TranscodeTrait
 	protected $mimeType;
 	
 	/**
-	 * @var \Arhitector\Transcoder\Filter\Collection List of filters.
+	 * @var \Arhitector\Transcoder\Filter\Graph List of filters.
 	 */
 	protected $filters;
 	
