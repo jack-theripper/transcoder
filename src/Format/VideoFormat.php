@@ -45,7 +45,7 @@ class VideoFormat extends AudioFormat implements VideoFormatInterface
 	/**
 	 * @var int Passes value.
 	 */
-	protected $passes = 2;
+	protected $passes = 1;
 	
 	/**
 	 * @var float Frame rate value.
