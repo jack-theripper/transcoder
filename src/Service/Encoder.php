@@ -68,7 +68,9 @@ class Encoder implements EncoderInterface
 			'video_bitrate'          => '-b:v',
 			'video_pixel_format'     => '-pix_fmt',
 			'metadata'               => '-metadata',
-			'force_format'           => '-f'
+			'force_format'           => '-f',
+		    'seek_start' => 'ss',
+		    'seek_end' => 't'
 		];
 	}
 	
@@ -170,7 +172,7 @@ class Encoder implements EncoderInterface
 			}
 			
 			$options[] = $filePath;
-			
+			var_dump($options);
 			yield (new ProcessBuilder($options))
 				->setPrefix($this->options['ffmpeg.path'])
 				->setTimeout($this->options['timeout'])
