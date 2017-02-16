@@ -16,6 +16,7 @@ use Arhitector\Transcoder\Codec;
 use Arhitector\Transcoder\Exception\TranscoderException;
 use Arhitector\Transcoder\Filter\SimpleFilter;
 use Arhitector\Transcoder\Format\FormatInterface;
+use Arhitector\Transcoder\TimeInterval;
 use Arhitector\Transcoder\Traits\FilePathAwareTrait;
 use Arhitector\Transcoder\TranscodeInterface;
 use Symfony\Component\Process\Exception\ProcessFailedException;
@@ -96,9 +97,9 @@ trait StreamTrait
 	protected $startTime;
 	
 	/**
-	 * @var float Duration value.
+	 * @var TimeInterval Duration value.
 	 */
-	protected $duration = 0.0;
+	protected $duration;
 	
 	/**
 	 * @var TranscodeInterface
@@ -206,7 +207,7 @@ trait StreamTrait
 	/**
 	 * Get duration value.
 	 *
-	 * @return float
+	 * @return TimeInterval
 	 */
 	public function getDuration()
 	{
@@ -319,19 +320,24 @@ trait StreamTrait
 	/**
 	 * Set duration value.
 	 *
-	 * @param float $duration
+	 * @param TimeInterval|float $duration
 	 *
 	 * @return $this
 	 * @throws \InvalidArgumentException
 	 */
 	protected function setDuration($duration)
 	{
-		if ( ! is_numeric($duration) || $duration < 0)
+		if (( ! is_numeric($duration) || $duration < 0) && ! $duration instanceof TimeInterval)
 		{
 			throw new \InvalidArgumentException('Wrong duration value.');
 		}
 		
-		$this->duration = (float) $duration;
+		if ( ! $duration instanceof TimeInterval)
+		{
+			$duration = TimeInterval::fromSeconds((float) $duration);
+		}
+		
+		$this->duration = $duration;
 		
 		return $this;
 	}

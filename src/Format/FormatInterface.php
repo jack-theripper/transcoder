@@ -12,6 +12,8 @@
  */
 namespace Arhitector\Transcoder\Format;
 
+use Arhitector\Transcoder\TimeInterval;
+
 /**
  * Interface FormatInterface.
  *
@@ -32,7 +34,7 @@ interface FormatInterface extends \Iterator, \ArrayAccess
 	/**
 	 * Get the duration value.
 	 *
-	 * @return float
+	 * @return TimeInterval
 	 */
 	public function getDuration();
 	

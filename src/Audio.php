@@ -111,7 +111,7 @@ class Audio implements AudioInterface
 	 */
 	public function getDuration()
 	{
-		return $this->getFormat()->getDuration();
+		return $this->getFormat()->getDuration()->toSeconds();
 	}
 	
 	/**

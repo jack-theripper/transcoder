@@ -14,6 +14,7 @@ namespace Arhitector\Transcoder\Stream;
 
 use Arhitector\Transcoder\Codec;
 use Arhitector\Transcoder\Format\FormatInterface;
+use Arhitector\Transcoder\TimeInterval;
 use Arhitector\Transcoder\TranscodeInterface;
 
 /**
@@ -112,7 +113,7 @@ interface StreamInterface
 	/**
 	 * Get duration value.
 	 *
-	 * @return float
+	 * @return TimeInterval
 	 */
 	public function getDuration();
 	
