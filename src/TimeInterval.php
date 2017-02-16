@@ -155,7 +155,7 @@ class TimeInterval
 	 *
 	 * @return string
 	 */
-	public function getFormat()
+	public function toString()
 	{
 		return sprintf('%02d:%02d:%02d.%02d', $this->getHours(), $this->getMinutes(), $this->getSeconds(),
 			$this->getFrames());

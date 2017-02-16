@@ -64,12 +64,12 @@ class Cut implements AudioFilterInterface, FrameFilterInterface
 	public function apply(TranscodeInterface $media, FormatInterface $format)
 	{
 		$options = [
-			'seek_start' => $this->getStartTime()->getFormat()
+			'seek_start' => $this->getStartTime()->toString()
 		];
 		
 		if ($this->getDuration() !== null)
 		{
-			$options['seek_end'] = $this->getDuration()->getFormat();
+			$options['seek_end'] = $this->getDuration()->toString();
 		}
 		
 		return $options;
