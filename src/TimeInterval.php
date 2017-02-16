@@ -168,7 +168,7 @@ class TimeInterval
 	 */
 	public function toSeconds()
 	{
-		return $this->getHours() * 3600 + $this->getMinutes() * 60 + $this->getSeconds() + (float) $this->getFrames();
+		return $this->getHours() * 3600 + $this->getMinutes() * 60 + $this->getSeconds() + $this->getFrames() / 100;
 	}
 	
 	/**
