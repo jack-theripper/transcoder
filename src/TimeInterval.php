@@ -162,6 +162,16 @@ class TimeInterval
 	}
 	
 	/**
+	 * Returns the time in seconds.
+	 *
+	 * @return float
+	 */
+	public function toSeconds()
+	{
+		return $this->getHours() * 3600 + $this->getMinutes() * 60 + $this->getSeconds() + (float) $this->getFrames();
+	}
+	
+	/**
 	 * Set hours value.
 	 *
 	 * @param int $hours
