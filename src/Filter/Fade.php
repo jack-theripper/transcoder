@@ -157,7 +157,7 @@ class Fade implements AudioFilterInterface
 	{
 		if ( ! $startTime instanceof TimeInterval)
 		{
-			$startTime = TimeInterval::fromSeconds($startTime);
+			$startTime = new TimeInterval($startTime);
 		}
 		
 		$this->setStartTime($startTime);
@@ -166,7 +166,7 @@ class Fade implements AudioFilterInterface
 		{
 			if ( ! $duration instanceof TimeInterval)
 			{
-				$duration = TimeInterval::fromSeconds($duration);
+				$duration = new TimeInterval($duration);
 			}
 			
 			$this->setDuration($duration);
@@ -190,7 +190,7 @@ class Fade implements AudioFilterInterface
 	{
 		$options = [
 			't'     => $this->getEffectType(),
-			'st'    => $this->getStartTime()->getSeconds(),
+			'st'    => (string) $this->getStartTime(),
 			'curve' => $this->getCurve()
 		];
 		
@@ -201,7 +201,7 @@ class Fade implements AudioFilterInterface
 		
 		if ($this->getDuration() !== null)
 		{
-			$options['d'] = $this->getDuration()->getSeconds();
+			$options['d'] = (string) $this->getDuration();
 		}
 		
 		if ($this->getStartSample() !== null)

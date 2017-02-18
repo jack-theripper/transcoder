@@ -220,14 +220,14 @@ trait FormatTrait
 	 */
 	protected function setDuration($duration)
 	{
-		if (( ! is_numeric($duration) || $duration < 0) && ! $duration instanceof TimeInterval)
+		if (is_numeric($duration) || $duration > 0)
 		{
-			throw new \InvalidArgumentException('Duration value must be a positive number value.');
+			$duration = new TimeInterval($duration);
 		}
 		
 		if ( ! $duration instanceof TimeInterval)
 		{
-			$duration = TimeInterval::fromSeconds((float) $duration);
+			throw new \InvalidArgumentException('The duration value must be a positive number value.');
 		}
 		
 		$this->duration = $duration;

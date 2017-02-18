@@ -35,27 +35,7 @@ class TimeInterval
 			throw new \InvalidArgumentException('Time string has an unsupported format.');
 		}
 		
-		return new self($matches[1], $matches[2], $matches[3], $matches[4]);
-	}
-	
-	/**
-	 * Create TimeCode from seconds.
-	 *
-	 * @param float|int $seconds
-	 *
-	 * @return TimeInterval
-	 * @throws \InvalidArgumentException
-	 */
-	public static function fromSeconds($seconds)
-	{
-		if ( ! is_numeric($seconds) || $seconds < 0)
-		{
-			throw new \InvalidArgumentException('Seconds value must be a positive numeric.');
-		}
-		
-		$split = explode(':', gmdate('H:i:s', $seconds));
-		
-		return new self($split[0], $split[1], $split[2], round(100 * ($seconds - floor($seconds))));
+		return new self($matches[1] * 3600 + $matches[2] + 60 + $matches[3] + ($matches[4] / 100));
 	}
 	
 	/**
@@ -69,96 +49,64 @@ class TimeInterval
 	 */
 	public static function fromFrame($frames, $fps)
 	{
-		return self::fromSeconds($frames / $fps);
+		return new self($frames / $fps);
 	}
 	
 	/**
-	 * @var int
+	 * @var int The timestamp.
 	 */
-	protected $hours = 0;
-	
-	/**
-	 * @var int
-	 */
-	protected $minutes = 0;
-	
-	/**
-	 * @var int
-	 */
-	protected $seconds = 0;
-	
-	/**
-	 * @var int
-	 */
-	protected $frames = 0;
+	protected $timestamp = 0;
 	
 	/**
 	 * TimeCode constructor.
 	 *
-	 * @param int $hours
-	 * @param int $minutes
 	 * @param int $seconds
-	 * @param int $frames
 	 *
 	 * @throws \InvalidArgumentException
 	 */
-	public function __construct($hours, $minutes, $seconds, $frames = 0)
+	public function __construct($seconds)
 	{
-		$this->setHours($hours);
-		$this->setMinutes($minutes);
-		$this->setSeconds($seconds);
-		$this->setFrames($frames);
+		$this->setTimestamp($seconds);
 	}
 	
 	/**
-	 * Get hours value.
+	 * Get the hours value.
 	 *
 	 * @return int
 	 */
 	public function getHours()
 	{
-		return $this->hours;
+		return (int) gmdate('H', $this->toSeconds());
 	}
 	
 	/**
-	 * Get minutes value.
+	 * Get the minutes value.
 	 *
 	 * @return int
 	 */
 	public function getMinutes()
 	{
-		return $this->minutes;
+		return (int) gmdate('i', $this->toSeconds());
 	}
 	
 	/**
-	 * Get seconds value.
+	 * Get the seconds value.
 	 *
 	 * @return int
 	 */
 	public function getSeconds()
 	{
-		return $this->seconds;
+		return (int) gmdate('s', $this->toSeconds());
 	}
 	
 	/**
-	 * Get frames value.
+	 * Get the frames value.
 	 *
 	 * @return int
 	 */
 	public function getFrames()
 	{
-		return $this->frames;
-	}
-	
-	/**
-	 * Get time string in the format.
-	 *
-	 * @return string
-	 */
-	public function toString()
-	{
-		return sprintf('%02d:%02d:%02d.%02d', $this->getHours(), $this->getMinutes(), $this->getSeconds(),
-			$this->getFrames());
+		return round(100 * ($this->toSeconds() - floor($this->toSeconds())));
 	}
 	
 	/**
@@ -168,85 +116,37 @@ class TimeInterval
 	 */
 	public function toSeconds()
 	{
-		return $this->getHours() * 3600 + $this->getMinutes() * 60 + $this->getSeconds() + $this->getFrames() / 100;
+		return $this->timestamp;
 	}
 	
 	/**
-	 * Set hours value.
+	 * Get time string in the ffmpeg format.
 	 *
-	 * @param int $hours
+	 * @return string
+	 */
+	public function __toString()
+	{
+		$timestamp = $this->toSeconds();
+		
+		return sprintf('%s.%02d', gmdate('H:i:s', $timestamp), round(100 * ($timestamp - floor($timestamp))));
+	}
+	
+	/**
+	 * Set the timestamp value.
+	 *
+	 * @param int|float $seconds
 	 *
 	 * @return TimeInterval
 	 * @throws \InvalidArgumentException
 	 */
-	protected function setHours($hours)
+	protected function setTimestamp($seconds)
 	{
-		if ($hours < 0)
+		if ( ! is_numeric($seconds) || $seconds < 0)
 		{
-			throw new \InvalidArgumentException('Hours value should be a positive integer.');
+			throw new \InvalidArgumentException('The seconds value should be a positive integer.');
 		}
 		
-		$this->hours = (int) $hours;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set minutes value.
-	 *
-	 * @param int $minutes
-	 *
-	 * @return TimeInterval
-	 * @throws \InvalidArgumentException
-	 */
-	protected function setMinutes($minutes)
-	{
-		if ($minutes < 0)
-		{
-			throw new \InvalidArgumentException('Minutes value should be a positive integer.');
-		}
-		
-		$this->minutes = (int) $minutes;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set seconds value.
-	 *
-	 * @param int $seconds
-	 *
-	 * @return TimeInterval
-	 * @throws \InvalidArgumentException
-	 */
-	protected function setSeconds($seconds)
-	{
-		if ($seconds < 0)
-		{
-			throw new \InvalidArgumentException('Seconds value should be a positive integer.');
-		}
-		
-		$this->seconds = (int) $seconds;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set frames value.
-	 *
-	 * @param int $frames
-	 *
-	 * @return TimeInterval
-	 * @throws \InvalidArgumentException
-	 */
-	protected function setFrames($frames)
-	{
-		if ($frames < 0)
-		{
-			throw new \InvalidArgumentException('Frames value should be a positive integer.');
-		}
-		
-		$this->frames = (int) $frames;
+		$this->timestamp = (float) $seconds;
 		
 		return $this;
 	}

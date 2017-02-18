@@ -46,7 +46,7 @@ class Cut implements AudioFilterInterface, FrameFilterInterface
 	{
 		if ( ! $start instanceof TimeInterval)
 		{
-			$start = TimeInterval::fromSeconds($start);
+			$start = new TimeInterval($start);
 		}
 		
 		$this->startTime = $start;
@@ -64,12 +64,12 @@ class Cut implements AudioFilterInterface, FrameFilterInterface
 	public function apply(TranscodeInterface $media, FormatInterface $format)
 	{
 		$options = [
-			'seek_start' => $this->getStartTime()->toString()
+			'seek_start' => (string) $this->getStartTime()
 		];
 		
 		if ($this->getDuration() !== null)
 		{
-			$options['seek_end'] = $this->getDuration()->toString();
+			$options['seek_end'] = (string) $this->getDuration();
 		}
 		
 		return $options;

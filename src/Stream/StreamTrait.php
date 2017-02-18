@@ -327,14 +327,14 @@ trait StreamTrait
 	 */
 	protected function setDuration($duration)
 	{
-		if (( ! is_numeric($duration) || $duration < 0) && ! $duration instanceof TimeInterval)
+		if (is_numeric($duration) || $duration > 0)
 		{
-			throw new \InvalidArgumentException('Wrong duration value.');
+			$duration = new TimeInterval($duration);
 		}
 		
 		if ( ! $duration instanceof TimeInterval)
 		{
-			$duration = TimeInterval::fromSeconds((float) $duration);
+			throw new \InvalidArgumentException('Wrong the duration value.');
 		}
 		
 		$this->duration = $duration;
