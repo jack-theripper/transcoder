@@ -327,7 +327,7 @@ trait StreamTrait
 	 */
 	protected function setDuration($duration)
 	{
-		if (is_numeric($duration) || $duration > 0)
+		if (is_numeric($duration) && $duration > 0)
 		{
 			$duration = new TimeInterval($duration);
 		}
