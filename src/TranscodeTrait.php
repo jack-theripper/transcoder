@@ -14,6 +14,7 @@ namespace Arhitector\Transcoder;
 
 use Arhitector\Transcoder\Format\FormatInterface;
 use Arhitector\Transcoder\Service\ServiceFactoryInterface;
+use Arhitector\Transcoder\Stream\Collection;
 use Arhitector\Transcoder\Stream\StreamInterface;
 use Arhitector\Transcoder\Traits\FilePathAwareTrait;
 use Mimey\MimeTypes;
@@ -65,10 +66,35 @@ trait TranscodeTrait
 	/**
 	 * Get a list of streams.
 	 *
-	 * @return \Arhitector\Transcoder\Stream\Collection|StreamInterface[]
+	 * @param int|callable $filter
+	 *
+	 * @return Collection|StreamInterface[]
 	 */
-	public function getStreams()
+	public function getStreams($filter = null)
 	{
+		if ($filter !== null)
+		{
+			if ( ! is_callable($filter))
+			{
+				$filter = function (StreamInterface $stream) use ($filter)
+				{
+					return (bool) ($filter & $stream->getType());
+				};
+			}
+			
+			$streams = clone $this->streams;
+			
+			foreach ($streams as $index => $stream)
+			{
+				if ($filter($stream) === false)
+				{
+					$streams->offsetUnset($index);
+				}
+			}
+			
+			return $streams;
+		}
+		
 		return $this->streams;
 	}
 	
@@ -101,7 +127,7 @@ trait TranscodeTrait
 	 *
 	 * @return TranscodeTrait
 	 */
-	protected function setService(ServiceFactoryInterface $service)
+	protected function setServiceFactory(ServiceFactoryInterface $service)
 	{
 		$this->service = $service;
 		
@@ -168,7 +194,7 @@ trait TranscodeTrait
 				return $classString;
 			}
 		}
-
+		
 		return $default;
 	}
 	

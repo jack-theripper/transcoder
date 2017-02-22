@@ -51,9 +51,11 @@ interface TranscodeInterface
 	/**
 	 * Get a list of streams.
 	 *
+	 * @param int|callable $filter
+	 *
 	 * @return Collection|StreamInterface[]
 	 */
-	public function getStreams();
+	public function getStreams($filter = null);
 	
 	/**
 	 * Transcoding.
