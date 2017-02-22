@@ -179,7 +179,7 @@ trait FormatTrait
 	{
 		if ( ! $this->offsetExists($tagName))
 		{
-			throw new \OutOfBoundsException('Index invalid or out of range.');
+			return null;
 		}
 		
 		return $this->tags[$tagName];
