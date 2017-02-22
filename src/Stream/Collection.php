@@ -28,6 +28,11 @@ class Collection implements \Iterator, \Countable, \ArrayAccess
 	protected $streams = [];
 	
 	/**
+	 * @var int Current position
+	 */
+	private $position = 0;
+	
+	/**
 	 * Collection constructor.
 	 *
 	 * @param array $streams
@@ -42,9 +47,9 @@ class Collection implements \Iterator, \Countable, \ArrayAccess
 			{
 				throw new TranscoderException('Class instance must be instanceof "StreamInterface".');
 			}
-			
-			$this->streams[$stream->getIndex()] = $stream;
 		}
+		
+		$this->streams = $streams;
 	}
 	
 	/**
@@ -54,7 +59,7 @@ class Collection implements \Iterator, \Countable, \ArrayAccess
 	 */
 	public function current()
 	{
-		return current($this->streams);
+		return $this->streams[$this->position];
 	}
 	
 	/**
@@ -64,7 +69,7 @@ class Collection implements \Iterator, \Countable, \ArrayAccess
 	 */
 	public function next()
 	{
-		next($this->streams);
+		$this->position++;
 		
 		return $this;
 	}
@@ -76,7 +81,7 @@ class Collection implements \Iterator, \Countable, \ArrayAccess
 	 */
 	public function key()
 	{
-		return key($this->streams);
+		return $this->position;
 	}
 	
 	/**
@@ -86,7 +91,7 @@ class Collection implements \Iterator, \Countable, \ArrayAccess
 	 */
 	public function valid()
 	{
-		return key($this->streams) !== null;
+		return isset($this->streams[$this->position]);
 	}
 	
 	/**
@@ -96,7 +101,7 @@ class Collection implements \Iterator, \Countable, \ArrayAccess
 	 */
 	public function rewind()
 	{
-		reset($this->streams);
+		$this->position = 0;
 		
 		return $this;
 	}
