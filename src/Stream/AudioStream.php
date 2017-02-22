@@ -52,6 +52,16 @@ class AudioStream implements AudioStreamInterface
 	}
 	
 	/**
+	 * Returns a bit mask of type.
+	 *
+	 * @return int
+	 */
+	public function getType()
+	{
+		return self::T_AUDIO;
+	}
+	
+	/**
 	 * Sets the channels value.
 	 *
 	 * @param  int $channels

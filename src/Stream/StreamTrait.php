@@ -13,13 +13,11 @@
 namespace Arhitector\Transcoder\Stream;
 
 use Arhitector\Transcoder\Codec;
-use Arhitector\Transcoder\Exception\TranscoderException;
 use Arhitector\Transcoder\Filter\SimpleFilter;
 use Arhitector\Transcoder\Format\FormatInterface;
 use Arhitector\Transcoder\TimeInterval;
 use Arhitector\Transcoder\Traits\FilePathAwareTrait;
 use Arhitector\Transcoder\TranscodeInterface;
-use Symfony\Component\Process\Exception\ProcessFailedException;
 
 /**
  * Class StreamTrait.

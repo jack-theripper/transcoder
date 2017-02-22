@@ -54,6 +54,16 @@ class FrameStream implements FrameStreamInterface
 	}
 	
 	/**
+	 * Returns a bit mask of type.
+	 *
+	 * @return int
+	 */
+	public function getType()
+	{
+		return self::T_FRAME;
+	}
+	
+	/**
 	 * Set the width value.
 	 *
 	 * @param int $width

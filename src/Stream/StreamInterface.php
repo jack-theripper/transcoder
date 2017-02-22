@@ -155,4 +155,11 @@ interface StreamInterface
 	 */
 	public function toArray();
 	
+	/**
+	 * Returns a bit mask of type.
+	 *
+	 * @return int
+	 */
+	public function getType();
+	
 }

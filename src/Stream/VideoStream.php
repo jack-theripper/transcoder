@@ -36,6 +36,16 @@ class VideoStream extends FrameStream implements VideoStreamInterface
 	}
 	
 	/**
+	 * Returns a bit mask of type.
+	 *
+	 * @return int
+	 */
+	public function getType()
+	{
+		return self::T_VIDEO;
+	}
+	
+	/**
 	 * Set frame rate value.
 	 *
 	 * @param float $frameRate
