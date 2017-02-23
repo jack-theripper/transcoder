@@ -34,7 +34,7 @@ trait TranscodeTrait
 	protected $format;
 	
 	/**
-	 * @var \Arhitector\Transcoder\Stream\Collection
+	 * @var Collection
 	 */
 	protected $streams;
 	
@@ -108,11 +108,11 @@ trait TranscodeTrait
 	 *
 	 * @param StreamInterface $stream
 	 *
-	 * @return TranscodeInterface
+	 * @return static
 	 */
 	public function addStream(StreamInterface $stream)
 	{
-		
+		// TODO
 	}
 	
 	/**
@@ -186,6 +186,34 @@ trait TranscodeTrait
 		}
 		
 		return $default;
+	}
+	
+	/**
+	 * Set the format instance.
+	 *
+	 * @param FormatInterface $format
+	 *
+	 * @return static
+	 */
+	protected function setFormat(FormatInterface $format)
+	{
+		$this->format = $format;
+		
+		return $this;
+	}
+	
+	/**
+	 * Set the stream collection instance.
+	 *
+	 * @param Collection $streams
+	 *
+	 * @return static
+	 */
+	protected function setStreams(Collection $streams)
+	{
+		$this->streams = $streams;
+		
+		return $this;
 	}
 	
 }
