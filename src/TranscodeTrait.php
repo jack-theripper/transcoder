@@ -44,11 +44,6 @@ trait TranscodeTrait
 	protected $service;
 	
 	/**
-	 * @var string The MIME Content-type for a file.
-	 */
-	protected $mimeType;
-	
-	/**
 	 * @var \Arhitector\Transcoder\Filter\Graph List of filters.
 	 */
 	protected $filters;
@@ -141,12 +136,7 @@ trait TranscodeTrait
 	 */
 	protected function getMimeType()
 	{
-		if ( ! $this->mimeType)
-		{
-			$this->mimeType = mime_content_type($this->getFilePath());
-		}
-		
-		return (string) $this->mimeType;
+		return mime_content_type($this->getFilePath());
 	}
 	
 	/**
