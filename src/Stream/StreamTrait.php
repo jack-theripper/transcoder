@@ -248,7 +248,7 @@ trait StreamTrait
 		{
 			if (stripos($method, 'get') === 0)
 			{
-				$result[substr($method, 3)] = $this->{$method}();
+				$result[strtolower(substr($method, 3))] = $this->{$method}();
 			}
 		}
 		
