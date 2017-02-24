@@ -162,7 +162,7 @@ class Collection implements \Iterator, \Countable, \ArrayAccess
 			throw new TranscoderException(sprintf('The new value must be an instance of %s', StreamInterface::class));
 		}
 		
-		$this->streams[$index] = $value;
+		$this->streams[$index ?: $this->count()] = $value;
 		
 		return $this;
 	}
