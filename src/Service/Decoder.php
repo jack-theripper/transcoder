@@ -84,9 +84,9 @@ class Decoder implements DecoderInterface
 			
 			throw new TranscoderException($output['error']['string']);
 		}
-		 
+		
 		$result = new \stdClass;
-		$result->format = $this->resolveFormatProperties($output['format']);
+		$result->format = $this->ensureFormatProperties($output['format']);
 		$result->streams = [];
 		
 		foreach ((array) $output['streams'] as $stream)
@@ -132,19 +132,21 @@ class Decoder implements DecoderInterface
 	 *
 	 * @return array
 	 */
-	protected function resolveFormatProperties(array $properties)
+	protected function ensureFormatProperties(array $properties)
 	{
 		// defaults keys for transforming
 		$properties += [
-		    'bit_rate'    => 0,
+			'bit_rate'    => 0,
 			'duration'    => 0.0,
 			'format_name' => '',
-			'format'      => false,
 			'tags'        => []
 		];
-
+		
 		$properties['metadata'] = (array) $properties['tags'];
 		$properties['format'] = $properties['format_name'];
+		$properties['bitrate'] = $properties['bit_rate'];
+		
+		unset($properties['tags'], $properties['bit_rate']);
 		
 		return $properties;
 	}
