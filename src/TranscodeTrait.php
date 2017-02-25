@@ -290,6 +290,13 @@ trait TranscodeTrait
 	}
 	
 	/**
+	 * It supports the type of media.
+	 *
+	 * @return bool
+	 */
+	abstract protected function isSupportedFileType();
+	
+	/**
 	 * Creates an instance of the format from the internal type.
 	 *
 	 * @param array $formatArray
