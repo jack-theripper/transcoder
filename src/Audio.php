@@ -20,11 +20,7 @@ use Arhitector\Transcoder\Filter\Graph;
 use Arhitector\Transcoder\Format\AudioFormat;
 use Arhitector\Transcoder\Format\AudioFormatInterface;
 use Arhitector\Transcoder\Format\FormatInterface;
-use Arhitector\Transcoder\Service\ServiceFactory;
-use Arhitector\Transcoder\Service\ServiceFactoryInterface;
-use Arhitector\Transcoder\Stream\AudioStream;
-use Arhitector\Transcoder\Stream\Collection;
-use Arhitector\Transcoder\Stream\FrameStream;
+use Arhitector\Transcoder\Stream\StreamInterface;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
 /**
@@ -36,32 +32,6 @@ class Audio implements AudioInterface
 {
 	use TranscodeTrait {
 		TranscodeTrait::getFormat as private _getFormat;
-	}
-	
-	/**
-	 * Audio constructor.
-	 *
-	 * @param string                  $filePath
-	 * @param ServiceFactoryInterface $service
-	 *
-	 * @throws \Arhitector\Transcoder\Exception\TranscoderException
-	 * @throws \InvalidArgumentException
-	 */
-	public function __construct($filePath, ServiceFactoryInterface $service = null)
-	{
-		$this->setFilePath($filePath);
-		$this->setService($service ?: new ServiceFactory());
-		
-		/** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-		$demuxing = $this->getService()->getDecoderService()->demuxing($this);
-		
-		if (count($demuxing->streams) < 1 || ( ! $this->isSupportedFileType() && empty($demuxing->format['format'])))
-		{
-			throw new TranscoderException('File type unsupported or the file is corrupted.');
-		}
-		
-		$this->_createCollections($demuxing);
-		$this->filters = new Graph();
 	}
 	
 	/**
@@ -229,55 +199,41 @@ class Audio implements AudioInterface
 	}
 	
 	/**
-	 * Ensure streams etc.
+	 * Creates an instance of the format from the internal type.
 	 *
-	 * @param \stdClass $demuxing
+	 * @param array $formatArray
 	 *
-	 * @throws \Arhitector\Transcoder\Exception\TranscoderException
+	 * @return AudioFormatInterface
 	 * @throws \InvalidArgumentException
+	 * @throws \Arhitector\Transcoder\Exception\TranscoderException
 	 */
-	protected function _createCollections($demuxing)
+	protected function createFormat(array $formatArray)
 	{
-		/** @var AudioFormatInterface $className */
-		$className = $this->findFormatClass($demuxing->format['format'], AudioFormat::class);
+		$format = $this->findFormatClass($formatArray['format'], AudioFormat::class);
 		
-		if ( ! $className instanceof AudioFormatInterface)
+		if ( ! is_subclass_of($format, AudioFormatInterface::class))
 		{
-			$className = AudioFormat::class;
+			throw new TranscoderException('Invalid format type.');
 		}
 		
-		$this->format = $className::fromArray(array_filter($demuxing->format, function ($value) {
+		$stream = $this->getStreams(StreamInterface::T_AUDIO)->getFirst();
+		
+		if ($stream !== null)
+		{
+			foreach ($stream->toArray() as $key => $value)
+			{
+				$formatArray[$key] = $value;
+				
+				if (in_array($key, ['codec', 'bitrate'], false))
+				{
+					$formatArray['audio_'.$key] = $value;
+				}
+			}
+		}
+		
+		return $format::fromArray(array_filter($formatArray, function ($value) {
 			return $value !== null;
 		}));
-		
-		$this->streams = new Collection(array_map(function ($parameters) {
-			if ($parameters['type'] == 'audio')
-			{
-				$stream = AudioStream::create($this, $parameters);
-				
-				if ($stream->getChannels() !== null)
-				{
-					$this->getFormat()->setChannels($stream->getChannels());
-				}
-				
-				if ($stream->getFrequency() !== null)
-				{
-					$this->getFormat()->setFrequency($stream->getFrequency());
-				}
-				
-				$this->getFormat()->setAudioBitrate($stream->getBitrate());
-				$this->getFormat()->setAudioCodec($stream->getCodec());
-				
-				return $stream;
-			}
-			
-			if ($parameters['type'] == 'video')
-			{
-				return FrameStream::create($this, $parameters);
-			}
-			
-			throw new TranscoderException('This stream unsupported.');
-		}, $demuxing->streams));
 	}
 	
 }

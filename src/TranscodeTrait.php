@@ -12,10 +12,16 @@
  */
 namespace Arhitector\Transcoder;
 
+use Arhitector\Transcoder\Exception\TranscoderException;
+use Arhitector\Transcoder\Filter\Graph;
 use Arhitector\Transcoder\Format\FormatInterface;
+use Arhitector\Transcoder\Service\ServiceFactory;
 use Arhitector\Transcoder\Service\ServiceFactoryInterface;
+use Arhitector\Transcoder\Stream\AudioStream;
 use Arhitector\Transcoder\Stream\Collection;
+use Arhitector\Transcoder\Stream\FrameStream;
 use Arhitector\Transcoder\Stream\StreamInterface;
+use Arhitector\Transcoder\Stream\VideoStream;
 use Arhitector\Transcoder\Traits\FilePathAwareTrait;
 use Mimey\MimeTypes;
 
@@ -23,6 +29,7 @@ use Mimey\MimeTypes;
  * Class TranscoderTrait.
  *
  * @package Arhitector\Transcoder
+ * @mixin TranscodeInterface
  */
 trait TranscodeTrait
 {
@@ -47,6 +54,33 @@ trait TranscodeTrait
 	 * @var \Arhitector\Transcoder\Filter\Graph List of filters.
 	 */
 	protected $filters;
+	
+	/**
+	 * The constructor.
+	 *
+	 * @param string                  $filePath
+	 * @param ServiceFactoryInterface $service
+	 *
+	 * @throws \Arhitector\Transcoder\Exception\TranscoderException
+	 * @throws \InvalidArgumentException
+	 */
+	public function __construct($filePath, ServiceFactoryInterface $service = null)
+	{
+		$this->setFilePath($filePath);
+		$this->setServiceFactory($service ?: new ServiceFactory());
+		
+		/** @noinspection ExceptionsAnnotatingAndHandlingInspection */
+		$demuxing = $this->getService()->getDecoderService()->demuxing($this);
+		
+		if (count($demuxing->streams) < 1 || ( ! $this->isSupportedFileType() && empty($demuxing->format['format'])))
+		{
+			throw new TranscoderException('File type unsupported or the file is corrupted.');
+		}
+		
+		$this->setStreams(new Collection($this->ensureStreams($demuxing->streams)));
+		$this->setFormat($this->createFormat($demuxing->format));
+		$this->filters = new Graph();
+	}
 	
 	/**
 	 * Get current format.
@@ -109,10 +143,13 @@ trait TranscodeTrait
 	 * @param StreamInterface $stream
 	 *
 	 * @return static
+	 * @throws \Arhitector\Transcoder\Exception\TranscoderException
 	 */
 	public function addStream(StreamInterface $stream)
 	{
-		// TODO
+		$this->getStreams()->offsetSet(null, $stream);
+		
+		return $this;
 	}
 	
 	/**
@@ -215,5 +252,52 @@ trait TranscodeTrait
 		
 		return $this;
 	}
+	
+	/**
+	 * Returns the stream instances.
+	 *
+	 * @param array $streamsArray
+	 *
+	 * @return StreamInterface[]
+	 * @throws \InvalidArgumentException
+	 * @throws TranscoderException
+	 */
+	protected function ensureStreams(array $streamsArray)
+	{
+		return array_map(function (array $stream)
+		{
+			switch ($stream['type'] ?: null)
+			{
+				case 'audio':
+					return AudioStream::create($this, $stream);
+				break;
+				
+				case 'video':
+					
+					if ($this instanceof AudioInterface && ! $this instanceof VideoInterface)
+					{
+						return FrameStream::create($this, $stream);
+					}
+					
+					return VideoStream::create($this, $stream);
+				
+				break;
+				
+				default;
+					throw new TranscoderException('This stream unsupported.');
+			}
+		}, $streamsArray);
+	}
+	
+	/**
+	 * Creates an instance of the format from the internal type.
+	 *
+	 * @param array $formatArray
+	 *
+	 * @return FormatInterface
+	 * @throws \InvalidArgumentException
+	 * @throws \Arhitector\Transcoder\Exception\TranscoderException
+	 */
+	abstract protected function createFormat(array $formatArray);
 	
 }
