@@ -55,11 +55,11 @@ class Collection implements \Iterator, \Countable, \ArrayAccess
 	/**
 	 * Returns the first StreamInterface from the list.
 	 *
-	 * @return StreamInterface
+	 * @return StreamInterface|null
 	 */
 	public function getFirst()
 	{
-		return reset($this->streams);
+		return reset($this->streams) ?: null;
 	}
 	
 	/**
