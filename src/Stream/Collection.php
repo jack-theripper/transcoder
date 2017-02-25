@@ -19,7 +19,7 @@ use Arhitector\Transcoder\Exception\TranscoderException;
  *
  * @package Arhitector\Transcoder\Stream
  */
-class Collection implements \Iterator, \Countable, \ArrayAccess
+class Collection implements EnumerationInterface, \Iterator, \Countable, \ArrayAccess
 {
 	
 	/**

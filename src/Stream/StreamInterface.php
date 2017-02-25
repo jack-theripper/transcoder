@@ -22,28 +22,8 @@ use Arhitector\Transcoder\TranscodeInterface;
  *
  * @package Arhitector\Transcoder\Stream
  */
-interface StreamInterface
+interface StreamInterface extends EnumerationInterface
 {
-	
-	/**
-	 * @var int Type of audio stream.
-	 */
-	const T_AUDIO = 1;
-	
-	/**
-	 * @var int Type of frame stream.
-	 */
-	const T_FRAME = 2;
-	
-	/**
-	 * @var int Type of video stream.
-	 */
-	const T_VIDEO = 4;
-	
-	/**
-	 * @var int Type of subtitle stream.
-	 */
-	const T_SUBTITLE = 8;
 	
 	/**
 	 * Returns a new format instance.

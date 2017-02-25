@@ -13,11 +13,31 @@
 namespace Arhitector\Transcoder\Stream;
 
 /**
- * Interface SubtitleStreamInterface.
+ * Interface EnumerationInterface.
  *
  * @package Arhitector\Transcoder\Stream
  */
-interface SubtitleStreamInterface extends StreamInterface
+interface EnumerationInterface
 {
+	
+	/**
+	 * @var int Type of audio stream.
+	 */
+	const T_AUDIO = 1;
+	
+	/**
+	 * @var int Type of frame stream.
+	 */
+	const T_FRAME = 2;
+	
+	/**
+	 * @var int Type of video stream.
+	 */
+	const T_VIDEO = 4;
+	
+	/**
+	 * @var int Type of subtitle stream.
+	 */
+	const T_SUBTITLE = 8;
 	
 }
