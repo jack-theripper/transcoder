@@ -21,6 +21,7 @@ use Arhitector\Transcoder\Stream\AudioStream;
 use Arhitector\Transcoder\Stream\Collection;
 use Arhitector\Transcoder\Stream\FrameStream;
 use Arhitector\Transcoder\Stream\StreamInterface;
+use Arhitector\Transcoder\Stream\SubtitleStream;
 use Arhitector\Transcoder\Stream\VideoStream;
 use Arhitector\Transcoder\Traits\FilePathAwareTrait;
 use Mimey\MimeTypes;
@@ -105,8 +106,7 @@ trait TranscodeTrait
 		{
 			if ( ! is_callable($filter))
 			{
-				$filter = function (StreamInterface $stream) use ($filter)
-				{
+				$filter = function (StreamInterface $stream) use ($filter) {
 					return (bool) ($filter & $stream->getType());
 				};
 			}
@@ -264,8 +264,7 @@ trait TranscodeTrait
 	 */
 	protected function ensureStreams(array $streamsArray)
 	{
-		return array_map(function (array $stream)
-		{
+		return array_map(function (array $stream) {
 			switch ($stream['type'] ?: null)
 			{
 				case 'audio':
@@ -281,6 +280,10 @@ trait TranscodeTrait
 					
 					return VideoStream::create($this, $stream);
 				
+				break;
+				
+				case 'subtitle':
+					return SubtitleStream::create($this, $stream);
 				break;
 				
 				default;
