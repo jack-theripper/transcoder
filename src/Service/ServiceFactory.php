@@ -58,4 +58,5 @@ class ServiceFactory implements ServiceFactoryInterface
 		/** @noinspection ExceptionsAnnotatingAndHandlingInspection */
 		return new Encoder($options ?: $this->getOptions());
 	}
+	
 }
