@@ -19,10 +19,8 @@ use Arhitector\Transcoder\Filter\FilterInterface;
 use Arhitector\Transcoder\Filter\FrameFilterInterface;
 use Arhitector\Transcoder\Format\VideoFormat;
 use Arhitector\Transcoder\Format\VideoFormatInterface;
-use Arhitector\Transcoder\Service\ServiceFactoryInterface;
-use Arhitector\Transcoder\Stream\AudioStream;
-use Arhitector\Transcoder\Stream\Collection;
-use Arhitector\Transcoder\Stream\VideoStream;
+use Arhitector\Transcoder\Stream\StreamInterface;
+use Arhitector\Transcoder\Stream\VideoStreamInterface;
 
 /**
  * Class Video.
@@ -31,20 +29,6 @@ use Arhitector\Transcoder\Stream\VideoStream;
  */
 class Video extends Audio implements VideoInterface
 {
-	
-	/**
-	 * Video constructor.
-	 *
-	 * @param string                  $filePath
-	 * @param ServiceFactoryInterface $service
-	 *
-	 * @throws \Arhitector\Transcoder\Exception\TranscoderException
-	 * @throws \InvalidArgumentException
-	 */
-	public function __construct($filePath, ServiceFactoryInterface $service = null)
-	{
-		parent::__construct($filePath, $service);
-	}
 	
 	/**
 	 * Get current format.
@@ -145,42 +129,58 @@ class Video extends Audio implements VideoInterface
 	}
 	
 	/**
-	 * Ensure streams etc.
+	 * Creates an instance of the format from the internal type.
 	 *
-	 * @param \stdClass $demuxing
+	 * @param array $formatArray
 	 *
-	 * @throws \Arhitector\Transcoder\Exception\TranscoderException
+	 * @return VideoFormatInterface
 	 * @throws \InvalidArgumentException
+	 * @throws \Arhitector\Transcoder\Exception\TranscoderException
 	 */
-	protected function _createCollections($demuxing)
+	protected function createFormat(array $formatArray)
 	{
-		$this->streams = new Collection(array_map(function ($parameters) {
-			if ($parameters['type'] == 'audio')
-			{
-				return AudioStream::create($this, $parameters);
-			}
-			
-			if ($parameters['type'] == 'video')
-			{
-				return VideoStream::create($this, $parameters);
-			}
-			
-			throw new TranscoderException('This stream unsupported.');
-		}, $demuxing->streams));
+		$format = $this->findFormatClass($formatArray['format'], VideoFormat::class);
 		
-		/** @var VideoFormatInterface $className */
-		$className = $this->findFormatClass($demuxing->format['format'], VideoFormat::class);
-		
-		if ( ! $className instanceof VideoFormatInterface)
+		if ( ! is_subclass_of($format, VideoFormatInterface::class))
 		{
-			$className = VideoFormat::class;
+			throw new TranscoderException('Invalid format type.');
 		}
 		
-		$demuxing->format += $this->getStreams()[0]->toArray();
-		$this->format = $className::fromArray(array_filter($demuxing->format, function ($value) {
+		foreach ($this->getStreams(StreamInterface::T_AUDIO | StreamInterface::T_VIDEO) as $stream)
+		{
+			$prefix = $stream instanceof VideoStreamInterface ? 'video_' : 'audio_';
+			
+			foreach ($stream->toArray() as $key => $value)
+			{
+				if ($prefix == 'audio_')
+				{
+					$formatArray[$key] = $value;
+					
+					if (in_array($key, ['codec', 'bitrate'], false))
+					{
+						$formatArray[$prefix.$key] = $value;
+					}
+				}
+				else if ($prefix == 'video_')
+				{
+					$formatArray[$key] = $value;
+					
+					if ($key == 'codec')
+					{
+						$formatArray['frame_codec'] = $value;
+					}
+					
+					if (in_array($key, ['bitrate'], false))
+					{
+						$formatArray[$prefix.$key] = $value;
+					}
+				}
+			}
+		}
+		
+		return $format::fromArray(array_filter($formatArray, function ($value) {
 			return $value !== null;
 		}));
-		
 	}
 	
 }
