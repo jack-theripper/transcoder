@@ -16,9 +16,8 @@ use Arhitector\Transcoder\Exception\InvalidFilterException;
 use Arhitector\Transcoder\Exception\TranscoderException;
 use Arhitector\Transcoder\Filter\FilterInterface;
 use Arhitector\Transcoder\Format\FormatInterface;
-use Arhitector\Transcoder\Service\ServiceFactory;
-use Arhitector\Transcoder\Service\ServiceFactoryInterface;
-use Arhitector\Transcoder\Filter\Graph;
+use Arhitector\Transcoder\Format\SubtitleFormat;
+use Arhitector\Transcoder\Format\SubtitleFormatInterface;
 
 /**
  * Class Subtitle.
@@ -28,32 +27,6 @@ use Arhitector\Transcoder\Filter\Graph;
 class Subtitle implements SubtitleInterface
 {
 	use TranscodeTrait;
-	
-	/**
-	 * Subtitle constructor.
-	 *
-	 * @param string                  $filePath
-	 * @param ServiceFactoryInterface $service
-	 *
-	 * @throws \Arhitector\Transcoder\Exception\TranscoderException
-	 * @throws \InvalidArgumentException
-	 */
-	public function __construct($filePath, ServiceFactoryInterface $service = null)
-	{
-		$this->setFilePath($filePath);
-		$this->setService($service ?: new ServiceFactory());
-		
-		/** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-		$demuxing = $this->getService()->getDecoderService()->demuxing($this);
-		
-		if (count($demuxing->streams) < 1 || ( ! $this->isSupportedFileType() && empty($demuxing->format['format'])))
-		{
-			throw new TranscoderException('File type unsupported or the file is corrupted.');
-		}
-		
-		$this->_createCollections($demuxing);
-		$this->filters = new Graph();
-	}
 	
 	/**
 	 * Get duration value.
@@ -104,31 +77,36 @@ class Subtitle implements SubtitleInterface
 	}
 	
 	/**
+	 * Creates an instance of the format from the internal type.
+	 *
+	 * @param array $formatArray
+	 *
+	 * @return FormatInterface
+	 * @throws \InvalidArgumentException
+	 * @throws \Arhitector\Transcoder\Exception\TranscoderException
+	 */
+	protected function createFormat(array $formatArray)
+	{
+		$format = $this->findFormatClass($formatArray['format'], SubtitleFormat::class);
+		
+		if ( ! is_subclass_of($format, SubtitleFormatInterface::class))
+		{
+			throw new TranscoderException('Invalid format type.');
+		}
+		
+		return $format::fromArray(array_filter($formatArray, function ($value) {
+			return $value !== null;
+		}));
+	}
+	
+	/**
 	 * It supports the type of media.
 	 *
 	 * @return bool
 	 */
 	protected function isSupportedFileType()
 	{
-		if (stripos($this->getMimeType(), 'text/plain') !== 0)
-		{
-			return false;
-		}
-		
-		return true;
-	}
-	
-	/**
-	 * Ensure streams etc.
-	 *
-	 * @param \stdClass $demuxing
-	 *
-	 * @throws \Arhitector\Transcoder\Exception\TranscoderException
-	 * @throws \InvalidArgumentException
-	 */
-	protected function _createCollections($demuxing)
-	{
-		// TODO
+		return ! (stripos($this->getMimeType(), 'text/plain') !== 0);
 	}
 	
 }
