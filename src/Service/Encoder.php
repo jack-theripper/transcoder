@@ -275,7 +275,7 @@ class Encoder implements EncoderInterface
 		
 		if ($format instanceof FrameFormatInterface)
 		{
-			$options['video_codec'] = (string) $format->getFrameCodec() ?: 'copy';
+			$options['video_codec'] = (string) $format->getVideoCodec() ?: 'copy';
 		}
 		
 		if ($format instanceof VideoFormatInterface)

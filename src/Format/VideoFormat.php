@@ -79,7 +79,7 @@ class VideoFormat extends AudioFormat implements VideoFormatInterface
 				$videoCodec = new Codec($videoCodec, '');
 			}
 			
-			$this->setFrameCodec($videoCodec);
+			$this->setVideoCodec($videoCodec);
 		}
 		
 		$this->setVideoBitrate(1000000);
@@ -110,7 +110,7 @@ class VideoFormat extends AudioFormat implements VideoFormatInterface
 	 *
 	 * @return Codec
 	 */
-	public function getFrameCodec()
+	public function getVideoCodec()
 	{
 		return $this->frameCodec;
 	}
@@ -123,12 +123,12 @@ class VideoFormat extends AudioFormat implements VideoFormatInterface
 	 * @return VideoFormat
 	 * @throws \InvalidArgumentException
 	 */
-	public function setFrameCodec(Codec $codec)
+	public function setVideoCodec(Codec $codec)
 	{
-		if (__CLASS__ != get_class($this) && ! in_array($codec, $this->getAvailableFrameCodecs(), false))
+		if (__CLASS__ != get_class($this) && ! in_array($codec, $this->getAvailableVideoCodecs(), false))
 		{
 			throw new \InvalidArgumentException(sprintf('Wrong video codec value for %s, available values are %s',
-				$codec, implode(', ', $this->getAvailableFrameCodecs())));
+				$codec, implode(', ', $this->getAvailableVideoCodecs())));
 		}
 		
 		$this->frameCodec = $codec;
@@ -141,7 +141,7 @@ class VideoFormat extends AudioFormat implements VideoFormatInterface
 	 *
 	 * @return string[]
 	 */
-	public function getAvailableFrameCodecs()
+	public function getAvailableVideoCodecs()
 	{
 		return $this->frameAvailableCodecs;
 	}

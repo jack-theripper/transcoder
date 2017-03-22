@@ -47,7 +47,7 @@ class Video extends Audio implements VideoInterface
 	 */
 	public function getVideoCodec()
 	{
-		return $this->getFormat()->getFrameCodec();
+		return $this->getFormat()->getVideoCodec();
 	}
 	
 	/**

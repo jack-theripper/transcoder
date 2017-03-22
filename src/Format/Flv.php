@@ -75,7 +75,7 @@ class Flv extends VideoFormat
 	 *
 	 * @return string[]
 	 */
-	public function getAvailableFrameCodecs()
+	public function getAvailableVideoCodecs()
 	{
 		return ['flv', 'flv1'];
 	}
