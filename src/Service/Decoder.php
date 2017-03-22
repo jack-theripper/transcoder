@@ -18,7 +18,7 @@ use Arhitector\Transcoder\Exception\TranscoderException;
 use Arhitector\Transcoder\Traits\OptionsAwareTrait;
 use Arhitector\Transcoder\TranscodeInterface;
 use Symfony\Component\Process\ExecutableFinder;
-use Symfony\Component\Process\Process;
+use Symfony\Component\Process\ProcessBuilder;
 
 /**
  * Class Decoder.
@@ -47,6 +47,7 @@ class Decoder implements DecoderInterface
 	 * @param TranscodeInterface $media
 	 *
 	 * @return \stdClass
+	 * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
 	 *
 	 * <code>
 	 * object(stdClass)[5]
@@ -70,8 +71,19 @@ class Decoder implements DecoderInterface
 	 */
 	public function demuxing(TranscodeInterface $media)
 	{
-		$output = (new Process(sprintf('%s -loglevel quiet -print_format json -show_format -show_streams -show_error -i %s',
-			$this->options['ffprobe.path'], $media->getFilePath()), null, null, null, $this->options['timeout']))
+		$output = (new ProcessBuilder([
+			'-loglevel',
+			'quiet',
+			'-print_format',
+			'json',
+			'-show_format',
+			'-show_streams',
+			'-show_error',
+			'-i',
+			$media->getFilePath()
+		]))
+			->setPrefix($this->options['ffprobe.path'])
+			->getProcess()
 			->mustRun()
 			->getOutput();
 		
