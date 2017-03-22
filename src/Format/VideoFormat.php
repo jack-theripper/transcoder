@@ -23,9 +23,9 @@ class VideoFormat extends AudioFormat implements VideoFormatInterface
 {
 
 	/**
-	 * @var Codec The frame codec value.
+	 * @var Codec The video codec value.
 	 */
-	protected $frameCodec;
+	protected $videoCodec;
 	
 	/**
 	 * @var int The width value.
@@ -38,9 +38,9 @@ class VideoFormat extends AudioFormat implements VideoFormatInterface
 	protected $height;
 	
 	/**
-	 * @var string[] The list of available frame codecs.
+	 * @var string[] The list of available video codecs.
 	 */
-	protected $frameAvailableCodecs = [];
+	protected $videoAvailableCodecs = [];
 	
 	/**
 	 * @var int Passes value.
@@ -112,7 +112,7 @@ class VideoFormat extends AudioFormat implements VideoFormatInterface
 	 */
 	public function getVideoCodec()
 	{
-		return $this->frameCodec;
+		return $this->videoCodec;
 	}
 	
 	/**
@@ -131,7 +131,7 @@ class VideoFormat extends AudioFormat implements VideoFormatInterface
 				$codec, implode(', ', $this->getAvailableVideoCodecs())));
 		}
 		
-		$this->frameCodec = $codec;
+		$this->videoCodec = $codec;
 		
 		return $this;
 	}
@@ -143,7 +143,7 @@ class VideoFormat extends AudioFormat implements VideoFormatInterface
 	 */
 	public function getAvailableVideoCodecs()
 	{
-		return $this->frameAvailableCodecs;
+		return $this->videoAvailableCodecs;
 	}
 	
 	/**
@@ -305,7 +305,7 @@ class VideoFormat extends AudioFormat implements VideoFormatInterface
 	 */
 	protected function setAvailableFrameCodecs(array $codecs)
 	{
-		$this->frameAvailableCodecs = array_map('strval', $codecs);
+		$this->videoAvailableCodecs = array_map('strval', $codecs);
 		
 		return $this;
 	}

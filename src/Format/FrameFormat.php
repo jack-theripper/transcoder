@@ -24,9 +24,9 @@ class FrameFormat implements FrameFormatInterface
 	use FormatTrait;
 	
 	/**
-	 * @var Codec The frame codec value.
+	 * @var Codec The video codec value.
 	 */
-	protected $frameCodec;
+	protected $videoCodec;
 	
 	/**
 	 * @var int The width value.
@@ -39,9 +39,9 @@ class FrameFormat implements FrameFormatInterface
 	protected $height;
 	
 	/**
-	 * @var string[] The list of available frame codecs.
+	 * @var string[] The list of available video codecs.
 	 */
-	protected $frameAvailableCodecs = [];
+	protected $videoAvailableCodecs = [];
 	
 	/**
 	 * FrameFormat constructor.
@@ -100,7 +100,7 @@ class FrameFormat implements FrameFormatInterface
 	 */
 	public function getVideoCodec()
 	{
-		return $this->frameCodec;
+		return $this->videoCodec;
 	}
 	
 	/**
@@ -119,7 +119,7 @@ class FrameFormat implements FrameFormatInterface
 				$codec, implode(', ', $this->getAvailableVideoCodecs())));
 		}
 		
-		$this->frameCodec = $codec;
+		$this->videoCodec = $codec;
 		
 		return $this;
 	}
@@ -131,7 +131,7 @@ class FrameFormat implements FrameFormatInterface
 	 */
 	public function getAvailableVideoCodecs()
 	{
-		return $this->frameAvailableCodecs;
+		return $this->videoAvailableCodecs;
 	}
 	
 	/**
@@ -183,7 +183,7 @@ class FrameFormat implements FrameFormatInterface
 	 */
 	protected function setAvailableFrameCodecs(array $codecs)
 	{
-		$this->frameAvailableCodecs = array_map('strval', $codecs);
+		$this->videoAvailableCodecs = array_map('strval', $codecs);
 		
 		return $this;
 	}

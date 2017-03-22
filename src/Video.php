@@ -167,7 +167,7 @@ class Video extends Audio implements VideoInterface
 					
 					if ($key == 'codec')
 					{
-						$formatArray['frame_codec'] = $value;
+						$formatArray['video_codec'] = $value;
 					}
 					
 					if (in_array($key, ['bitrate'], false))
