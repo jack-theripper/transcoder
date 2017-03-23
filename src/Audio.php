@@ -20,6 +20,7 @@ use Arhitector\Transcoder\Filter\Graph;
 use Arhitector\Transcoder\Format\AudioFormat;
 use Arhitector\Transcoder\Format\AudioFormatInterface;
 use Arhitector\Transcoder\Format\FormatInterface;
+use Arhitector\Transcoder\Stream\AudioStreamInterface;
 use Arhitector\Transcoder\Stream\StreamInterface;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
@@ -216,17 +217,17 @@ class Audio implements AudioInterface
 			throw new TranscoderException('Invalid format type.');
 		}
 		
-		$stream = $this->getStreams(StreamInterface::T_AUDIO)->getFirst();
-		
-		if ($stream !== null)
+		foreach ($this->getStreams(StreamInterface::T_AUDIO | StreamInterface::T_FRAME) as $stream)
 		{
+			$prefix = $stream instanceof AudioStreamInterface ? 'audio_' : 'video_';
+			
 			foreach ($stream->toArray() as $key => $value)
 			{
 				$formatArray[$key] = $value;
 				
 				if (in_array($key, ['codec', 'bitrate'], false))
 				{
-					$formatArray['audio_'.$key] = $value;
+					$formatArray[$prefix.$key] = $value;
 				}
 			}
 		}
