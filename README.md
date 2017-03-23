@@ -122,3 +122,44 @@ $filter = new Volume('6dB', Volume::PRECISION_FIXED);
 ```php
 use \Arhitector\Jumper\Filter\Fade;
 ```
+
+## Опции форматов
+
+*FormatInterface* определяет 
+
+`duration`
+
+`extensions`
+
+`metadata`
+
+*FrameFormatInterface* дополняет список *FormatInterface*
+
+`video_codec`
+
+`width`
+
+`height`
+
+`available_video_codecs`
+
+*AudioFormatInterface* дополняет список *FrameFormatInterface*
+
+`channels`
+
+`audio_codec`
+
+`audio_bitrate`
+
+`frequency`
+
+`available_audio_coecs`
+
+*VideoFormatInterface* дополняет список *AudioFormatInterface*
+
+`video_bitrate`
+
+`passes`
+
+`frame_rate`
+
