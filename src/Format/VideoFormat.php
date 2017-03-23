@@ -21,26 +21,6 @@ use Arhitector\Transcoder\Codec;
  */
 class VideoFormat extends AudioFormat implements VideoFormatInterface
 {
-
-	/**
-	 * @var Codec The video codec value.
-	 */
-	protected $videoCodec;
-	
-	/**
-	 * @var int The width value.
-	 */
-	protected $width;
-	
-	/**
-	 * @var int The height value.
-	 */
-	protected $height;
-	
-	/**
-	 * @var string[] The list of available video codecs.
-	 */
-	protected $videoAvailableCodecs = [];
 	
 	/**
 	 * @var int Passes value.
@@ -58,7 +38,7 @@ class VideoFormat extends AudioFormat implements VideoFormatInterface
 	protected $videoBitrate;
 	
 	/**
-	 * VideoFormat constructor.
+	 * Format constructor.
 	 *
 	 * @param Codec|string $audioCodec
 	 * @param Codec|string $videoCodec
@@ -67,83 +47,9 @@ class VideoFormat extends AudioFormat implements VideoFormatInterface
 	 */
 	public function __construct($audioCodec = null, $videoCodec = null)
 	{
-		if ($audioCodec !== null)
-		{
-			parent::__construct($audioCodec);
-		}
-		
-		if ($videoCodec !== null)
-		{
-			if ( ! $videoCodec instanceof Codec)
-			{
-				$videoCodec = new Codec($videoCodec, '');
-			}
-			
-			$this->setVideoCodec($videoCodec);
-		}
+		parent::__construct($audioCodec, $videoCodec);
 		
 		$this->setVideoBitrate(1000000);
-	}
-	
-	/**
-	 * Get width value.
-	 *
-	 * @return int
-	 */
-	public function getWidth()
-	{
-		return $this->width;
-	}
-	
-	/**
-	 * Get height value.
-	 *
-	 * @return int
-	 */
-	public function getHeight()
-	{
-		return $this->height;
-	}
-	
-	/**
-	 * Get the video/frame codec.
-	 *
-	 * @return Codec
-	 */
-	public function getVideoCodec()
-	{
-		return $this->videoCodec;
-	}
-	
-	/**
-	 * Sets the video/frame codec, should be in the available ones, otherwise an exception is thrown.
-	 *
-	 * @param Codec $codec
-	 *
-	 * @return VideoFormat
-	 * @throws \InvalidArgumentException
-	 */
-	public function setVideoCodec(Codec $codec)
-	{
-		if (__CLASS__ != get_class($this) && ! in_array($codec, $this->getAvailableVideoCodecs(), false))
-		{
-			throw new \InvalidArgumentException(sprintf('Wrong video codec value for %s, available values are %s',
-				$codec, implode(', ', $this->getAvailableVideoCodecs())));
-		}
-		
-		$this->videoCodec = $codec;
-		
-		return $this;
-	}
-	
-	/**
-	 * Get available codecs.
-	 *
-	 * @return string[]
-	 */
-	public function getAvailableVideoCodecs()
-	{
-		return $this->videoAvailableCodecs;
 	}
 	
 	/**
@@ -227,26 +133,6 @@ class VideoFormat extends AudioFormat implements VideoFormatInterface
 	}
 	
 	/**
-	 * Sets the audio codec, Should be in the available ones, otherwise an exception is thrown.
-	 *
-	 * @param Codec $codec
-	 *
-	 * @return VideoFormat
-	 * @throws \InvalidArgumentException
-	 */
-	public function setAudioCodec(Codec $codec)
-	{
-		if (get_class($this) == __CLASS__)
-		{
-			$this->setAvailableAudioCodecs(array_merge($this->getAvailableAudioCodecs(), [$codec->getCode()]));
-		}
-		
-		parent::setAudioCodec($codec);
-		
-		return $this;
-	}
-	
-	/**
 	 * Returns the number of passes.
 	 *
 	 * @return int
@@ -254,60 +140,6 @@ class VideoFormat extends AudioFormat implements VideoFormatInterface
 	public function getPasses()
 	{
 		return $this->passes;
-	}
-	
-	/**
-	 * Set the width value.
-	 *
-	 * @param int $width
-	 *
-	 * @return VideoFormat
-	 * @throws \InvalidArgumentException
-	 */
-	protected function setWidth($width)
-	{
-		if ( ! is_numeric($width) || $width < 1)
-		{
-			throw new \InvalidArgumentException('Wrong the width value.');
-		}
-		
-		$this->width = $width;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set the height value.
-	 *
-	 * @param int $height
-	 *
-	 * @return VideoFormat
-	 * @throws \InvalidArgumentException
-	 */
-	protected function setHeight($height)
-	{
-		if ( ! is_numeric($height) || $height < 1)
-		{
-			throw new \InvalidArgumentException('Wrong the height value.');
-		}
-		
-		$this->height = $height;
-		
-		return $this;
-	}
-	
-	/**
-	 * Sets the list of available audio codecs.
-	 *
-	 * @param array $codecs
-	 *
-	 * @return VideoFormat
-	 */
-	protected function setAvailableFrameCodecs(array $codecs)
-	{
-		$this->videoAvailableCodecs = array_map('strval', $codecs);
-		
-		return $this;
 	}
 	
 }

@@ -44,7 +44,7 @@ class FrameFormat implements FrameFormatInterface
 	protected $videoAvailableCodecs = [];
 	
 	/**
-	 * FrameFormat constructor.
+	 * Format constructor.
 	 *
 	 * @param Codec|string $codec
 	 *
@@ -113,9 +113,9 @@ class FrameFormat implements FrameFormatInterface
 	 */
 	public function setVideoCodec(Codec $codec)
 	{
-		if (class_parents($this) && ! in_array($codec, $this->getAvailableVideoCodecs(), false))
+		if ($this->getAvailableVideoCodecs() && ! in_array($codec, $this->getAvailableVideoCodecs(), false))
 		{
-			throw new \InvalidArgumentException(sprintf('Wrong video codec value for %s, available values are %s',
+			throw new \InvalidArgumentException(sprintf('Wrong video codec value for "%s", available values are %s',
 				$codec, implode(', ', $this->getAvailableVideoCodecs())));
 		}
 		
@@ -181,7 +181,7 @@ class FrameFormat implements FrameFormatInterface
 	 *
 	 * @return FrameFormat
 	 */
-	protected function setAvailableFrameCodecs(array $codecs)
+	protected function setAvailableVideoCodecs(array $codecs)
 	{
 		$this->videoAvailableCodecs = array_map('strval', $codecs);
 		

@@ -19,9 +19,8 @@ use Arhitector\Transcoder\Codec;
  *
  * @package Arhitector\Transcoder\Format
  */
-class AudioFormat implements AudioFormatInterface
+class AudioFormat extends FrameFormat implements AudioFormatInterface
 {
-	use FormatTrait;
 	
 	/**
 	 * @var int Audio bitrate value.
@@ -49,13 +48,14 @@ class AudioFormat implements AudioFormatInterface
 	protected $audioAvailableCodecs = [];
 	
 	/**
-	 * AudioFormat constructor.
+	 * Format constructor.
 	 *
 	 * @param Codec|string $audioCodec
+	 * @param Codec|string $videoCodec
 	 *
 	 * @throws \InvalidArgumentException
 	 */
-	public function __construct($audioCodec = null)
+	public function __construct($audioCodec = null, $videoCodec = null)
 	{
 		if ($audioCodec !== null)
 		{
@@ -65,6 +65,11 @@ class AudioFormat implements AudioFormatInterface
 			}
 			
 			$this->setAudioCodec($audioCodec);
+		}
+		
+		if ($videoCodec !== null)
+		{
+			parent::__construct($videoCodec);
 		}
 		
 		$this->setAudioBitrate(128000);
@@ -120,9 +125,9 @@ class AudioFormat implements AudioFormatInterface
 	 */
 	public function setAudioCodec(Codec $codec)
 	{
-		if (__CLASS__ != get_class($this) && ! in_array((string) $codec, $this->getAvailableAudioCodecs(), false))
+		if ($this->getAvailableAudioCodecs() && ! in_array((string) $codec, $this->getAvailableAudioCodecs(), false))
 		{
-			throw new \InvalidArgumentException(sprintf('Wrong audio codec value for %s, available values are %s',
+			throw new \InvalidArgumentException(sprintf('Wrong audio codec value for "%s", available values are %s',
 				$codec, implode(', ', $this->getAvailableAudioCodecs())));
 		}
 		

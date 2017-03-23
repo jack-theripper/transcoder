@@ -17,7 +17,7 @@ namespace Arhitector\Transcoder\Format;
  *
  * @package Arhitector\Transcoder\Format
  */
-interface VideoFormatInterface extends AudioFormatInterface, FrameFormatInterface
+interface VideoFormatInterface extends AudioFormatInterface
 {
 	
 	/**
