@@ -86,11 +86,11 @@ class Encoder implements EncoderInterface
 	 */
 	public function transcoding(TranscodeInterface $media, FormatInterface $format, array $options = [])
 	{
-		$_options = array_merge([
+		$_options = array_merge_recursive(array_merge([
 			'y'      => '',
 			'i'      => [$media->getFilePath()],
 			'strict' => '-2'
-		], $options, $this->getForceFormatOptions($format), $this->getFormatOptions($format));
+		], $this->getForceFormatOptions($format), $this->getFormatOptions($format)), $options);
 		
 		if ( ! isset($options['output']))
 		{
