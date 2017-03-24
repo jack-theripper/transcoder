@@ -12,7 +12,6 @@
  */
 namespace Arhitector\Transcoder\Service;
 
-use Arhitector\Jumper\Service\EncoderQueue;
 use Arhitector\Transcoder\Traits\OptionsAwareTrait;
 
 /**
