@@ -53,6 +53,11 @@ trait FilePathAwareTrait
 			throw new \InvalidArgumentException('File path must be a string type.');
 		}
 		
+		if (preg_match('~^(\w+:)?//~', $filePath) || is_link($filePath))
+		{
+			throw new \InvalidArgumentException('File path must be a local path.');
+		}
+		
 		$filePath = realpath($filePath);
 		
 		if ( ! is_file($filePath))
