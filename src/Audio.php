@@ -102,7 +102,7 @@ class Audio implements AudioInterface
 	 * @param string          $filePath
 	 * @param bool            $overwrite
 	 *
-	 * @return float|int Size of the new file or -1
+	 * @return Audio
 	 * @throws \Symfony\Component\Process\Exception\RuntimeException
 	 * @throws \Symfony\Component\Process\Exception\LogicException
 	 * @throws \Symfony\Component\Process\Exception\ProcessFailedException
@@ -139,7 +139,7 @@ class Audio implements AudioInterface
 			}
 		}
 		
-		return filesize($filePath);
+		return $this;
 	}
 	
 	/**

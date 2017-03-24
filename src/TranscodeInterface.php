@@ -64,7 +64,7 @@ interface TranscodeInterface
 	 * @param string          $filePath
 	 * @param bool            $overwrite
 	 *
-	 * @return float|int Size of the new file or -1
+	 * @return TranscodeInterface
 	 */
 	public function save(FormatInterface $format, $filePath, $overwrite = true);
 	
