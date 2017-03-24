@@ -12,6 +12,7 @@
  */
 namespace Arhitector\Transcoder\Service;
 
+use Arhitector\Jumper\Service\EncoderQueue;
 use Arhitector\Transcoder\Traits\OptionsAwareTrait;
 
 /**
@@ -22,6 +23,11 @@ use Arhitector\Transcoder\Traits\OptionsAwareTrait;
 class ServiceFactory implements ServiceFactoryInterface
 {
 	use OptionsAwareTrait;
+	
+	/**
+	 * @var string The option alias for `use_queue`.
+	 */
+	const OPTION_USE_QUEUE = 'use_queue';
 	
 	/**
 	 * ServiceFactory constructor.
@@ -55,8 +61,16 @@ class ServiceFactory implements ServiceFactoryInterface
 	 */
 	public function getEncoderService(array $options = [])
 	{
+		$options = $options ?: $this->getOptions();
+		
+		if (isset($options[static::OPTION_USE_QUEUE]) && $options[static::OPTION_USE_QUEUE])
+		{
+			/** @noinspection ExceptionsAnnotatingAndHandlingInspection */
+			return new EncoderQueue($this->options[static::OPTION_USE_QUEUE], $options);
+		}
+		
 		/** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-		return new Encoder($options ?: $this->getOptions());
+		return new Encoder($options);
 	}
 	
 }
