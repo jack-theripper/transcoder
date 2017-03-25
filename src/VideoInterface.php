@@ -17,29 +17,8 @@ namespace Arhitector\Transcoder;
  *
  * @package Arhitector\Transcoder
  */
-interface VideoInterface extends AudioInterface
+interface VideoInterface extends FrameInterface, AudioInterface
 {
-	
-	/**
-	 * Returns the video codec.
-	 *
-	 * @return Codec|null
-	 */
-	public function getVideoCodec();
-	
-	/**
-	 * Get width value.
-	 *
-	 * @return int
-	 */
-	public function getWidth();
-	
-	/**
-	 * Get height value.
-	 *
-	 * @return int
-	 */
-	public function getHeight();
 	
 	/**
 	 * Gets the bitrate value.
