@@ -63,7 +63,7 @@ $service = new \Arhitector\Transcoder\Service\ServiceFactory([
 $video = new Video('sample.avi', $service);
 ```
 
-## 2. Что можно настроить?
+## 1.2. Что можно настроить?
 
 `ServiceFactory` поддерживает следующие опции:
 
@@ -81,8 +81,28 @@ $video = new Video('sample.avi', $service);
 Вы можете использовать свою реализацию сервис-фабрики. Для этого необходимо реализовать в вашем объекте
  интерфейс `Arhitector\Transcoder\Service\ServiceFactoryInterface`.
 
+## 2. Поддержка очередей
 
+Вместо прямого транскодирования вы можете отправлять задачи в очередь, например, на сервер очередей. Такой функционал
+ доступен прямо из коробки. Вы можете использовать опцию `ServiceFactoryInterface::OPTION_USE_QUEUE` при создании сервис-фабрики.
 
+**Пример**
+
+```php
+$adapter = new SimpleQueue\Adapter\MemoryQueueAdapter();
+$queue = new SimpleQueue\Queue($queue);
+
+$service = new Arhitector\Transcoder\Service\ServiceFactory([
+    Arhitector\Transcoder\Service\ServiceFactory::OPTION_USE_QUEUE => $queue
+]);
+
+$audio = new Arhitector\Transcoder\Audio('sample.mp3', $service);
+
+// задача будет отправлена в очерель `$queue`
+$audio->save($audio->getFormat(), 'new-sample.mp3');
+
+var_dump($queue->pull()); // запросить задачу из очереди
+```
 
 ### Извлечение информации из видеофайла, аудио файла и т.д.
 
