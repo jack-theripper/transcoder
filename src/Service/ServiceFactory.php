@@ -24,11 +24,6 @@ class ServiceFactory implements ServiceFactoryInterface
 	use OptionsAwareTrait;
 	
 	/**
-	 * @var string The option alias for `use_queue`.
-	 */
-	const OPTION_USE_QUEUE = 'use_queue';
-	
-	/**
 	 * ServiceFactory constructor.
 	 *
 	 * @param array $options

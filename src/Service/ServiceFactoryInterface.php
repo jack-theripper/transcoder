@@ -21,6 +21,32 @@ interface ServiceFactoryInterface
 {
 	
 	/**
+	 * @var string The option value alias for `ffmpeg.path`.
+	 */
+	const OPTION_FFMPEG_PATH = 'ffmpeg.path';
+	
+	/**
+	 * @var string The option value alias for `ffmpeg.path`.
+	 */
+	const OPTION_FFMPEG_THREADS = 'ffmpeg.threads';
+	
+	/**
+	 * @var string The option value alias for `ffprobe.path`.
+	 */
+	const OPTION_FFPROBE_PATH = 'ffprobe.path';
+	
+	/**
+	 * @var string The option value alias for `timeout`.
+	 */
+	const OPTION_USE_TIMEOUT = 'timeout';
+	
+	/**
+	 * @var string The option value alias for `use_queue`.
+	 */
+	const OPTION_USE_QUEUE = 'use_queue';
+	
+	
+	/**
 	 * Gets the options.
 	 *
 	 * @return array
