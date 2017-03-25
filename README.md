@@ -3,23 +3,86 @@
 ## Установка
 
 ```bash
-$ composer require arhitector/jumper dev-master
+$ composer require arhitector/transcoder dev-master
 ```
 
-## Использование
+## 1. Быстрый старт
+
+Необходимо определить, с каким типом файлов предстоит работать.
+
+`Arhitector\Transcoder\Audio` используется для работы с аудио-файлами.
+
+`Arhitector\Transcoder\Video` используется для работы с видео-файлами.
+
+`Arhitector\Transcoder\Frame` используется для работы с изображениями.
+
+`Arhitector\Transcoder\Subtitle` используется для работы с субтитрами.
+
+Конструктор в общем виде выглядит так
 
 ```php
-// Это список всех поддерживаемых опций.
-// Конечно эти опции можно опустить если ffmpeg доступен из 'Path'.
-$options = [
-	'ffprobe.path'   => 'E:\devtools\bin\ffprobe.exe',
-	'ffmpeg.path'    => 'E:\devtools\bin\ffmpeg.exe',
-	'ffmpeg.threads' => 2,
-	'timeout'        => 30
-];
-
-$factory = new \Arhitector\Transcoder\Service\ServiceFactory($options);
+public <...>::__construct(string $filePath, ServiceFactoryInterface $service = null)
 ```
+
+`$filePath` - определяет путь до исходного файла. Вы не можете использовать удаленный источник или символические ссылки.
+
+`$service` - не обязательный параметр, экземпляр сервиса. Если не передан, то будет использоваться `ServiceFactory`.
+
+### 1.1. Примеры
+
+Простые примеры
+
+```php
+use Arhitector\Transcoder\Audio;
+use Arhitector\Transcoder\Video;
+use Arhitector\Transcoder\Frame;
+use Arhitector\Transcoder\Subtitle;
+
+// аудио
+$audio = new Audio('sample.mp3');
+
+// видео
+$video = new Video('sample.avi');
+
+// изображения
+$frame = new Frame('sample.jpg');
+
+// субтитры
+$subtitle = new Subtitle('sample.srt');
+```
+
+Вы можете использовать свою сервис-фабрику или изменить некоторые опции.
+
+```php
+$service = new \Arhitector\Transcoder\Service\ServiceFactory([
+	'ffprobe.path'   => 'E:\devtools\bin\ffprobe.exe',
+	'ffmpeg.path'    => 'E:\devtools\bin\ffmpeg.exe'
+]);
+
+// используем это
+$video = new Video('sample.avi', $service);
+```
+
+## 2. Что можно настроить?
+
+`ServiceFactory` поддерживает следующие опции:
+
+- `ffmpeg.path` - путь до исполняемого файла `ffmpeg`
+
+- `ffmpeg.threads` - FFMpeg-опция `threads`. По умолчанию `0`.
+
+- `ffprobe.path` - путь до исполняемого файла `ffprobe`
+
+- `timeout` - задаёт таймаут выполнения команды кодирования.
+
+- `use_queue` - задача кодирования будет отправляться в очередь. Значение должно быть объектом,
+ реализующим `SimpleQueue\QueueAdapterInterface`.
+
+Вы можете использовать свою реализацию сервис-фабрики. Для этого необходимо реализовать в вашем объекте
+ интерфейс `Arhitector\Transcoder\Service\ServiceFactoryInterface`.
+
+
+
 
 ### Извлечение информации из видеофайла, аудио файла и т.д.
 
@@ -91,7 +154,7 @@ $auiod->save($format, 'new-file.mp3');
 
 ## Фильтры
 
-### Айдио фильтры
+### Аудио фильтры
 
 - Фильтр **Volume**
 
@@ -117,7 +180,7 @@ $filter = new Volume('6dB', Volume::PRECISION_FIXED);
 
 - Фильтр **Fade**
 
-Фильтр накладывает еффект затухания звука.
+Фильтр накладывает эффект затухания звука.
 
 ```php
 use \Arhitector\Jumper\Filter\Fade;
@@ -153,7 +216,7 @@ use \Arhitector\Jumper\Filter\Fade;
 
 `frequency`
 
-`available_audio_coecs`
+`available_audio_codecs`
 
 *VideoFormatInterface* дополняет список *AudioFormatInterface*
 
