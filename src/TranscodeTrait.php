@@ -273,12 +273,12 @@ trait TranscodeTrait
 				
 				case 'video':
 					
-					if ($this instanceof AudioInterface && ! $this instanceof VideoInterface)
+					if ($this instanceof AudioInterface && $this instanceof VideoInterface)
 					{
-						return FrameStream::create($this, $stream);
+						return VideoStream::create($this, $stream);
 					}
 					
-					return VideoStream::create($this, $stream);
+					return FrameStream::create($this, $stream);
 				
 				break;
 				
