@@ -69,8 +69,8 @@ class Encoder implements EncoderInterface
 			'video_pixel_format'     => '-pix_fmt',
 			'metadata'               => '-metadata',
 			'force_format'           => '-f',
-		    'seek_start' => 'ss',
-		    'seek_end' => 't'
+			'seek_start'             => 'ss',
+			'seek_end'               => 't'
 		];
 	}
 	
@@ -102,6 +102,17 @@ class Encoder implements EncoderInterface
 		if ( ! isset($options['metadata']) && $format->getTags())
 		{
 			$_options['metadata'] = $format->getTags();
+		}
+		
+		foreach ($media->getStreams() as $stream)
+		{
+			if (($input = array_search($stream->getFilePath(), $_options['i'], false)) === false)
+			{
+				$_options['i'][] = $stream->getFilePath();
+				$input = count($_options['i']) - 1;
+			}
+			
+			$_options['map'][] = sprintf('%s:%d', $input, $stream->getIndex());
 		}
 		
 		// получаем чистый массив опций без псевдонимов.
