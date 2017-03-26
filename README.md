@@ -172,6 +172,25 @@ $format['artist'] = 'Новый артист';
 $auiod->save($format, 'new-file.mp3');
 ```
 
+### Как добавить/удалить обложку MP3-файла?
+
+```php
+use Arhitector\Transcoder\Audio;
+use Arhitector\Transcoder\Frame;
+
+$audio = new Audio(__DIR__.'/sample.mp3');
+$streams = $audio->getStreams();
+
+$new_cover = (new Frame(__DIR__.'/sample.jpg'))
+    ->getStreams()
+    ->getFirst();
+
+// индекс `0` - аудио-дорожка, `1` - обложка.
+$streams[1] = $new_cover;
+
+$audio->save($audio->getFormat(), 'sample-with-new-cover.mp3');
+```
+
 ## Фильтры
 
 ### Аудио фильтры
