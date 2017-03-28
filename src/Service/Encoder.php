@@ -137,34 +137,14 @@ class Encoder implements EncoderInterface
 			$options['map_metadata'] = '-1';
 		}
 		
-		$_options = [];
+		$heap = new OptionsHeap();
 		
 		foreach ($options as $option => $value)
 		{
-			$_options[] = $option[0] == '-' ? $option : '-'.$option;
-			
-			if ( ! is_scalar($value))
-			{
-				if (stripos($option, 'filter') === 0)
-				{
-					$_options[] = implode('; ', (array) $value);
-				}
-				else
-				{
-					array_pop($_options);
-					
-					foreach ((array) $value as $_option => $_value)
-					{
-						$_options[] = $option[0] == '-' ? $option : '-'.$option;
-						$_options[] = is_int($_option) ? $_value : sprintf('%s=%s', $_option, $_value);
-					}
-				}
-			}
-			else if ($value || is_int($value))
-			{
-				$_options[] = $value;
-			}
+			$heap->insert([$option, $value]);
 		}
+		
+		$_options = array_merge(...iterator_to_array($heap));
 		
 		if ($format->getPasses() > 1)
 		{
