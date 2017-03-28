@@ -52,6 +52,7 @@ class Encoder implements EncoderInterface
 	public function getAliasOptions()
 	{
 		return [
+			'input'                  => '-i',
 			'disable_audio'          => '-an',
 			'disable_video'          => '-vn',
 			'disable_subtitle'       => '-sn',
@@ -88,7 +89,7 @@ class Encoder implements EncoderInterface
 	{
 		$_options = array_merge_recursive(array_merge([
 			'y'      => '',
-			'i'      => [$media->getFilePath()],
+			'input'  => [$media->getFilePath()],
 			'strict' => '-2'
 		], $this->getForceFormatOptions($format), $this->getFormatOptions($format)), $options);
 		
@@ -106,10 +107,10 @@ class Encoder implements EncoderInterface
 		
 		foreach ($media->getStreams() as $stream)
 		{
-			if (($input = array_search($stream->getFilePath(), $_options['i'], false)) === false)
+			if (($input = array_search($stream->getFilePath(), $_options['input'], false)) === false)
 			{
-				$_options['i'][] = $stream->getFilePath();
-				$input = count($_options['i']) - 1;
+				$_options['input'][] = $stream->getFilePath();
+				$input = count($_options['input']) - 1;
 			}
 			
 			$_options['map'][] = sprintf('%s:%d', $input, $stream->getIndex());
