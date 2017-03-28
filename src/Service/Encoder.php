@@ -70,8 +70,8 @@ class Encoder implements EncoderInterface
 			'video_pixel_format'     => '-pix_fmt',
 			'metadata'               => '-metadata',
 			'force_format'           => '-f',
-			'seek_start'             => 'ss',
-			'seek_end'               => 't'
+			'seek_start'             => '-ss',
+			'seek_end'               => '-t'
 		];
 	}
 	
