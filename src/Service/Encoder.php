@@ -160,7 +160,7 @@ class Encoder implements EncoderInterface
 					}
 				}
 			}
-			else if ($value)
+			else if ($value || is_int($value))
 			{
 				$_options[] = $value;
 			}
