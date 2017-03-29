@@ -15,7 +15,7 @@ namespace Arhitector\Transcoder\Format;
 use Arhitector\Transcoder\Codec;
 
 /**
- * Class Flv.
+ * The Flv video format.
  *
  * @package Arhitector\Transcoder\Format
  */
@@ -35,6 +35,8 @@ class Flv extends VideoFormat
 		parent::__construct($audioCodec, $videoCodec);
 		
 		$this->setExtensions(['flv']);
+		$this->setAvailableVideoCodecs(['flv', 'flv1']);
+		$this->setAvailableAudioCodecs(['libmp3lame', 'libshine', 'mp3', 'mp3pro', 'lame']);
 	}
 	
 	/**
@@ -58,26 +60,6 @@ class Flv extends VideoFormat
 		parent::setFrequency($frequency);
 		
 		return $this;
-	}
-	
-	/**
-	 * Get available codecs.
-	 *
-	 * @return string[]
-	 */
-	public function getAvailableAudioCodecs()
-	{
-		return ['libmp3lame', 'libshine', 'mp3', 'mp3pro', 'lame'];
-	}
-	
-	/**
-	 * Get available codecs.
-	 *
-	 * @return string[]
-	 */
-	public function getAvailableVideoCodecs()
-	{
-		return ['flv', 'flv1'];
 	}
 	
 }
