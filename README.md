@@ -104,7 +104,7 @@ $audio->save($audio->getFormat(), 'new-sample.mp3');
 var_dump($queue->pull()); // запросить задачу из очереди
 ```
 
-### Извлечение информации из видеофайла, аудио файла и т.д.
+### Извлечение информации из видео файла, аудио файла и т.д.
 
 ```php
 use Arhitector\Transcoder\Video;
@@ -120,7 +120,7 @@ var_dump($audio->getAudioChannels());
 var_dump($audio->getFormat()->getTags());
 ```
 
-### Извлечение звука из видеофайла с последующим сохранением в формате MP3
+### Извлечение звука из видео файла с последующим сохранением в формате MP3
 
 Этот простой пример показывает лишь принцип, таким же способом можно сохранить субтитры или обложку из Mp3-файла и т.д.
 
@@ -159,7 +159,7 @@ $video = new Video('video-file.avi');
 $video->save(new VideoFormat('aac', 'h264'), 'video-file.mp4');
 ```
 
-### Добавление/Изменение метаинформации
+### Добавление/Изменение мета-информации
 
 ```php
 use Arhitector\Transcoder\Audio;
@@ -172,7 +172,7 @@ $format['artist'] = 'Новый артист';
 $auiod->save($format, 'new-file.mp3');
 ```
 
-### Как добавить/удалить обложку MP3-файла?
+### Как добавить/изменить обложку MP3-файла?
 
 ```php
 use Arhitector\Transcoder\Audio;
@@ -190,6 +190,14 @@ $streams[1] = $new_cover;
 
 $audio->save($audio->getFormat(), 'sample-with-new-cover.mp3');
 ```
+
+## ООП-обёртки над форматами
+
+Такие обёртки (например, Mp3 или Jpeg и т.д.) созданы для удобства. 
+
+### Изображения
+
+- Png, Jpeg, Ppm, Bmp, Gif
 
 ## Фильтры
 
