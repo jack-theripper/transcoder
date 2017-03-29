@@ -12,6 +12,7 @@
  */
 namespace Arhitector\Transcoder;
 
+use Arhitector\Transcoder\Exception\ExecutionFailureException;
 use Arhitector\Transcoder\Exception\InvalidFilterException;
 use Arhitector\Transcoder\Exception\TranscoderException;
 use Arhitector\Transcoder\Filter\AudioFilterInterface;
@@ -103,6 +104,7 @@ class Audio implements AudioInterface
 	 * @param bool            $overwrite
 	 *
 	 * @return Audio
+	 * @throws \Arhitector\Transcoder\Exception\ExecutionFailureException
 	 * @throws \Symfony\Component\Process\Exception\RuntimeException
 	 * @throws \Symfony\Component\Process\Exception\LogicException
 	 * @throws \Symfony\Component\Process\Exception\ProcessFailedException
@@ -131,12 +133,19 @@ class Audio implements AudioInterface
 		/** @noinspection ExceptionsAnnotatingAndHandlingInspection */
 		$processes = $this->getService()->getEncoderService()->transcoding($this, $format, $options);
 		
-		foreach ($processes as $process)
+		try
 		{
-			if ( ! $process->isTerminated() && $process->run() !== 0)
+			foreach ($processes as $process)
 			{
-				throw new ProcessFailedException($process);
+				if ( ! $process->isTerminated() && $process->run() !== 0)
+				{
+					throw new ProcessFailedException($process);
+				}
 			}
+		}
+		catch (ProcessFailedException $exc)
+		{
+			throw new ExecutionFailureException($exc->getMessage(), $exc->getProcess(), $exc->getCode(), $exc);
 		}
 		
 		return $this;
@@ -178,7 +187,7 @@ class Audio implements AudioInterface
 	{
 		$self = clone $this;
 		$self->filters = new Graph();
-			
+		
 		return $self;
 	}
 	

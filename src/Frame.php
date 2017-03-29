@@ -12,6 +12,7 @@
  */
 namespace Arhitector\Transcoder;
 
+use Arhitector\Transcoder\Exception\ExecutionFailureException;
 use Arhitector\Transcoder\Exception\InvalidFilterException;
 use Arhitector\Transcoder\Exception\TranscoderException;
 use Arhitector\Transcoder\Filter\FilterInterface;
@@ -118,12 +119,19 @@ class Frame implements FrameInterface
 		/** @noinspection ExceptionsAnnotatingAndHandlingInspection */
 		$processes = $this->getService()->getEncoderService()->transcoding($this, $format, $options);
 		
-		foreach ($processes as $process)
+		try
 		{
-			if ( ! $process->isTerminated() && $process->run() !== 0)
+			foreach ($processes as $process)
 			{
-				throw new ProcessFailedException($process);
+				if ( ! $process->isTerminated() && $process->run() !== 0)
+				{
+					throw new ProcessFailedException($process);
+				}
 			}
+		}
+		catch (ProcessFailedException $exc)
+		{
+			throw new ExecutionFailureException($exc->getMessage(), $exc->getProcess(), $exc->getCode(), $exc);
 		}
 		
 		return $this;
