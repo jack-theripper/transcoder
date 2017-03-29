@@ -19,6 +19,7 @@ use Arhitector\Transcoder\Format\FormatInterface;
 use Arhitector\Transcoder\Format\FrameFormat;
 use Arhitector\Transcoder\Format\FrameFormatInterface;
 use Arhitector\Transcoder\Stream\StreamInterface;
+use Symfony\Component\Process\Exception\ProcessFailedException;
 
 /**
  * Class Frame.
@@ -89,10 +90,43 @@ class Frame implements FrameInterface
 	 * @param bool            $overwrite
 	 *
 	 * @return TranscodeInterface
+	 * @throws \Symfony\Component\Process\Exception\RuntimeException
+	 * @throws \Symfony\Component\Process\Exception\LogicException
+	 * @throws \Symfony\Component\Process\Exception\ProcessFailedException
+	 * @throws \Arhitector\Transcoder\Exception\TranscoderException
+	 * @throws \InvalidArgumentException
 	 */
 	public function save(FormatInterface $format, $filePath, $overwrite = true)
 	{
-		// TODO: Implement save() method.
+		if ( ! is_string($filePath) || empty($filePath))
+		{
+			throw new \InvalidArgumentException('File path must not be an empty string.');
+		}
+		
+		if ( ! $overwrite && file_exists($filePath))
+		{
+			throw new TranscoderException('File path already exists.');
+		}
+		
+		$options = ['output' => $filePath];
+		
+		foreach (clone $this->filters as $filter)
+		{
+			$options = array_replace_recursive($options, $filter->apply($this, $format));
+		}
+		
+		/** @noinspection ExceptionsAnnotatingAndHandlingInspection */
+		$processes = $this->getService()->getEncoderService()->transcoding($this, $format, $options);
+		
+		foreach ($processes as $process)
+		{
+			if ( ! $process->isTerminated() && $process->run() !== 0)
+			{
+				throw new ProcessFailedException($process);
+			}
+		}
+		
+		return $this;
 	}
 	
 	/**
