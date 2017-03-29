@@ -31,10 +31,10 @@ class Png extends FrameFormat
 	 */
 	public function __construct($codec = 'png')
 	{
+		parent::__construct($codec);
+		
 		$this->setExtensions(['png']);
 		$this->setAvailableVideoCodecs(['apng', 'png']);
-		
-		parent::__construct($codec);
 	}
 	
 }
