@@ -12,6 +12,7 @@
  */
 namespace Arhitector\Transcoder\Format;
 
+use Arhitector\Transcoder\Preset\PresetInterface;
 use Arhitector\Transcoder\TimeInterval;
 
 /**
@@ -58,5 +59,14 @@ interface FormatInterface extends \Iterator, \ArrayAccess
 	 * @return array
 	 */
 	public function getExtensions();
+	
+	/**
+	 * Clone format instance with a new parameters from preset.
+	 *
+	 * @param PresetInterface $preset
+	 *
+	 * @return FormatInterface
+	 */
+	public function withPreset(PresetInterface $preset);
 	
 }

@@ -12,6 +12,7 @@
  */
 namespace Arhitector\Transcoder\Format;
 
+use Arhitector\Transcoder\Preset\PresetInterface;
 use Arhitector\Transcoder\TimeInterval;
 
 /**
@@ -208,6 +209,18 @@ trait FormatTrait
 	public function offsetUnset($tagName)
 	{
 		unset($this->tags[$tagName]);
+	}
+	
+	/**
+	 * Clone format instance with a new parameters from preset.
+	 *
+	 * @param PresetInterface $preset
+	 *
+	 * @return FormatInterface
+	 */
+	public function withPreset(PresetInterface $preset)
+	{
+		// TODO
 	}
 	
 	/**
