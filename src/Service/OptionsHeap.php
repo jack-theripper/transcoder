@@ -13,7 +13,6 @@
 namespace Arhitector\Transcoder\Service;
 
 /**
- *
  * Class OptionsHeap.
  *
  * @package Arhitector\Transcoder\Service
