@@ -12,6 +12,7 @@
  */
 namespace Arhitector\Transcoder\Format;
 
+use Arhitector\Transcoder\Event\EmitterInterface;
 use Arhitector\Transcoder\Preset\PresetInterface;
 use Arhitector\Transcoder\TimeInterval;
 
@@ -20,7 +21,7 @@ use Arhitector\Transcoder\TimeInterval;
  *
  * @package Arhitector\Transcoder\Format
  */
-interface FormatInterface extends \Iterator, \ArrayAccess
+interface FormatInterface extends \Iterator, \ArrayAccess, EmitterInterface
 {
 	
 	/**

@@ -12,6 +12,7 @@
  */
 namespace Arhitector\Transcoder\Format;
 
+use Arhitector\Transcoder\Event\EmitterTrait;
 use Arhitector\Transcoder\Preset\PresetInterface;
 use Arhitector\Transcoder\TimeInterval;
 
@@ -22,6 +23,7 @@ use Arhitector\Transcoder\TimeInterval;
  */
 trait FormatTrait
 {
+	use EmitterTrait;
 	
 	/**
 	 * Returns a new format instance.
@@ -273,6 +275,5 @@ trait FormatTrait
 		
 		return $this;
 	}
-	
 	
 }
