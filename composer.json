@@ -21,7 +21,8 @@
 	    "php": ">=5.6",
         "symfony/process": "3.2.x-dev",
 	    "ralouphie/mimey": "^1.0",
-        "fguillot/simple-queue": "^1.0"
+        "fguillot/simple-queue": "^1.0",
+        "league/event": "^2.1"
     },
     "require-dev": {
         "phpunit/phpunit": "5.*"
