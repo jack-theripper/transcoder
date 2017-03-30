@@ -30,7 +30,7 @@ class Mkv extends VideoFormat
 	 *
 	 * @throws \InvalidArgumentException
 	 */
-	public function __construct($audioCodec = 'mp3', $videoCodec = 'libtheora')
+	public function __construct($audioCodec = 'aac', $videoCodec = 'libtheora')
 	{
 		parent::__construct($audioCodec, $videoCodec);
 		
