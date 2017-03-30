@@ -91,6 +91,7 @@ class Frame implements FrameInterface
 	 * @param bool            $overwrite
 	 *
 	 * @return TranscodeInterface
+	 * @throws \Arhitector\Transcoder\Exception\ExecutionFailureException
 	 * @throws \Symfony\Component\Process\Exception\RuntimeException
 	 * @throws \Symfony\Component\Process\Exception\LogicException
 	 * @throws \Symfony\Component\Process\Exception\ProcessFailedException
@@ -118,6 +119,11 @@ class Frame implements FrameInterface
 		
 		/** @noinspection ExceptionsAnnotatingAndHandlingInspection */
 		$processes = $this->getService()->getEncoderService()->transcoding($this, $format, $options);
+		
+		if ($format->emit('before')->isPropagationStopped())
+		{
+			return $this;
+		}
 		
 		try
 		{
