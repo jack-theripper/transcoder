@@ -203,17 +203,11 @@ trait TranscodeTrait
 			$mimeTypes = new MimeTypes();
 		}
 		
-		$extension = pathinfo($this->getFilePath(), PATHINFO_EXTENSION);
+		$extensions = $mimeTypes->getAllExtensions($this->getMimeType());
+		$extensions[] = pathinfo($this->getFilePath(), PATHINFO_EXTENSION);
 		
-		if ($extension)
+		foreach ($extensions as $extension)
 		{
-			$extensions = $mimeTypes->getAllExtensions($this->getMimeType());
-			
-			if ( ! in_array($extension, $extensions, false))
-			{
-				$extension = reset($extensions);
-			}
-			
 			$classString = __NAMESPACE__.'\\Format\\'.ucfirst($extension);
 			
 			if (class_exists($classString))
