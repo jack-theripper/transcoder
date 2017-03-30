@@ -225,6 +225,11 @@ class AudioFormat extends FrameFormat implements AudioFormatInterface
 	 */
 	protected function setAvailableAudioCodecs(array $codecs)
 	{
+		if ($this->getAvailableAudioCodecs())
+		{
+			$codecs = array_intersect($this->getAvailableAudioCodecs(), $codecs);
+		}
+		
 		$this->audioAvailableCodecs = array_map('strval', $codecs);
 		
 		return $this;

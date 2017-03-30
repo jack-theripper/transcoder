@@ -183,6 +183,11 @@ class FrameFormat implements FrameFormatInterface
 	 */
 	protected function setAvailableVideoCodecs(array $codecs)
 	{
+		if ($this->getAvailableVideoCodecs())
+		{
+			$codecs = array_intersect($this->getAvailableVideoCodecs(), $codecs);
+		}
+		
 		$this->videoAvailableCodecs = array_map('strval', $codecs);
 		
 		return $this;
