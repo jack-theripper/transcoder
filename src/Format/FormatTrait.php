@@ -15,6 +15,7 @@ namespace Arhitector\Transcoder\Format;
 use Arhitector\Transcoder\Event\EmitterTrait;
 use Arhitector\Transcoder\Preset\PresetInterface;
 use Arhitector\Transcoder\TimeInterval;
+use Arhitector\Transcoder\Traits\ConvertEncodingTrait;
 
 /**
  * Class FormatTrait.
@@ -23,7 +24,7 @@ use Arhitector\Transcoder\TimeInterval;
  */
 trait FormatTrait
 {
-	use EmitterTrait;
+	use EmitterTrait, ConvertEncodingTrait;
 	
 	/**
 	 * Returns a new format instance.
@@ -198,7 +199,7 @@ trait FormatTrait
 	 */
 	public function offsetSet($tagName, $value)
 	{
-		$this->tags[$tagName] = $value;
+		$this->tags[$tagName] = $this->convertEncoding($value);
 	}
 	
 	/**
