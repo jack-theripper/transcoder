@@ -135,6 +135,9 @@ class Encoder implements EncoderInterface
 		if ( ! empty($_options['metadata']))
 		{
 			$options['map_metadata'] = '-1';
+			$options['metadata'] = array_map(function ($value) {
+				return mb_convert_encoding($value, stripos(PHP_OS, 'WIN') === false ? 'UTF-8' : 'WINDOWS-1251');
+			}, $options['metadata']);
 		}
 		
 		$heap = new OptionsHeap();
