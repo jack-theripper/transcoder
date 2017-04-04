@@ -24,7 +24,7 @@ use Arhitector\Transcoder\Traits\ConvertEncodingTrait;
  */
 trait FormatTrait
 {
-	use EmitterTrait, ConvertEncodingTrait;
+	use EmitterTrait;
 	
 	/**
 	 * Returns a new format instance.
@@ -199,7 +199,7 @@ trait FormatTrait
 	 */
 	public function offsetSet($tagName, $value)
 	{
-		$this->tags[$tagName] = $this->convertEncoding($value);
+		$this->tags[$tagName] = $value;
 	}
 	
 	/**

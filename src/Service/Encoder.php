@@ -18,6 +18,7 @@ use Arhitector\Transcoder\Format\AudioFormatInterface;
 use Arhitector\Transcoder\Format\FormatInterface;
 use Arhitector\Transcoder\Format\FrameFormatInterface;
 use Arhitector\Transcoder\Format\VideoFormatInterface;
+use Arhitector\Transcoder\Traits\ConvertEncodingTrait;
 use Arhitector\Transcoder\Traits\OptionsAwareTrait;
 use Arhitector\Transcoder\TranscodeInterface;
 use Symfony\Component\Process\ExecutableFinder;
@@ -30,7 +31,7 @@ use Symfony\Component\Process\ProcessBuilder;
  */
 class Encoder implements EncoderInterface
 {
-	use OptionsAwareTrait;
+	use OptionsAwareTrait, ConvertEncodingTrait;
 	
 	/**
 	 * Encoder constructor.
@@ -116,7 +117,6 @@ class Encoder implements EncoderInterface
 			$_options['map'][] = sprintf('%s:%d', $input, $stream->getIndex());
 		}
 		
-		// получаем чистый массив опций без псевдонимов.
 		$options = array_diff_key($_options, $this->getAliasOptions() + ['output' => null]);
 		
 		foreach ($this->getAliasOptions() as $option => $value)
@@ -135,9 +135,7 @@ class Encoder implements EncoderInterface
 		if ( ! empty($_options['metadata']))
 		{
 			$options['map_metadata'] = '-1';
-			$options['metadata'] = array_map(function ($value) {
-				return mb_convert_encoding($value, stripos(PHP_OS, 'WIN') === false ? 'UTF-8' : 'WINDOWS-1251');
-			}, $options['metadata']);
+			$options['-metadata'] = array_map([$this, 'convertEncoding'], $_options['metadata']);
 		}
 		
 		$heap = new OptionsHeap();
