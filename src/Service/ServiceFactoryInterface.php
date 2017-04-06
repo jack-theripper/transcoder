@@ -21,7 +21,7 @@ interface ServiceFactoryInterface
 {
 	
 	/**
-	 * @var string The option value alias for `ffmpeg.path`.
+	 * @var string The path to the binary file 'ffmpeg'.
 	 */
 	const OPTION_FFMPEG_PATH = 'ffmpeg.path';
 	
@@ -45,6 +45,10 @@ interface ServiceFactoryInterface
 	 */
 	const OPTION_USE_QUEUE = 'use_queue';
 	
+	/**
+	 * @var string Check for codecs.
+	 */
+	const OPTION_TEST_CODECS = 'test_codecs';
 	
 	/**
 	 * Gets the options.
