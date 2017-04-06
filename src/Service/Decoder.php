@@ -18,6 +18,7 @@ use Arhitector\Transcoder\Exception\TranscoderException;
 use Arhitector\Transcoder\Traits\OptionsAwareTrait;
 use Arhitector\Transcoder\TranscodeInterface;
 use Symfony\Component\Process\ExecutableFinder;
+use Symfony\Component\Process\Process;
 use Symfony\Component\Process\ProcessBuilder;
 
 /**
@@ -151,8 +152,14 @@ class Decoder implements DecoderInterface
 			'bit_rate'    => 0,
 			'duration'    => 0.0,
 			'format_name' => '',
-			'tags'        => []
+			'tags'        => [],
+			'codecs'      => []
 		];
+		
+		if ( ! empty($this->options[ServiceFactoryInterface::OPTION_TEST_CODECS]))
+		{
+			$properties['codecs'] = $this->getAvailableCodecs();
+		}
 		
 		$properties['metadata'] = (array) $properties['tags'];
 		$properties['format'] = $properties['format_name'];
@@ -189,6 +196,56 @@ class Decoder implements DecoderInterface
 		$properties['codec'] = new Codec($properties['codec_name'], $properties['codec_long_name']);
 		
 		return $properties;
+	}
+	
+	/**
+	 * Supported codecs.
+	 *
+	 * @return int[]
+	 */
+	public function getAvailableCodecs()
+	{
+		$codecs = [];
+		$bit = ['.' => 0, 'A' => 1, 'V' => 2, 'S' => 4, 'E' => 8, 'D' => 16];
+		
+		try
+		{
+			foreach (['encoders', 'codecs'] as $command)
+			{
+				$process = new Process(sprintf('"%s" "-%s"', $this->options['ffprobe.path'], $command));
+				$process->start();
+				
+				while ($process->getStatus() !== Process::STATUS_TERMINATED)
+				{
+					usleep(200000);
+				}
+				
+				if (preg_match_all('/\s([VASFXBDEIL\.]{6})\s(\S{3,20})\s/', $process->getOutput(), $matches))
+				{
+					if ($command == 'encoders')
+					{
+						foreach ($matches[2] as $key => $value)
+						{
+							$codecs[$value] = $bit[$matches[1][$key]{0}] | $bit['E'];
+						}
+					}
+					else // codecs, encoders + decoders
+					{
+						foreach ($matches[2] as $key => $value)
+						{
+							$key = $matches[1][$key];
+							$codecs[$value] = $bit[$key{2}] | $bit[$key{0}] | $bit[$key{1}];
+						}
+					}
+				}
+			}
+		}
+		catch (\Exception $exception)
+		{
+		
+		}
+		
+		return $codecs;
 	}
 	
 }
