@@ -137,7 +137,13 @@ class Frame implements FrameInterface
 		}
 		catch (ProcessFailedException $exc)
 		{
+			$format->emit('failure');
+			
 			throw new ExecutionFailureException($exc->getMessage(), $exc->getProcess(), $exc->getCode(), $exc);
+		}
+		finally
+		{
+			$format->emit('after');
 		}
 		
 		return $this;
