@@ -208,6 +208,13 @@ class Frame implements FrameInterface
 			}
 		}
 		
+		if (isset($formatArray['codecs']) && is_array($formatArray['codecs']))
+		{
+			$formatArray['available_video_codecs'] = array_keys(array_filter($formatArray['codecs'], function ($mask) {
+				return $mask & 2;
+			}));
+		}
+		
 		return $format::fromArray(array_filter($formatArray, function ($value) {
 			return $value !== null;
 		}));
