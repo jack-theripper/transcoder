@@ -12,6 +12,7 @@
  */
 namespace Arhitector\Transcoder;
 
+use Arhitector\Transcoder\Event\EventProgress;
 use Arhitector\Transcoder\Exception\ExecutionFailureException;
 use Arhitector\Transcoder\Exception\InvalidFilterException;
 use Arhitector\Transcoder\Exception\TranscoderException;
@@ -127,9 +128,9 @@ class Frame implements FrameInterface
 		
 		try
 		{
-			foreach ($processes as $process)
+			foreach ($processes as $pass => $process)
 			{
-				if ( ! $process->isTerminated() && $process->run() !== 0)
+				if ( ! $process->isTerminated() && $process->run(new EventProgress($pass, $format)) !== 0)
 				{
 					throw new ProcessFailedException($process);
 				}
