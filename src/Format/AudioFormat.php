@@ -220,12 +220,13 @@ class AudioFormat extends FrameFormat implements AudioFormatInterface
 	 * Sets the list of available audio codecs.
 	 *
 	 * @param array $codecs
+	 * @param bool  $force
 	 *
-	 * @return AudioFormat
+	 * @return \Arhitector\Transcoder\Format\AudioFormat
 	 */
-	protected function setAvailableAudioCodecs(array $codecs)
+	protected function setAvailableAudioCodecs(array $codecs, $force = false)
 	{
-		if ($this->getAvailableAudioCodecs())
+		if ( ! $force && $this->getAvailableAudioCodecs())
 		{
 			$codecs = array_intersect($this->getAvailableAudioCodecs(), $codecs);
 		}

@@ -178,12 +178,13 @@ class FrameFormat implements FrameFormatInterface
 	 * Sets the list of available audio codecs.
 	 *
 	 * @param array $codecs
+	 * @param bool  $force
 	 *
-	 * @return FrameFormat
+	 * @return \Arhitector\Transcoder\Format\FrameFormat
 	 */
-	protected function setAvailableVideoCodecs(array $codecs)
+	protected function setAvailableVideoCodecs(array $codecs, $force = false)
 	{
-		if ($this->getAvailableVideoCodecs())
+		if ( ! $force && $this->getAvailableVideoCodecs())
 		{
 			$codecs = array_intersect($this->getAvailableVideoCodecs(), $codecs);
 		}
