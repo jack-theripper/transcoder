@@ -134,6 +134,8 @@ class Frame implements FrameInterface
 					throw new ProcessFailedException($process);
 				}
 			}
+			
+			$format->emit('success');
 		}
 		catch (ProcessFailedException $exc)
 		{
