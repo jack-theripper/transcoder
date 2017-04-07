@@ -12,6 +12,7 @@
  */
 namespace Arhitector\Transcoder;
 
+use Arhitector\Transcoder\Event\EventProgress;
 use Arhitector\Transcoder\Exception\ExecutionFailureException;
 use Arhitector\Transcoder\Exception\InvalidFilterException;
 use Arhitector\Transcoder\Exception\TranscoderException;
@@ -133,19 +134,32 @@ class Audio implements AudioInterface
 		/** @noinspection ExceptionsAnnotatingAndHandlingInspection */
 		$processes = $this->getService()->getEncoderService()->transcoding($this, $format, $options);
 		
+		if ($format->emit('before')->isPropagationStopped())
+		{
+			return $this;
+		}
+		
 		try
 		{
-			foreach ($processes as $process)
+			foreach ($processes as $pass => $process)
 			{
-				if ( ! $process->isTerminated() && $process->run() !== 0)
+				if ( ! $process->isTerminated() && $process->run(new EventProgress($pass, $format)) !== 0)
 				{
 					throw new ProcessFailedException($process);
 				}
 			}
+			
+			$format->emit('success');
 		}
 		catch (ProcessFailedException $exc)
 		{
+			$format->emit('failure');
+			
 			throw new ExecutionFailureException($exc->getMessage(), $exc->getProcess(), $exc->getCode(), $exc);
+		}
+		finally
+		{
+			$format->emit('after');
 		}
 		
 		return $this;
