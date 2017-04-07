@@ -166,7 +166,7 @@ class Encoder implements EncoderInterface
 			
 			$options[] = $filePath;
 			
-			yield (new ProcessBuilder($options))
+			yield $pass => (new ProcessBuilder($options))
 				->setPrefix($this->options['ffmpeg.path'])
 				->setTimeout($this->options['timeout'])
 				->getProcess();
