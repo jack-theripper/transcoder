@@ -12,6 +12,7 @@
  */
 namespace Arhitector\Transcoder\Event;
 
+use Arhitector\Transcoder\Format\FormatInterface;
 use League\Event\Event;
 use League\Event\EventInterface;
 
@@ -51,15 +52,14 @@ class EventProgress extends Event implements EventInterface
 	/**
 	 * EventProgress constructor.
 	 *
-	 * @param float $duration
-	 * @param int   $totalPass
-	 *
-	 * @throws \InvalidArgumentException
+	 * @param string          $pass
+	 * @param FormatInterface $format
 	 */
-	public function __construct($duration, $totalPass = 1)
+	public function __construct($pass, FormatInterface $format)
 	{
-		$this->setDuration($duration);
-		$this->setTotalPass($totalPass);
+		$this->setCurrentPass((int) $pass);
+		$this->setDuration($format->getDuration()->toSeconds());
+		$this->setTotalPass($format->getPasses());
 		
 		parent::__construct('progress');
 	}
