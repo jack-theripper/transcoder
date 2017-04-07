@@ -50,6 +50,11 @@ class EventProgress extends Event implements EventInterface
 	protected $size = 0;
 	
 	/**
+	 * @var FormatInterface
+	 */
+	protected $format;
+	
+	/**
 	 * EventProgress constructor.
 	 *
 	 * @param string          $pass
@@ -60,6 +65,7 @@ class EventProgress extends Event implements EventInterface
 		$this->setCurrentPass((int) $pass);
 		$this->setDuration($format->getDuration()->toSeconds());
 		$this->setTotalPass($format->getPasses());
+		$this->format = $format;
 		
 		parent::__construct('progress');
 	}
@@ -131,6 +137,33 @@ class EventProgress extends Event implements EventInterface
 	public function getRemaining()
 	{
 		return $this->duration - $this->time;
+	}
+	
+	/**
+	 * Emit an event.
+	 *
+	 * @param string $type
+	 * @param string $data
+	 *
+	 * @return mixed
+	 */
+	public function __invoke($type, $data)
+	{
+		if (preg_match('/size=(.*?) time=(.*?) /', $data, $matches))
+		{
+			$matches[2] = array_reverse(explode(':', $matches[2]));
+			$duration = (float) array_shift($matches[2]);
+			
+			foreach ($matches[2] as $key => $value)
+			{
+				$duration += (int) $value * 60 * ($key + 1);
+			}
+			
+			$this->setCurrentSize((int) trim($matches[1]));
+			$this->setCurrentTime($duration);
+			
+			$this->format->emit($this);
+		}
 	}
 	
 	/**
