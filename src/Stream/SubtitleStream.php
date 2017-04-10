@@ -28,7 +28,7 @@ class SubtitleStream implements SubtitleStreamInterface
 	 */
 	public function getType()
 	{
-		return self::T_SUBTITLE;
+		return self::STREAM_SUBTITLE;
 	}
 	
 }

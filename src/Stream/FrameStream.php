@@ -60,7 +60,7 @@ class FrameStream implements FrameStreamInterface
 	 */
 	public function getType()
 	{
-		return self::T_FRAME;
+		return self::STREAM_FRAME;
 	}
 	
 	/**

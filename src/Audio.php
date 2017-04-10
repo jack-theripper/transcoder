@@ -238,7 +238,7 @@ class Audio implements AudioInterface
 			throw new TranscoderException('Invalid format type.');
 		}
 		
-		foreach ($this->getStreams(StreamInterface::T_AUDIO | StreamInterface::T_FRAME) as $stream)
+		foreach ($this->getStreams(StreamInterface::STREAM_AUDIO | StreamInterface::STREAM_FRAME) as $stream)
 		{
 			$prefix = $stream instanceof AudioStreamInterface ? 'audio_' : 'video_';
 			

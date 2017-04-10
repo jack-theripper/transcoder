@@ -204,7 +204,7 @@ class Frame implements FrameInterface
 			throw new TranscoderException('Invalid format type.');
 		}
 		
-		if ($stream = $this->getStreams(StreamInterface::T_FRAME)->getFirst())
+		if ($stream = $this->getStreams(StreamInterface::STREAM_FRAME)->getFirst())
 		{
 			foreach ($stream->toArray() as $key => $value)
 			{

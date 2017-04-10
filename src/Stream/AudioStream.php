@@ -58,7 +58,7 @@ class AudioStream implements AudioStreamInterface
 	 */
 	public function getType()
 	{
-		return self::T_AUDIO;
+		return self::STREAM_AUDIO;
 	}
 	
 	/**

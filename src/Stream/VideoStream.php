@@ -42,7 +42,7 @@ class VideoStream extends FrameStream implements VideoStreamInterface
 	 */
 	public function getType()
 	{
-		return self::T_VIDEO;
+		return self::STREAM_VIDEO;
 	}
 	
 	/**

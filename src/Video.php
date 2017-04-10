@@ -146,7 +146,7 @@ class Video extends Audio implements VideoInterface
 			throw new TranscoderException('Invalid format type.');
 		}
 		
-		foreach ($this->getStreams(StreamInterface::T_AUDIO | StreamInterface::T_VIDEO) as $stream)
+		foreach ($this->getStreams(StreamInterface::STREAM_AUDIO | StreamInterface::STREAM_VIDEO) as $stream)
 		{
 			$prefix = $stream instanceof VideoStreamInterface ? 'video_' : 'audio_';
 			
