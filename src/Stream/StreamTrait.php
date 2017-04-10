@@ -105,6 +105,11 @@ trait StreamTrait
 	protected $media;
 	
 	/**
+	 * @var array The metadata tags or other.
+	 */
+	protected $metadata = [];
+	
+	/**
 	 * Stream constructor.
 	 *
 	 * @param TranscodeInterface $media
@@ -337,6 +342,26 @@ trait StreamTrait
 		}
 		
 		$this->duration = $duration;
+		
+		return $this;
+	}
+	
+	/**
+	 * Sets the metadata.
+	 *
+	 * @param string|array $metadata
+	 * @param mixed        $value
+	 *
+	 * @return $this
+	 */
+	protected function setMetadata($metadata, $value = null)
+	{
+		if ( ! is_array($metadata))
+		{
+			$metadata = [$metadata => $value];
+		}
+		
+		$this->metadata = array_filter($metadata, 'is_scalar');
 		
 		return $this;
 	}
