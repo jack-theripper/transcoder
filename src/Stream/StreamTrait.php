@@ -219,7 +219,8 @@ trait StreamTrait
 	 * @param string          $filePath
 	 * @param bool            $overwrite
 	 *
-	 * @return bool
+	 * @return \Arhitector\Transcoder\TranscodeInterface
+	 *
 	 * @throws \Arhitector\Transcoder\Exception\InvalidFilterException
 	 * @throws \Symfony\Component\Process\Exception\ProcessFailedException
 	 * @throws \Arhitector\Transcoder\Exception\TranscoderException
