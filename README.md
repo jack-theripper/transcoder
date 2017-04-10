@@ -1,36 +1,61 @@
-## Tools to transcoding/encoding audio or video, inspect and convert media formats.
+
+# Transcoder
+
+[![Latest Version](https://img.shields.io/github/release/jack-theripper/transcoder.svg?style=flat-square)](https://github.com/jack-theripper/transcoder/releases)
+[![Software License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Build Status](https://img.shields.io/travis/jack-theripper/transcoder/master.svg?style=flat-square)](https://travis-ci.org/jack-theripper/transcoder)
+[![Coverage Status](https://img.shields.io/scrutinizer/coverage/g/jack-theripper/transcoder.svg?style=flat-square)](https://scrutinizer-ci.com/g/jack-theripper/transcoder/code-structure)
+[![Quality Score](https://img.shields.io/scrutinizer/g/jack-theripper/transcoder.svg?style=flat-square)](https://scrutinizer-ci.com/g/jack-theripper/transcoder)
+[![Total Downloads](https://img.shields.io/packagist/dt/arhitector/transcoder.svg?style=flat-square)](https://packagist.org/packages/arhitector/transcoder)
+
+#### Tools to transcoding/encoding audio or video, inspect and convert media formats.
+
+Инструмент для кодирования, конвертации, и получения метаинформации для аудио и видео.
+
+## Требования
+
+* PHP 5.6 или новее
+* Установленный [FFMpeg](http://ffmpeg.org)
 
 ## Установка
+
+Поддерживается установка с помощью менеджера пакетов [Composer](http://getcomposer.org/).
 
 ```bash
 $ composer require arhitector/transcoder dev-master
 ```
 
-## 1. Быстрый старт
+Вы также можете внести зависимость в уже существующий файл `composer.json` самостоятельно.
 
-Необходимо определить, с каким типом файлов предстоит работать.
-
-`Arhitector\Transcoder\Audio` используется для работы с аудио-файлами.
-
-`Arhitector\Transcoder\Video` используется для работы с видео-файлами.
-
-`Arhitector\Transcoder\Frame` используется для работы с изображениями.
-
-`Arhitector\Transcoder\Subtitle` используется для работы с субтитрами.
-
-Конструктор в общем виде выглядит так
-
-```php
-public <...>::__construct(string $filePath, ServiceFactoryInterface $service = null)
+```json
+{
+	"require": {
+		"arhitector/transcoder": "dev-master"
+	}
+}
 ```
 
-`$filePath` - определяет путь до исходного файла. Вы не можете использовать удаленный источник или символические ссылки.
+## Оказать содействие
 
-`$service` - не обязательный параметр, экземпляр сервиса. Если не передан, то будет использоваться `ServiceFactory`.
+Нашли ошибку или есть идея для новой функции? Пожалуйста, [откройте новый вопрос](https://github.com/jack-theripper/transcoder/issues).
 
-### 1.1. Примеры
+## С чего начать
 
-Простые примеры
+В зависимости от контента, вы можете использовать `Audio` для работы с аудио-файлами, `Frame` для изображений, а `Video` и `Subtitle` соответственно для видео-файлов и субтитров.
+
+Конструктор в общем виде выглядит так:
+
+```php
+public < ... >::__construct(string $filePath, ServiceFactoryInterface $service = null)
+```
+
+`$filePath` - строка, путь до исходного файла.
+
+> Вы не можете использовать удаленный источник или символические ссылки.
+
+`$service` - параметр не обязателен. Экземпляр сервиса. По умолчанию   `ServiceFactory`.
+
+**Пример №1**
 
 ```php
 use Arhitector\Transcoder\Audio;
@@ -51,10 +76,14 @@ $frame = new Frame('sample.jpg');
 $subtitle = new Subtitle('sample.srt');
 ```
 
+**Пример №2**
+
 Вы можете использовать свою сервис-фабрику или изменить некоторые опции.
 
 ```php
-$service = new \Arhitector\Transcoder\Service\ServiceFactory([
+use Arhitector\Transcoder\Service\ServiceFactory;
+
+$service = new ServiceFactory([
 	'ffprobe.path'   => 'E:\devtools\bin\ffprobe.exe',
 	'ffmpeg.path'    => 'E:\devtools\bin\ffmpeg.exe'
 ]);
@@ -63,28 +92,59 @@ $service = new \Arhitector\Transcoder\Service\ServiceFactory([
 $video = new Video('sample.avi', $service);
 ```
 
-## 1.2. Что можно настроить?
+### События
 
-`ServiceFactory` поддерживает следующие опции:
+Экземпляр формата позволяет регистрировать обработчики событий. Читать подробнее [League\Event](http://event.thephpleague.com/2.0/).
 
-- `ffmpeg.path` - путь до исполняемого файла `ffmpeg`
+**Пример №1**
 
-- `ffmpeg.threads` - FFMpeg-опция `threads`. По умолчанию `0`.
+Добавим обработчик на событие `progress`.
 
-- `ffprobe.path` - путь до исполняемого файла `ffprobe`
+```php
+$format = new VideoFormat();
+$format->addListener('*', function ($event) {
+	// обработчик сработает на любое событие
+});
+```
 
-- `timeout` - задаёт таймаут выполнения команды кодирования.
+#### Поддерживаемые события
 
-- `use_queue` - задача кодирования будет отправляться в очередь. Значение должно быть объектом,
- реализующим `SimpleQueue\QueueAdapterInterface`.
+- `before` выполняется перед началом кодирования. Вы можете отменить процесс вызвав `$event->stopPropagation()`.
 
-Вы можете использовать свою реализацию сервис-фабрики. Для этого необходимо реализовать в вашем объекте
- интерфейс `Arhitector\Transcoder\Service\ServiceFactoryInterface`.
+**Пример №2**
 
-## 2. Поддержка очередей
+Операция будет отменена и вызов последующих событий НЕ произойдёт.
+
+```php
+$format = new AudioFormat();
+$format->addListener('before', function ($event) {
+	$event->stopPropagation();
+});
+```
+
+- `success` сработает в случае если операция успешна.
+
+- `progress` срабатывает в ходе выполнения операции.
+
+**Пример №3**
+
+```php
+$format = new VideoFormat();
+$format->addListener('progress', function ($event) {
+	/* @var Arhitector/Transcoder/Event/EventProgress $event */
+	var_dump($event->getPercent());
+});
+```
+
+- `failure` если что-то пошло не так.
+
+- `after` обработчик будет вызван когда операция завершится, не зависимо от того была ли операция завершена успешно или нет.
+
+### Поддержка очередей
 
 Вместо прямого транскодирования вы можете отправлять задачи в очередь, например, на сервер очередей. Такой функционал
  доступен прямо из коробки. Вы можете использовать опцию `ServiceFactoryInterface::OPTION_USE_QUEUE` при создании сервис-фабрики.
+Читать подробнее [SimpleQueue](https://github.com/fguillot/simple-queue).
 
 **Пример**
 
@@ -103,6 +163,26 @@ $audio->save($audio->getFormat(), 'new-sample.mp3');
 
 var_dump($queue->pull()); // запросить задачу из очереди
 ```
+
+## Что можно настроить? Поддерживаемые опции
+
+###  Опции сервис-фабрики
+
+Вы можете использовать свою реализацию сервис-фабрики. Для этого необходимо реализовать интерфейс `Arhitector\Transcoder\Service\ServiceFactoryInterface`.
+ 
+`ServiceFactory` поддерживает следующие опции:
+
+1. `ffmpeg.path` - путь до исполняемого файла ffmpeg
+
+1. `ffmpeg.threads` - FFMpeg-опция threads. По умолчанию `0`.
+
+1. `ffprobe.path` - путь до исполняемого файла ffprobe
+
+1. `timeout` - задаёт таймаут выполнения команды кодирования.
+
+1. `use_queue` - Отправляет задачу в очередь. Значение должно быть объектом, реализующим `SimpleQueue\QueueAdapterInterface`.
+
+## Примеры 
 
 ### Извлечение информации из видео файла, аудио файла и т.д.
 
@@ -199,6 +279,14 @@ $audio->save($audio->getFormat(), 'sample-with-new-cover.mp3');
 
 - Png, Jpeg, Ppm, Bmp, Gif
 
+### Аудио-форматы
+
+- Aac, Mp3, Oga, Flac
+
+### Видео-форматы
+
+- Flv, Mkv
+
 ## Фильтры
 
 ### Аудио фильтры
@@ -208,7 +296,7 @@ $audio->save($audio->getFormat(), 'sample-with-new-cover.mp3');
 Фильтр изменяет громкость аудио потока.
 
 ```php
-use \Arhitector\Jumper\Filter\Volume;
+use \Arhitector\Transcoder\Filter\Volume;
 ```
 
 Пример показывает как уменьшить громкость аудио.
@@ -230,46 +318,34 @@ $filter = new Volume('6dB', Volume::PRECISION_FIXED);
 Фильтр накладывает эффект затухания звука.
 
 ```php
-use \Arhitector\Jumper\Filter\Fade;
+use \Arhitector\Transcoder\Filter\Fade;
 ```
 
-## Опции форматов
 
-*FormatInterface* определяет 
 
-`duration`
 
-`extensions`
+## Лицензия
 
-`metadata`
+Распространяется под лицензией <a href="http://opensource.org/licenses/MIT">MIT</a>.
 
-*FrameFormatInterface* дополняет список *FormatInterface*
+```
+Copyright (c) 2017 Dmitry Arhitector
 
-`video_codec`
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-`width`
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-`height`
-
-`available_video_codecs`
-
-*AudioFormatInterface* дополняет список *FrameFormatInterface*
-
-`channels`
-
-`audio_codec`
-
-`audio_bitrate`
-
-`frequency`
-
-`available_audio_codecs`
-
-*VideoFormatInterface* дополняет список *AudioFormatInterface*
-
-`video_bitrate`
-
-`passes`
-
-`frame_rate`
-
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
