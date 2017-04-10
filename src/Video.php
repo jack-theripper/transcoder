@@ -19,7 +19,6 @@ use Arhitector\Transcoder\Filter\FilterInterface;
 use Arhitector\Transcoder\Filter\FrameFilterInterface;
 use Arhitector\Transcoder\Format\VideoFormat;
 use Arhitector\Transcoder\Format\VideoFormatInterface;
-use Arhitector\Transcoder\Stream\StreamInterface;
 use Arhitector\Transcoder\Stream\VideoStreamInterface;
 
 /**
@@ -146,7 +145,7 @@ class Video extends Audio implements VideoInterface
 			throw new TranscoderException('Invalid format type.');
 		}
 		
-		foreach ($this->getStreams(StreamInterface::STREAM_AUDIO | StreamInterface::STREAM_VIDEO) as $stream)
+		foreach ($this->getStreams(self::STREAM_AUDIO | self::STREAM_VIDEO) as $stream)
 		{
 			$prefix = $stream instanceof VideoStreamInterface ? 'video_' : 'audio_';
 			

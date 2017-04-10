@@ -20,7 +20,6 @@ use Arhitector\Transcoder\Filter\FilterInterface;
 use Arhitector\Transcoder\Format\FormatInterface;
 use Arhitector\Transcoder\Format\FrameFormat;
 use Arhitector\Transcoder\Format\FrameFormatInterface;
-use Arhitector\Transcoder\Stream\StreamInterface;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
 /**
@@ -204,7 +203,7 @@ class Frame implements FrameInterface
 			throw new TranscoderException('Invalid format type.');
 		}
 		
-		if ($stream = $this->getStreams(StreamInterface::STREAM_FRAME)->getFirst())
+		if ($stream = $this->getStreams(self::STREAM_FRAME)->getFirst())
 		{
 			foreach ($stream->toArray() as $key => $value)
 			{

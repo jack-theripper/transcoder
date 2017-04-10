@@ -17,6 +17,7 @@ use Arhitector\Transcoder\Filter\FilterInterface;
 use Arhitector\Transcoder\Format\FormatInterface;
 use Arhitector\Transcoder\Service\ServiceFactoryInterface;
 use Arhitector\Transcoder\Stream\Collection;
+use Arhitector\Transcoder\Stream\EnumerationInterface;
 use Arhitector\Transcoder\Stream\StreamInterface;
 
 /**
@@ -24,7 +25,7 @@ use Arhitector\Transcoder\Stream\StreamInterface;
  *
  * @package Arhitector\Transcoder
  */
-interface TranscodeInterface
+interface TranscodeInterface extends EnumerationInterface
 {
 	
 	/**
