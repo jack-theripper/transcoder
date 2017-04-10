@@ -119,7 +119,7 @@ class EventProgress extends Event implements EventInterface
 	 */
 	public function getPercent()
 	{
-		if ($this->duration < 1)
+		if ($this->duration == 0)
 		{
 			return -1;
 		}
