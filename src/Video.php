@@ -147,32 +147,15 @@ class Video extends Audio implements VideoInterface
 		
 		foreach ($this->getStreams(self::STREAM_AUDIO | self::STREAM_VIDEO) as $stream)
 		{
-			$prefix = $stream instanceof VideoStreamInterface ? 'video_' : 'audio_';
+			$prefix = $stream instanceof VideoStreamInterface ? 'audio_' : 'video_';
 			
 			foreach ($stream->toArray() as $key => $value)
 			{
-				if ($prefix == 'audio_')
+				$formatArray[$key] = $value;
+				
+				if (in_array($key, ['codec', 'bitrate'], false))
 				{
-					$formatArray[$key] = $value;
-					
-					if (in_array($key, ['codec', 'bitrate'], false))
-					{
-						$formatArray[$prefix.$key] = $value;
-					}
-				}
-				else if ($prefix == 'video_')
-				{
-					$formatArray[$key] = $value;
-					
-					if ($key == 'codec')
-					{
-						$formatArray['video_codec'] = $value;
-					}
-					
-					if (in_array($key, ['bitrate'], false))
-					{
-						$formatArray[$prefix.$key] = $value;
-					}
+					$formatArray[$prefix.$key] = $value;
 				}
 			}
 		}
