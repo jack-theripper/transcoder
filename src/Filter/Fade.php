@@ -148,8 +148,8 @@ class Fade implements AudioFilterInterface
 	 * Fade constructor.
 	 *
 	 * @param TimeInterval|int $startTime Specify the start time of the fade effect.
-	 * @param string           $duration
-	 * @param TimeInterval|int $effectType
+	 * @param TimeInterval|int $duration
+	 * @param string           $effectType
 	 *
 	 * @throws \InvalidArgumentException
 	 */
