@@ -142,7 +142,7 @@ class Audio implements AudioInterface
 		{
 			foreach ($processes as $pass => $process)
 			{
-				if ( ! $process->isTerminated() && $process->run(new EventProgress($pass, $format)) !== 0)
+				if ( ! $process->isTerminated() && $process->run(new EventProgress($pass, $this->getFormat())) !== 0)
 				{
 					throw new ProcessFailedException($process);
 				}
