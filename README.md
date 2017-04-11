@@ -98,7 +98,7 @@ $video = new Video('sample.avi', $service);
 
 **Пример №1**
 
-Добавим обработчик на событие `progress`.
+Добавим обработчик на событие.
 
 ```php
 $format = new VideoFormat();
@@ -158,7 +158,7 @@ $service = new Arhitector\Transcoder\Service\ServiceFactory([
 
 $audio = new Arhitector\Transcoder\Audio('sample.mp3', $service);
 
-// задача будет отправлена в очерель `$queue`
+// задача будет отправлена в очередь `$queue`
 $audio->save($audio->getFormat(), 'new-sample.mp3');
 
 var_dump($queue->pull()); // запросить задачу из очереди
@@ -289,15 +289,106 @@ $audio->save($audio->getFormat(), 'sample-with-new-cover.mp3');
 
 ## Фильтры
 
+Фильтры используются для изменения исходного медиа контента. Могут иметь один или несколько входов и выходов. 
+Фильтры могут быть организованы в цепочки фильтров для изоляции некоторый фильтров друг от друга.
+
+```php
+public < ... >::addFilter(FilterInterface $filter, $priority = 0);
+```
+
+`$filter` экземпляр фильтра.
+
+`$priority` вы можете задать приоритет для фильтров. На основе приоритета определяется порядок использования фильтра. По умолчанию `0`.
+
+**Пример №1**
+
+```php
+// добавляем любой фильтр
+$video->addFilter($filter);
+
+// добавляем фильтр с приоритетом = 99.
+$audio->addFilter($filter, 99);
+```
+
+#### Простой фильтр, SimpleFilter
+
+Это самый простой фильтр, который позволяет устанавливает свои параметры для командной строки ffmpeg.
+
+```php
+use Arhitector\Transcoder\Filter\SimpleFilter;
+```
+
+**Конструктор**
+
+```php
+public SimpleFilter::__construct(array $parameters = [])
+```
+
+**Пример №1**
+
+Создадим экземпляр и добавим параметр 'video_codec'.
+
+```php
+// 
+$filter = new SimpleFilter([
+	'video_codec' => 'h264'
+]);
+```
+
+**Пример №2**
+
+Этот метод перезапишет ранее установленные значения.
+
+```php
+$filter->setParameters([
+	'video_codec' => 'libx264'
+]);
+
+// ArrayAccess
+$filter['video_codec'] = 'x264';
+```
+
 ### Аудио фильтры
 
-- Фильтр **Volume**
+Такие фильтры реализуют интерфейс `AudioFilterInterface` и могут использоваться совместно только с `Audio` или `Video`.
+
+#### Фильтр Cut
+
+Позволяет обрезать медиа-файл до определённых значений продолжительности.
+
+```php
+use Arhitector\Transcoder\Filter\Cut;
+```
+
+**Конструктор**
+
+```php
+public Cut::__construct(TimeInterval|int $start [, TimeInterval $duration = null])
+```
+
+**Пример №1**
+
+Пропустить 20 секунд от начала и сохранить последующие 60 секунд.
+
+```php
+$filter = new Cut(new TimeInterval(20), new TimeInterval(60));
+```
+
+#### Фильтр Volume
 
 Фильтр изменяет громкость аудио потока.
 
 ```php
 use \Arhitector\Transcoder\Filter\Volume;
 ```
+
+**Конструктор**
+
+```php
+public Volume::__construct(float $volume [, string $precision = null])
+```
+
+**Пример №1**
 
 Пример показывает как уменьшить громкость аудио.
 
@@ -307,19 +398,34 @@ $filter = new Volume(1/2);
 $filter = new Volume('6.0206dB');
 ```
 
-Increase input audio power by 6 decibels using fixed-point precision.
+**Пример №2**
+
+Увеличение входной мощности звука на 6 дБ с фиксированной точностью.
 
 ```php
 $filter = new Volume('6dB', Volume::PRECISION_FIXED);
 ```
 
-- Фильтр **Fade**
+#### Фильтр Fade
 
 Фильтр накладывает эффект затухания звука.
 
 ```php
 use \Arhitector\Transcoder\Filter\Fade;
 ```
+
+**Конструктор**
+
+```php
+public Fade::__construct(TimeInterval|int $startTime = 0 [, TimeInterval|int $duration = null [, string $effectType = null]])
+```
+
+**Пример №1**
+
+```php
+new Fade(2, 10, Fade::FADE_OUT)
+```
+
 
 
 
