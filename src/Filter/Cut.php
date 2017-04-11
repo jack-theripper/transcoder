@@ -60,6 +60,7 @@ class Cut implements AudioFilterInterface, FrameFilterInterface
 	 * @param FormatInterface    $format
 	 *
 	 * @return array
+	 * @throws \InvalidArgumentException
 	 */
 	public function apply(TranscodeInterface $media, FormatInterface $format)
 	{
@@ -69,6 +70,11 @@ class Cut implements AudioFilterInterface, FrameFilterInterface
 		
 		if ($this->getDuration() !== null)
 		{
+			if ($this->getDuration()->toSeconds() > $media->getDuration())
+			{
+				throw new \InvalidArgumentException('The duration value exceeds the allowable value.');
+			}
+			
 			$options['seek_end'] = (string) $this->getDuration();
 		}
 		
