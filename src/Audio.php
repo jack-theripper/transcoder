@@ -243,7 +243,10 @@ class Audio implements AudioInterface
 			
 			foreach ($stream->toArray() as $key => $value)
 			{
-				$formatArray[$key] = $value;
+				if ($key != 'metadata')
+				{
+					$formatArray[$key] = $value;
+				}
 				
 				if (in_array($key, ['codec', 'bitrate'], false))
 				{

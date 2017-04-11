@@ -207,7 +207,10 @@ class Frame implements FrameInterface
 		{
 			foreach ($stream->toArray() as $key => $value)
 			{
-				$formatArray[$key] = $value;
+				if ($key != 'metadata')
+				{
+					$formatArray[$key] = $value;
+				}
 				
 				if ($key == 'codec')
 				{
