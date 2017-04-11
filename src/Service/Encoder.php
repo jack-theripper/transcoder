@@ -101,9 +101,9 @@ class Encoder implements EncoderInterface
 		
 		$filePath = $options['output'];
 		
-		if ( ! isset($options['metadata']) && $format->getTags())
+		if ( ! isset($options['metadata']) && $format->getMetadata())
 		{
-			$_options['metadata'] = $format->getTags();
+			$_options['metadata'] = $format->getMetadata();
 		}
 		
 		foreach ($media->getStreams() as $stream)

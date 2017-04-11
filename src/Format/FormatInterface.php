@@ -41,11 +41,11 @@ interface FormatInterface extends \Iterator, \ArrayAccess, EmitterInterface
 	public function getDuration();
 	
 	/**
-	 * Gets the tags.
+	 * Gets the metadata.
 	 *
 	 * @return array
 	 */
-	public function getTags();
+	public function getMetadata();
 	
 	/**
 	 * Returns the number of passes.
