@@ -22,7 +22,7 @@ use Arhitector\Transcoder\TranscodeInterface;
  *
  * @package Arhitector\Transcoder\Stream
  */
-interface StreamInterface extends EnumerationInterface
+interface StreamInterface extends \ArrayAccess, EnumerationInterface
 {
 	
 	/**
@@ -141,5 +141,12 @@ interface StreamInterface extends EnumerationInterface
 	 * @return int
 	 */
 	public function getType();
+	
+	/**
+	 * Gets the metadata.
+	 *
+	 * @return array
+	 */
+	public function getMetadata();
 	
 }
