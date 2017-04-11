@@ -21,7 +21,7 @@ use Arhitector\Transcoder\TimeInterval;
  *
  * @package Arhitector\Transcoder\Format
  */
-interface FormatInterface extends \Iterator, \ArrayAccess, EmitterInterface
+interface FormatInterface extends \ArrayAccess, EmitterInterface
 {
 	
 	/**
