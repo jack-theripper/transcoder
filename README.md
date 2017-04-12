@@ -312,7 +312,7 @@ $audio->addFilter($filter, 99);
 
 #### Простой фильтр, SimpleFilter
 
-Это самый простой фильтр, который позволяет устанавливает свои параметры для командной строки ffmpeg.
+Это самый простой фильтр, который позволяет устанавливать свои параметры для командной строки ffmpeg.
 
 ```php
 use Arhitector\Transcoder\Filter\SimpleFilter;
@@ -348,13 +348,19 @@ $filter->setParameters([
 $filter['video_codec'] = 'x264';
 ```
 
-### Аудио фильтры
+### Типы фильтров
+
+* Аудио фильтры
 
 Такие фильтры реализуют интерфейс `AudioFilterInterface` и могут использоваться совместно только с `Audio` или `Video`.
 
-#### Фильтр Cut
+* Видео фильтры
 
-Позволяет обрезать медиа-файл до определённых значений продолжительности.
+Реализуют интерфейсы `FrameFilterInterface` или `VideoFilterInterface`, используются либо с `Frame` либо с `Video`.
+
+### Фильтр Cut
+
+Аудио фильтр, который позволяет обрезать медиа-файл до определённых значений продолжительности.
 
 ```php
 use Arhitector\Transcoder\Filter\Cut;
@@ -374,9 +380,9 @@ public Cut::__construct(TimeInterval|int $start [, TimeInterval $duration = null
 $filter = new Cut(new TimeInterval(20), new TimeInterval(60));
 ```
 
-#### Фильтр Volume
+### Фильтр Volume
 
-Фильтр изменяет громкость аудио потока.
+Аудио фильтр, который изменяет громкость аудио потока.
 
 ```php
 use \Arhitector\Transcoder\Filter\Volume;
@@ -406,9 +412,9 @@ $filter = new Volume('6.0206dB');
 $filter = new Volume('6dB', Volume::PRECISION_FIXED);
 ```
 
-#### Фильтр Fade
+### Фильтр Fade
 
-Фильтр накладывает эффект затухания звука.
+Фильтр накладывает эффект затухания звука на аудио дорожку.
 
 ```php
 use \Arhitector\Transcoder\Filter\Fade;
@@ -426,9 +432,35 @@ public Fade::__construct(TimeInterval|int $startTime = 0 [, TimeInterval|int $du
 new Fade(2, 10, Fade::FADE_OUT)
 ```
 
+### Фильтр AudioDelay
 
+```php
+use \Arhitector\Transcoder\Filter\AudioDelay;
+```
 
+### Фильтр Rotate
 
+```php
+use \Arhitector\Transcoder\Filter\Rotate;
+```
+
+**Конструктор**
+
+```php
+public Rotate::__construct($angle = null)
+```
+
+### Фильтр Crop
+
+```php
+use \Arhitector\Transcoder\Filter\Crop;
+```
+
+**Конструктор**
+
+```php
+public Crop::__construct(Point $start, Dimension $dimension)
+```
 
 ## Лицензия
 
