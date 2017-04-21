@@ -57,7 +57,7 @@ class EncoderQueue extends Encoder
 	 */
 	public function transcoding(TranscodeInterface $media, FormatInterface $format, array $options = [])
 	{
-		foreach (parent::transcoding($media, $format, $options) as $process)
+		foreach (parent::transcoding($media, $format, $options) as $pass => $process)
 		{
 			$this->queue->push(new Job(['transcoding', 'command_line' => $process->getCommandLine()], 'transcoding'));
 			
@@ -66,7 +66,7 @@ class EncoderQueue extends Encoder
 			$property->setAccessible(true);
 			$property->setValue($process, $process::STATUS_TERMINATED);
 			
-			yield $process;
+			yield $pass => $process;
 		}
 	}
 	
