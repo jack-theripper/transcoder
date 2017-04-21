@@ -23,7 +23,7 @@ trait OptionsAwareTrait
 	/**
 	 * @var array The options.
 	 */
-	protected $options;
+	protected $options = [];
 	
 	/**
 	 * Gets the options.
