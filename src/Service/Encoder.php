@@ -243,7 +243,7 @@ class Encoder implements EncoderInterface
 	 */
 	protected function getFormatOptions(FormatInterface $format)
 	{
-		$options = [];
+		$options = $format->getOptions();
 		
 		if ($format instanceof AudioFormatInterface)
 		{
