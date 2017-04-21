@@ -166,16 +166,6 @@ class Frame implements FrameInterface
 	}
 	
 	/**
-	 * Reset filters.
-	 *
-	 * @return TranscodeInterface
-	 */
-	public function withoutFilters()
-	{
-		// TODO: Implement withoutFilters() method.
-	}
-	
-	/**
 	 * It supports the type of media.
 	 *
 	 * @return bool

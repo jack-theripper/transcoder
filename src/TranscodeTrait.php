@@ -128,6 +128,19 @@ trait TranscodeTrait
 	}
 	
 	/**
+	 * Reset filters.
+	 *
+	 * @return $this
+	 */
+	public function withoutFilters()
+	{
+		$self = clone $this;
+		$self->filters = new Graph();
+		
+		return $self;
+	}
+	
+	/**
 	 * Get the service instance.
 	 *
 	 * @return ServiceFactoryInterface

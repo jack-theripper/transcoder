@@ -192,19 +192,6 @@ class Audio implements AudioInterface
 	}
 	
 	/**
-	 * Reset filters.
-	 *
-	 * @return AudioInterface
-	 */
-	public function withoutFilters()
-	{
-		$self = clone $this;
-		$self->filters = new Graph();
-		
-		return $self;
-	}
-	
-	/**
 	 * It supports the type of media.
 	 *
 	 * @return bool
