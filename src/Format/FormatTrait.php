@@ -106,7 +106,10 @@ trait FormatTrait
 	 */
 	public function withPreset(PresetInterface $preset)
 	{
-		// TODO
+		$self = clone $this;
+		$self->setOptions($preset->toArray());
+		
+		return $self;
 	}
 	
 	/**
