@@ -70,4 +70,11 @@ interface FormatInterface extends \ArrayAccess, EmitterInterface
 	 */
 	public function withPreset(PresetInterface $preset);
 	
+	/**
+	 * Gets the extra params.
+	 *
+	 * @return array
+	 */
+	public function getOptions();
+	
 }

@@ -16,6 +16,7 @@ use Arhitector\Transcoder\Event\EmitterTrait;
 use Arhitector\Transcoder\Preset\PresetInterface;
 use Arhitector\Transcoder\TimeInterval;
 use Arhitector\Transcoder\Traits\MetadataTrait;
+use Arhitector\Transcoder\Traits\OptionsAwareTrait;
 
 /**
  * Class FormatTrait.
@@ -24,7 +25,9 @@ use Arhitector\Transcoder\Traits\MetadataTrait;
  */
 trait FormatTrait
 {
-	use EmitterTrait, MetadataTrait;
+	use EmitterTrait, MetadataTrait, OptionsAwareTrait {
+		OptionsAwareTrait::setOptions as protected;
+	}
 	
 	/**
 	 * Returns a new format instance.
