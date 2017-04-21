@@ -57,9 +57,11 @@ class EncoderQueue extends Encoder
 	 */
 	public function transcoding(TranscodeInterface $media, FormatInterface $format, array $options = [])
 	{
+		$commandLines = [];
+		
 		foreach (parent::transcoding($media, $format, $options) as $pass => $process)
 		{
-			$this->queue->push(new Job(['transcoding', 'command_line' => $process->getCommandLine()], 'transcoding'));
+			$commandLines[$pass] = $process->getCommandLine();
 			
 			// fix: because Symfony uses private properties without setters methods :-(((
 			$property = new \ReflectionProperty($process, 'status');
@@ -67,6 +69,11 @@ class EncoderQueue extends Encoder
 			$property->setValue($process, $process::STATUS_TERMINATED);
 			
 			yield $pass => $process;
+		}
+		
+		if ($commandLines)
+		{
+			$this->queue->push(new Job(['transcoding', 'command_line' => $commandLines], 'transcoding'));
 		}
 	}
 	
