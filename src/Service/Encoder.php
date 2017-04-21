@@ -157,6 +157,7 @@ class Encoder implements EncoderInterface
 		for ($pass = 1; $pass <= $format->getPasses(); ++$pass)
 		{
 			$options = $_options;
+			$format->emit('before.pass');
 			
 			if ($format->getPasses() > 1)
 			{
@@ -170,6 +171,8 @@ class Encoder implements EncoderInterface
 				->setPrefix($this->options['ffmpeg.path'])
 				->setTimeout($this->options['timeout'])
 				->getProcess();
+			
+			$format->emit('after.pass');
 		}
 	}
 	
