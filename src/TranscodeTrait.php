@@ -37,7 +37,7 @@ trait TranscodeTrait
 	use FilePathAwareTrait;
 	
 	/**
-	 * @var FormatInterface
+	 * @var FormatInterface|mixed
 	 */
 	protected $format;
 	
