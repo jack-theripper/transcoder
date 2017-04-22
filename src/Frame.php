@@ -29,9 +29,7 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
  */
 class Frame implements FrameInterface
 {
-	use TranscodeTrait {
-		TranscodeTrait::getFormat as private _getFormat;
-	}
+	use TranscodeTrait;
 	
 	/**
 	 * Returns the video codec.
@@ -66,11 +64,11 @@ class Frame implements FrameInterface
 	/**
 	 * Get current format.
 	 *
-	 * @return FrameFormatInterface|\Arhitector\Transcoder\Format\FormatInterface
+	 * @return FrameFormatInterface
 	 */
 	public function getFormat()
 	{
-		return $this->_getFormat();
+		return $this->format;
 	}
 	
 	/**
