@@ -67,6 +67,7 @@ class Resize implements FrameFilterInterface
 			throw new \InvalidArgumentException('The filter resize can be used only with the format of the frame.');
 		}
 		
+		$format = $media->getFormat();
 		$dimension = new Dimension($format->getWidth(), $format->getHeight());
 		
 		if ($this->width && ! $this->height) // Resize to width
