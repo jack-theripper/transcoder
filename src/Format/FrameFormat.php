@@ -13,6 +13,7 @@
 namespace Arhitector\Transcoder\Format;
 
 use Arhitector\Transcoder\Codec;
+use Arhitector\Transcoder\TimeInterval;
 
 /**
  * Class FrameFormat.
@@ -60,6 +61,11 @@ class FrameFormat implements FrameFormatInterface
 			}
 			
 			$this->setVideoCodec($codec);
+		}
+		
+		if ( ! $this->getDuration())
+		{
+			$this->setDuration(new TimeInterval(0));
 		}
 	}
 	
