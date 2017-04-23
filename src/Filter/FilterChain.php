@@ -148,7 +148,7 @@ class FilterChain implements FilterChainInterface
 		
 		foreach (clone $this->filters as $filter)
 		{
-			$options = array_merge_recursive($options, $filter->apply($media, $format));
+			$options = array_merge_recursive($options, $filter->apply($media, $format) ?: []);
 		}
 		
 		foreach ($options as $option => &$value)
