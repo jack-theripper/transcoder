@@ -17,6 +17,7 @@ use Arhitector\Transcoder\Exception\ExecutionFailureException;
 use Arhitector\Transcoder\Exception\InvalidFilterException;
 use Arhitector\Transcoder\Exception\TranscoderException;
 use Arhitector\Transcoder\Filter\FilterInterface;
+use Arhitector\Transcoder\Filter\FrameFilterInterface;
 use Arhitector\Transcoder\Format\FormatInterface;
 use Arhitector\Transcoder\Format\FrameFormat;
 use Arhitector\Transcoder\Format\FrameFormatInterface;
@@ -160,7 +161,14 @@ class Frame implements FrameInterface
 	 */
 	public function addFilter(FilterInterface $filter, $priority = 0)
 	{
-		// TODO: Implement addFilter() method.
+		if ( ! $filter instanceof FrameFilterInterface)
+		{
+			throw new InvalidFilterException('Filter type is not supported.');
+		}
+		
+		$this->filters->insert($filter, $priority);
+		
+		return $this;
 	}
 	
 	/**
