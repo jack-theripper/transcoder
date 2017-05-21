@@ -263,40 +263,46 @@ trait TranscodeTrait
 	/**
 	 * Returns the stream instances.
 	 *
-	 * @param array $streamsArray
+	 * @param array $rawStreams
 	 *
 	 * @return StreamInterface[]
 	 * @throws \InvalidArgumentException
 	 * @throws TranscoderException
 	 */
-	protected function ensureStreams(array $streamsArray)
+	protected function ensureStreams(array $rawStreams)
 	{
-		return array_map(function (array $stream) {
-			switch ($stream['type'] ?: null)
+		$streams = [];
+		
+		foreach ($rawStreams as $stream)
+		{
+			$stream['type'] = isset($stream['type']) ? strtolower($stream['type']) : null;
+			
+			if ($stream['type'] == 'audio')
 			{
-				case 'audio':
-					return AudioStream::create($this, $stream);
-				break;
-				
-				case 'video':
-					
-					if ($this instanceof AudioInterface && $this instanceof VideoInterface)
-					{
-						return VideoStream::create($this, $stream);
-					}
-					
-					return FrameStream::create($this, $stream);
-				
-				break;
-				
-				case 'subtitle':
-					return SubtitleStream::create($this, $stream);
-				break;
-				
-				default;
-					throw new TranscoderException('This stream unsupported.');
+				$streams[] = AudioStream::create($this, $stream);
 			}
-		}, $streamsArray);
+			else if ($stream['type'] == 'video')
+			{
+				if ($this instanceof AudioInterface && $this instanceof VideoInterface)
+				{
+					$streams[] = VideoStream::create($this, $stream);
+				}
+				else
+				{
+					$streams[] = FrameStream::create($this, $stream);
+				}
+			}
+			else if ($stream['type'] == 'subtitle')
+			{
+				$streams[] = SubtitleStream::create($this, $stream);
+			}
+			else
+			{
+				throw new TranscoderException('This stream unsupported.');
+			}
+		}
+		
+		return $streams;
 	}
 	
 	/**
