@@ -157,6 +157,7 @@ class Frame implements FrameInterface
 	 * @param int             $priority range 0-99.
 	 *
 	 * @return TranscodeInterface
+	 * @throws \InvalidArgumentException
 	 * @throws InvalidFilterException
 	 */
 	public function addFilter(FilterInterface $filter, $priority = 0)
