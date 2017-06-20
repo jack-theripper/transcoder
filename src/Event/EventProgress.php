@@ -156,7 +156,7 @@ class EventProgress extends Event implements EventInterface
 			
 			foreach ($matches[2] as $key => $value)
 			{
-				$duration += (int) $value * 60 * ($key + 1);
+				$duration += (int) $value * (60 ** ($key + 1));
 			}
 			
 			$this->setCurrentSize((int) trim($matches[1]));
