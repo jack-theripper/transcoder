@@ -207,7 +207,7 @@ class Frame implements FrameInterface
 		
 		$this->setStreams($streams);
 		
-		if ($stream = $this->getStreams(self::STREAM_FRAME)->getFirst())
+		if ($stream = $this->getStreams(self::STREAM_FRAME | self::STREAM_VIDEO)->getFirst())
 		{
 			foreach ($stream->toArray() as $key => $value)
 			{
