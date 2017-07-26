@@ -69,14 +69,9 @@ class OptionsHeap extends \SplHeap
 	{
 		$options = ['y', 'ss', 'i'];
 		
-		if (in_array(ltrim($value1[0], '-'), $options, false))
+		if (($value1 = array_search(ltrim($value1[0], '-'), $options, false)) !== false)
 		{
-			if (in_array(ltrim($value2[0]), $options, false))
-			{
-				return 0;
-			}
-			
-			return 1;
+			return ($value2 = array_search(ltrim($value2[0], '-'), $options)) !== false && $value1 > $value2 ? -1 : 1;
 		}
 		
 		return -1;
