@@ -18,9 +18,14 @@ use Arhitector\Transcoder\Exception\InvalidFilterException;
 use Arhitector\Transcoder\Exception\TranscoderException;
 use Arhitector\Transcoder\Filter\FilterInterface;
 use Arhitector\Transcoder\Filter\FrameFilterInterface;
+use Arhitector\Transcoder\Filter\SimpleFilter;
 use Arhitector\Transcoder\Format\FormatInterface;
 use Arhitector\Transcoder\Format\FrameFormat;
 use Arhitector\Transcoder\Format\FrameFormatInterface;
+use Arhitector\Transcoder\Format\VideoFormatInterface;
+use Arhitector\Transcoder\Stream\Collection;
+use Arhitector\Transcoder\Stream\FrameStream;
+use Arhitector\Transcoder\Stream\VideoStream;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
 /**
@@ -173,32 +178,34 @@ class Frame implements FrameInterface
 	}
 	
 	/**
-	 * It supports the type of media.
+	 * Initializing.
 	 *
-	 * @return bool
+	 * @param \StdClass $demuxing
+	 *
+	 * @return void
 	 */
-	protected function isSupportedFileType()
+	protected function initialize(\StdClass $demuxing)
 	{
-		return ! (stripos($this->getMimeType(), 'image/') !== 0);
-	}
-	
-	/**
-	 * Creates an instance of the format from the internal type.
-	 *
-	 * @param array $formatArray
-	 *
-	 * @return FormatInterface
-	 * @throws \InvalidArgumentException
-	 * @throws \Arhitector\Transcoder\Exception\TranscoderException
-	 */
-	protected function createFormat(array $formatArray)
-	{
-		$format = $this->findFormatClass($formatArray['format'], FrameFormat::class);
+		/** @var FrameFormatInterface $format */
+		$format = $this->findFormatClass($demuxing->format['format'], FrameFormat::class);
 		
 		if ( ! is_subclass_of($format, FrameFormatInterface::class))
 		{
-			throw new TranscoderException('Invalid format type.');
+			throw new TranscoderException(sprintf('This format unsupported in the "%s" wrapper.', __CLASS__));
 		}
+		
+		$streams =  new Collection();
+		
+		foreach ($demuxing->streams as $number => $stream)
+		{
+			if (isset($stream['type']) && strtolower($stream['type']) == 'video')
+			{
+				$streams[$number] = is_subclass_of($format, VideoFormatInterface::class)
+					? VideoStream::create($this, $stream) : FrameStream::create($this, $stream);
+			}
+		}
+		
+		$this->setStreams($streams);
 		
 		if ($stream = $this->getStreams(self::STREAM_FRAME)->getFirst())
 		{
@@ -206,26 +213,44 @@ class Frame implements FrameInterface
 			{
 				if ($key != 'metadata')
 				{
-					$formatArray[$key] = $value;
+					$demuxing->format[$key] = $value;
 				}
 				
 				if ($key == 'codec')
 				{
-					$formatArray['video_codec'] = $value;
+					$demuxing->format['video_codec'] = $value;
 				}
 			}
 		}
 		
-		if (isset($formatArray['codecs']) && is_array($formatArray['codecs']))
+		if (isset($demuxing->format['codecs']) && is_array($demuxing->format['codecs']))
 		{
-			$formatArray['available_video_codecs'] = array_keys(array_filter($formatArray['codecs'], function ($mask) {
+			$demuxing->format['available_video_codecs'] = array_keys(array_filter($demuxing->format['codecs'], function ($mask) {
 				return $mask & 2;
 			}));
 		}
 		
-		return $format::fromArray(array_filter($formatArray, function ($value) {
+		$this->setFormat($format::fromArray(array_filter($demuxing->format, function ($value) {
 			return $value !== null;
-		}));
+		})));
+		
+		if ($this->getFormat() instanceof VideoFormatInterface)
+		{
+			$this->addFilter(new SimpleFilter([
+				'frames'     => 1,
+				'seek_start' => 0,
+			]), 0);
+		}
+	}
+	
+	/**
+	 * It supports the type of media.
+	 *
+	 * @return bool
+	 */
+	protected function isSupportedFileType()
+	{
+		return ! (stripos($this->getMimeType(), 'image/') !== 0);
 	}
 	
 }
