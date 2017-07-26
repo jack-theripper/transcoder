@@ -19,8 +19,9 @@ use Arhitector\Transcoder\Codec;
  *
  * @package Arhitector\Transcoder\Format
  */
-class AudioFormat extends FrameFormat implements AudioFormatInterface
+class AudioFormat implements AudioFormatInterface
 {
+	use FormatTrait;
 	
 	/**
 	 * @var int Audio bitrate value.
@@ -51,11 +52,10 @@ class AudioFormat extends FrameFormat implements AudioFormatInterface
 	 * Format constructor.
 	 *
 	 * @param Codec|string $audioCodec
-	 * @param Codec|string $videoCodec
 	 *
 	 * @throws \InvalidArgumentException
 	 */
-	public function __construct($audioCodec = null, $videoCodec = null)
+	public function __construct($audioCodec = null)
 	{
 		if ($audioCodec !== null)
 		{
@@ -65,11 +65,6 @@ class AudioFormat extends FrameFormat implements AudioFormatInterface
 			}
 			
 			$this->setAudioCodec($audioCodec);
-		}
-		
-		if ($videoCodec !== null)
-		{
-			parent::__construct($videoCodec);
 		}
 		
 		$this->setAudioBitrate(128000);

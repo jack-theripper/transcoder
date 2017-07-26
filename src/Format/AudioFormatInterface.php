@@ -19,7 +19,7 @@ use Arhitector\Transcoder\Codec;
  *
  * @package Arhitector\Transcoder\Format
  */
-interface AudioFormatInterface extends FrameFormatInterface
+interface AudioFormatInterface extends FormatInterface
 {
 	
 	/**
