@@ -78,9 +78,7 @@ trait TranscodeTrait
 			throw new TranscoderException('File type unsupported or the file is corrupted.');
 		}
 		
-		$this->setStreams(new Collection($this->ensureStreams($demuxing->streams)));
-		$this->setFormat($this->createFormat($demuxing->format));
-		$this->filters = new Graph();
+		$this->initialize($demuxing);
 	}
 	
 	/**
