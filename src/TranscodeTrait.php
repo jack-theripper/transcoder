@@ -323,15 +323,4 @@ trait TranscodeTrait
 	 */
 	abstract protected function isSupportedFileType();
 	
-	/**
-	 * Creates an instance of the format from the internal type.
-	 *
-	 * @param array $formatArray
-	 *
-	 * @return FormatInterface
-	 * @throws \InvalidArgumentException
-	 * @throws \Arhitector\Transcoder\Exception\TranscoderException
-	 */
-	abstract protected function createFormat(array $formatArray);
-	
 }
