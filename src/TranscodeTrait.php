@@ -306,6 +306,18 @@ trait TranscodeTrait
 	}
 	
 	/**
+	 * Initializing.
+	 *
+	 * @param \StdClass $demuxing
+	 *
+	 * @return void
+	 */
+	protected function initialize(\StdClass $demuxing)
+	{
+	
+	}
+	
+	/**
 	 * It supports the type of media.
 	 *
 	 * @return bool
