@@ -123,21 +123,6 @@ class Audio implements AudioInterface
 	}
 	
 	/**
-	 * It supports the type of media.
-	 *
-	 * @return bool
-	 */
-	protected function isSupportedFileType()
-	{
-		if (stripos($this->getMimeType(), 'audio/') !== 0)
-		{
-			return false;
-		}
-		
-		return true;
-	}
-	
-	/**
 	 * Initializing.
 	 *
 	 * @param \StdClass $demuxing
@@ -206,6 +191,16 @@ class Audio implements AudioInterface
 		$this->setFormat($format::fromArray(array_filter($demuxing->format, function ($value) {
 			return $value !== null;
 		})));
+	}
+	
+	/**
+	 * It supports the type of media.
+	 *
+	 * @return bool
+	 */
+	protected function isSupportedFileType()
+	{
+		return ! (stripos($this->getMimeType(), 'audio/') !== 0);
 	}
 	
 	/**
