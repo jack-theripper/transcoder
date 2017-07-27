@@ -20,7 +20,11 @@ use Arhitector\Transcoder\Format\AudioFormat;
 use Arhitector\Transcoder\Format\AudioFormatInterface;
 use Arhitector\Transcoder\Format\FormatInterface;
 use Arhitector\Transcoder\Format\FrameFormatInterface;
+use Arhitector\Transcoder\Stream\AudioStream;
 use Arhitector\Transcoder\Stream\AudioStreamInterface;
+use Arhitector\Transcoder\Stream\Collection;
+use Arhitector\Transcoder\Stream\FrameStream;
+use Arhitector\Transcoder\Stream\VideoStream;
 
 /**
  * Class Audio.
@@ -134,22 +138,45 @@ class Audio implements AudioInterface
 	}
 	
 	/**
-	 * Creates an instance of the format from the internal type.
+	 * Initializing.
 	 *
-	 * @param array $formatArray
+	 * @param \StdClass $demuxing
 	 *
-	 * @return AudioFormatInterface
-	 * @throws \InvalidArgumentException
-	 * @throws \Arhitector\Transcoder\Exception\TranscoderException
+	 * @return void
 	 */
-	protected function createFormat(array $formatArray)
+	protected function initialize(\StdClass $demuxing)
 	{
-		$format = $this->findFormatClass($formatArray['format'], AudioFormat::class);
+		$format = $this->findFormatClass($demuxing->format['format'], AudioFormat::class);
 		
 		if ( ! is_subclass_of($format, AudioFormatInterface::class))
 		{
-			throw new TranscoderException('Invalid format type.');
+			throw new TranscoderException(sprintf('This format unsupported in the "%s" wrapper.', __CLASS__));
 		}
+		
+		$streams = [];
+		
+		foreach ($demuxing->streams as $number => $stream)
+		{
+			$stream['type'] = isset($stream['type']) ? strtolower($stream['type']) : null;
+			
+			if ($stream['type'] == 'audio')
+			{
+				$streams[$number] = AudioStream::create($this, $stream);
+			}
+			else if ($stream['type'] == 'video')
+			{
+				if ($this instanceof AudioInterface && $this instanceof VideoInterface)
+				{
+					$streams[$number] = VideoStream::create($this, $stream);
+				}
+				else
+				{
+					$streams[$number] = FrameStream::create($this, $stream);
+				}
+			}
+		}
+		
+		$this->setStreams(new Collection($streams));
 		
 		foreach ($this->getStreams(self::STREAM_AUDIO | self::STREAM_FRAME) as $stream)
 		{
@@ -159,19 +186,26 @@ class Audio implements AudioInterface
 			{
 				if ($key != 'metadata')
 				{
-					$formatArray[$key] = $value;
+					$demuxing->format[$key] = $value;
 				}
 				
 				if (in_array($key, ['codec', 'bitrate'], false))
 				{
-					$formatArray[$prefix.$key] = $value;
+					$demuxing->format[$prefix.$key] = $value;
 				}
 			}
 		}
 		
-		return $format::fromArray(array_filter($formatArray, function ($value) {
+		if (isset($demuxing->format['codecs']) && is_array($demuxing->format['codecs']))
+		{
+			$demuxing->format['available_video_codecs'] = array_keys(array_filter($demuxing->format['codecs'], function ($mask) {
+				return $mask & 2;
+			}));
+		}
+		
+		$this->setFormat($format::fromArray(array_filter($demuxing->format, function ($value) {
 			return $value !== null;
-		}));
+		})));
 	}
 	
 	/**
