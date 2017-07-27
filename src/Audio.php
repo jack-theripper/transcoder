@@ -183,7 +183,7 @@ class Audio implements AudioInterface
 		
 		if (isset($demuxing->format['codecs']) && is_array($demuxing->format['codecs']))
 		{
-			$demuxing->format['available_video_codecs'] = array_keys(array_filter($demuxing->format['codecs'], function ($mask) {
+			$demuxing->format['available_audio_codecs'] = array_keys(array_filter($demuxing->format['codecs'], function ($mask) {
 				return $mask & 2;
 			}));
 		}
