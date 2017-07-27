@@ -22,6 +22,7 @@ use Arhitector\Transcoder\Filter\SimpleFilter;
 use Arhitector\Transcoder\Format\FormatInterface;
 use Arhitector\Transcoder\Format\FrameFormat;
 use Arhitector\Transcoder\Format\FrameFormatInterface;
+use Arhitector\Transcoder\Format\VideoFormat;
 use Arhitector\Transcoder\Format\VideoFormatInterface;
 use Arhitector\Transcoder\Stream\Collection;
 use Arhitector\Transcoder\Stream\FrameStream;
@@ -186,8 +187,18 @@ class Frame implements FrameInterface
 	 */
 	protected function initialize(\StdClass $demuxing)
 	{
+		$defaultFormat = FrameFormat::class;
+		
+		foreach ($demuxing->streams as $stream)
+		{
+			if (isset($stream['type']) && strtolower($stream['type']) == 'audio')
+			{
+				$defaultFormat = VideoFormat::class;
+			}
+		}
+		
 		/** @var FrameFormatInterface $format */
-		$format = $this->findFormatClass($demuxing->format['format'], FrameFormat::class);
+		$format = $this->findFormatClass($demuxing->format['format'], $defaultFormat);
 		
 		if ( ! is_subclass_of($format, FrameFormatInterface::class))
 		{
