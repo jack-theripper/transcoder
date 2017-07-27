@@ -186,7 +186,7 @@ trait TranscodeTrait
 	{
 		if ( ! $this->isSupportedFormat($format))
 		{
-			throw new TranscoderException(sprintf('This format unsupported in the "%s" wrapper.', __CLASS__));
+			throw new TranscoderException(sprintf('This format unsupported in the "%s" wrapper.', static::class));
 		}
 		
 		if ( ! is_string($filePath) || empty($filePath))
