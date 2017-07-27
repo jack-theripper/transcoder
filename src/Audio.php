@@ -28,9 +28,7 @@ use Arhitector\Transcoder\Stream\AudioStreamInterface;
  */
 class Audio implements AudioInterface
 {
-	use TranscodeTrait {
-		TranscodeTrait::getFormat as private _getFormat;
-	}
+	use TranscodeTrait;
 	
 	/**
 	 * Gets the audio channels value.
@@ -85,11 +83,11 @@ class Audio implements AudioInterface
 	/**
 	 * Get current format.
 	 *
-	 * @return AudioFormatInterface|\Arhitector\Transcoder\Format\FormatInterface
+	 * @return AudioFormatInterface
 	 */
 	public function getFormat()
 	{
-		return $this->_getFormat();
+		return $this->format;
 	}
 	
 	/**
