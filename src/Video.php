@@ -18,6 +18,7 @@ use Arhitector\Transcoder\Filter\AudioFilterInterface;
 use Arhitector\Transcoder\Filter\FilterInterface;
 use Arhitector\Transcoder\Filter\FrameFilterInterface;
 use Arhitector\Transcoder\Filter\SimpleFilter;
+use Arhitector\Transcoder\Format\FormatInterface;
 use Arhitector\Transcoder\Format\VideoFormat;
 use Arhitector\Transcoder\Format\VideoFormatInterface;
 use Arhitector\Transcoder\Stream\Collection;
@@ -133,6 +134,11 @@ class Video extends Audio implements VideoInterface
 			$interval = new TimeInterval($interval);
 		}
 		
+		if ($interval->getSeconds() > $this->getDuration())
+		{
+			throw new \OutOfRangeException('The interval may not be a more than '.$this->getDuration());
+		}
+		
 		$frame = new Frame($this->getFilePath(), $this->getService());
 		$frame->addFilter(new SimpleFilter(['seek_start' => $interval->__toString()]));
 		
@@ -201,6 +207,18 @@ class Video extends Audio implements VideoInterface
 	{
 		$this->setStreams(new Collection($this->ensureStreams($demuxing->streams)));
 		$this->setFormat($this->createFormat($demuxing->format));
+	}
+	
+	/**
+	 * Checks is supported the encoding in format.
+	 *
+	 * @param FormatInterface $format
+	 *
+	 * @return bool
+	 */
+	protected function isSupportedFormat(FormatInterface $format)
+	{
+	
 	}
 	
 }

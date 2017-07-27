@@ -323,4 +323,13 @@ trait TranscodeTrait
 	 */
 	abstract protected function isSupportedFileType();
 	
+	/**
+	 * Checks is supported the encoding in format.
+	 *
+	 * @param FormatInterface $format
+	 *
+	 * @return bool
+	 */
+	abstract protected function isSupportedFormat(FormatInterface $format);
+	
 }

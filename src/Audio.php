@@ -247,4 +247,16 @@ class Audio implements AudioInterface
 		}));
 	}
 	
+	/**
+	 * Checks is supported the encoding in format.
+	 *
+	 * @param FormatInterface $format
+	 *
+	 * @return bool
+	 */
+	protected function isSupportedFormat(FormatInterface $format)
+	{
+	
+	}
+	
 }

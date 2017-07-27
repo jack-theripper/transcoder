@@ -264,4 +264,16 @@ class Frame implements FrameInterface
 		return ! (stripos($this->getMimeType(), 'image/') !== 0);
 	}
 	
+	/**
+	 * Checks is supported the encoding in format.
+	 *
+	 * @param FormatInterface $format
+	 *
+	 * @return bool
+	 */
+	protected function isSupportedFormat(FormatInterface $format)
+	{
+		return $format instanceof FrameFormatInterface;
+	}
+	
 }
