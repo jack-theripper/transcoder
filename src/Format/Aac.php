@@ -31,10 +31,10 @@ class Aac extends AudioFormat
 	 */
 	public function __construct($audioCodec = 'aac')
 	{
-		parent::__construct($audioCodec, null);
+		parent::__construct($audioCodec);
 		
 		$this->setExtensions(['aac']);
-		$this->setAvailableVideoCodecs(['libfdk_aac', 'libfaac', 'aac', 'libvo_aacenc', 'faac']);
+		$this->setAvailableAudioCodecs(['libfdk_aac', 'libfaac', 'aac', 'libvo_aacenc', 'faac']);
 	}
 	
 }
