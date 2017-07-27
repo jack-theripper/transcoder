@@ -31,10 +31,10 @@ class Flac extends AudioFormat
 	 */
 	public function __construct($codec = 'flac')
 	{
-		parent::__construct($codec, null);
+		parent::__construct($codec);
 		
 		$this->setExtensions(['flac']);
-		$this->setAvailableVideoCodecs(['flac', 'flaccl']);
+		$this->setAvailableAudioCodecs(['flac', 'flaccl']);
 	}
 	
 }
