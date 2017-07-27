@@ -12,6 +12,8 @@
  */
 namespace Arhitector\Transcoder;
 
+use Arhitector\Transcoder\Event\EventProgress;
+use Arhitector\Transcoder\Exception\ExecutionFailureException;
 use Arhitector\Transcoder\Exception\TranscoderException;
 use Arhitector\Transcoder\Filter\Graph;
 use Arhitector\Transcoder\Format\FormatInterface;
@@ -25,6 +27,7 @@ use Arhitector\Transcoder\Stream\SubtitleStream;
 use Arhitector\Transcoder\Stream\VideoStream;
 use Arhitector\Transcoder\Traits\FilePathAwareTrait;
 use Mimey\MimeTypes;
+use Symfony\Component\Process\Exception\ProcessFailedException;
 
 /**
  * Class TranscoderTrait.
@@ -160,6 +163,79 @@ trait TranscodeTrait
 	public function addStream(StreamInterface $stream)
 	{
 		$this->getStreams()->offsetSet(null, $stream);
+		
+		return $this;
+	}
+	
+	/**
+	 * Transcoding.
+	 *
+	 * @param FormatInterface $format
+	 * @param string          $filePath
+	 * @param bool            $overwrite
+	 *
+	 * @return TranscodeInterface
+	 * @throws \Arhitector\Transcoder\Exception\ExecutionFailureException
+	 * @throws \Symfony\Component\Process\Exception\RuntimeException
+	 * @throws \Symfony\Component\Process\Exception\LogicException
+	 * @throws \Symfony\Component\Process\Exception\ProcessFailedException
+	 * @throws \Arhitector\Transcoder\Exception\TranscoderException
+	 * @throws \InvalidArgumentException
+	 */
+	public function save(FormatInterface $format, $filePath, $overwrite = true)
+	{
+		if ( ! $this->isSupportedFormat($format))
+		{
+			throw new TranscoderException(sprintf('This format unsupported in the "%s" wrapper.', __CLASS__));
+		}
+		
+		if ( ! is_string($filePath) || empty($filePath))
+		{
+			throw new \InvalidArgumentException('File path must not be an empty string.');
+		}
+		
+		if ( ! $overwrite && file_exists($filePath))
+		{
+			throw new TranscoderException('File path already exists.');
+		}
+		
+		$options = ['output' => $filePath];
+		
+		foreach (clone $this->filters as $filter)
+		{
+			$options = array_replace_recursive($options, $filter->apply($this, $format));
+		}
+		
+		/** @noinspection ExceptionsAnnotatingAndHandlingInspection */
+		$processes = $this->getService()->getEncoderService()->transcoding($this, $format, $options);
+		
+		if ($format->emit('before')->isPropagationStopped())
+		{
+			return $this;
+		}
+		
+		try
+		{
+			foreach ($processes as $pass => $process)
+			{
+				if ( ! $process->isTerminated() && $process->run(new EventProgress($pass, $this->getFormat())) !== 0)
+				{
+					throw new ProcessFailedException($process);
+				}
+			}
+			
+			$format->emit('success');
+		}
+		catch (ProcessFailedException $exc)
+		{
+			$format->emit('failure');
+			
+			throw new ExecutionFailureException($exc->getMessage(), $exc->getProcess(), $exc->getCode(), $exc);
+		}
+		finally
+		{
+			$format->emit('after');
+		}
 		
 		return $this;
 	}
