@@ -19,6 +19,7 @@ use Arhitector\Transcoder\Filter\FilterInterface;
 use Arhitector\Transcoder\Format\AudioFormat;
 use Arhitector\Transcoder\Format\AudioFormatInterface;
 use Arhitector\Transcoder\Format\FormatInterface;
+use Arhitector\Transcoder\Format\FrameFormatInterface;
 use Arhitector\Transcoder\Stream\AudioStreamInterface;
 
 /**
@@ -182,7 +183,7 @@ class Audio implements AudioInterface
 	 */
 	protected function isSupportedFormat(FormatInterface $format)
 	{
-	
+		return $format instanceof AudioFormatInterface && ! $format instanceof FrameFormatInterface;
 	}
 	
 }
