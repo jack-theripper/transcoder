@@ -24,13 +24,26 @@ class SubtitleFormat implements SubtitleFormatInterface
 	use FormatTrait;
 	
 	/**
+	 * @var Codec Subtitle codec value.
+	 */
+	protected $codec;
+	
+	/**
 	 * SubtitleFormat constructor.
 	 *
 	 * @param Codec|string $codec
 	 */
 	public function __construct($codec = null)
 	{
-		// TODO
+		if ($codec !== null)
+		{
+			if ( ! $codec instanceof Codec)
+			{
+				$codec = new Codec($codec, '');
+			}
+			
+			$this->codec = $codec;
+		}
 	}
 	
 	/**
