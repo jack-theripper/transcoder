@@ -31,10 +31,10 @@ class Oga extends AudioFormat
 	 */
 	public function __construct($audioCodec = 'vorbis')
 	{
-		parent::__construct($audioCodec, null);
+		parent::__construct($audioCodec);
 		
 		$this->setExtensions(['oga']);
-		$this->setAvailableVideoCodecs(['vorbis', 'libvorbis']);
+		$this->setAvailableAudioCodecs(['vorbis', 'libvorbis']);
 	}
 	
 }
