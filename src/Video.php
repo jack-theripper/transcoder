@@ -17,6 +17,7 @@ use Arhitector\Transcoder\Exception\TranscoderException;
 use Arhitector\Transcoder\Filter\AudioFilterInterface;
 use Arhitector\Transcoder\Filter\FilterInterface;
 use Arhitector\Transcoder\Filter\FrameFilterInterface;
+use Arhitector\Transcoder\Filter\SimpleFilter;
 use Arhitector\Transcoder\Format\VideoFormat;
 use Arhitector\Transcoder\Format\VideoFormatInterface;
 use Arhitector\Transcoder\Stream\Collection;
@@ -116,6 +117,26 @@ class Video extends Audio implements VideoInterface
 		$this->filters->insert($filter, $priority);
 		
 		return $this;
+	}
+	
+	/**
+	 * Return a new Frame from by time interval.
+	 *
+	 * @param TimeInterval|int|float $interval
+	 *
+	 * @return Frame
+	 */
+	public function getFrame($interval)
+	{
+		if ( ! $interval instanceof TimeInterval)
+		{
+			$interval = new TimeInterval($interval);
+		}
+		
+		$frame = new Frame($this->getFilePath(), $this->getService());
+		$frame->addFilter(new SimpleFilter(['seek_start' => $interval->__toString()]));
+		
+		return $frame;
 	}
 	
 	/**

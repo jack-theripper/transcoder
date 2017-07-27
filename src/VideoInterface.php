@@ -299,4 +299,13 @@ interface VideoInterface extends FrameInterface, AudioInterface
 	 */
 	public function getFrameRate();
 	
+	/**
+	 * Return a new Frame from by time interval.
+	 *
+	 * @param TimeInterval|int|float $interval
+	 *
+	 * @return Frame
+	 */
+	public function getFrame($interval);
+	
 }
