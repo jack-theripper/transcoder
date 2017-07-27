@@ -18,6 +18,8 @@ use Arhitector\Transcoder\Filter\FilterInterface;
 use Arhitector\Transcoder\Format\FormatInterface;
 use Arhitector\Transcoder\Format\SubtitleFormat;
 use Arhitector\Transcoder\Format\SubtitleFormatInterface;
+use Arhitector\Transcoder\Stream\Collection;
+use Arhitector\Transcoder\Stream\SubtitleStream;
 
 /**
  * Class Subtitle.
@@ -35,21 +37,7 @@ class Subtitle implements SubtitleInterface
 	 */
 	public function getDuration()
 	{
-		// TODO: Implement getDuration() method.
-	}
-	
-	/**
-	 * Transcoding.
-	 *
-	 * @param FormatInterface $format
-	 * @param string          $filePath
-	 * @param bool            $overwrite
-	 *
-	 * @return float|int Size of the new file or -1
-	 */
-	public function save(FormatInterface $format, $filePath, $overwrite = true)
-	{
-		// TODO: Implement save() method.
+		return 0.0;
 	}
 	
 	/**
@@ -63,40 +51,41 @@ class Subtitle implements SubtitleInterface
 	 */
 	public function addFilter(FilterInterface $filter, $priority = 0)
 	{
-		// TODO: Implement addFilter() method.
+		throw new TranscoderException(sprintf('The "%s" wrapper unsuppored filers.', __CLASS__));
 	}
 	
 	/**
-	 * Reset filters.
+	 * Initializing.
 	 *
-	 * @return TranscodeInterface
+	 * @param \StdClass $demuxing
+	 *
+	 * @return void
 	 */
-	public function withoutFilters()
+	protected function initialize(\StdClass $demuxing)
 	{
-		// TODO: Implement withoutFilters() method.
-	}
-	
-	/**
-	 * Creates an instance of the format from the internal type.
-	 *
-	 * @param array $formatArray
-	 *
-	 * @return FormatInterface
-	 * @throws \InvalidArgumentException
-	 * @throws \Arhitector\Transcoder\Exception\TranscoderException
-	 */
-	protected function createFormat(array $formatArray)
-	{
-		$format = $this->findFormatClass($formatArray['format'], SubtitleFormat::class);
+		/** @var SubtitleFormatInterface $format */
+		$format = $this->findFormatClass($demuxing->format['format'], SubtitleFormat::class);
 		
 		if ( ! is_subclass_of($format, SubtitleFormatInterface::class))
 		{
-			throw new TranscoderException('Invalid format type.');
+			throw new TranscoderException(sprintf('This format unsupported in the "%s" wrapper.', __CLASS__));
 		}
 		
-		return $format::fromArray(array_filter($formatArray, function ($value) {
+		$streams =  new Collection();
+		
+		foreach ($demuxing->streams as $number => $stream)
+		{
+			if (isset($stream['type']) && strtolower($stream['type']) == 'subtitle')
+			{
+				$streams[$number] = SubtitleStream::create($this, $stream);
+			}
+		}
+		
+		$this->setStreams($streams);
+		
+		$this->setFormat($format::fromArray(array_filter($demuxing->format, function ($value) {
 			return $value !== null;
-		}));
+		})));
 	}
 	
 	/**
@@ -107,6 +96,18 @@ class Subtitle implements SubtitleInterface
 	protected function isSupportedFileType()
 	{
 		return ! (stripos($this->getMimeType(), 'text/plain') !== 0);
+	}
+	
+	/**
+	 * Checks is supported the encoding in format.
+	 *
+	 * @param FormatInterface $format
+	 *
+	 * @return bool
+	 */
+	protected function isSupportedFormat(FormatInterface $format)
+	{
+		return $format instanceof SubtitleFormatInterface;
 	}
 	
 }
