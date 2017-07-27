@@ -21,7 +21,11 @@ use Arhitector\Transcoder\Filter\SimpleFilter;
 use Arhitector\Transcoder\Format\FormatInterface;
 use Arhitector\Transcoder\Format\VideoFormat;
 use Arhitector\Transcoder\Format\VideoFormatInterface;
+use Arhitector\Transcoder\Stream\AudioStream;
 use Arhitector\Transcoder\Stream\Collection;
+use Arhitector\Transcoder\Stream\FrameStream;
+use Arhitector\Transcoder\Stream\SubtitleStream;
+use Arhitector\Transcoder\Stream\VideoStream;
 use Arhitector\Transcoder\Stream\VideoStreamInterface;
 
 /**
@@ -156,22 +160,51 @@ class Video extends Audio implements VideoInterface
 	}
 	
 	/**
-	 * Creates an instance of the format from the internal type.
+	 * Initializing.
 	 *
-	 * @param array $formatArray
+	 * @param \StdClass $demuxing
 	 *
-	 * @return VideoFormatInterface
-	 * @throws \InvalidArgumentException
-	 * @throws \Arhitector\Transcoder\Exception\TranscoderException
+	 * @return void
 	 */
-	protected function createFormat(array $formatArray)
+	protected function initialize(\StdClass $demuxing)
 	{
-		$format = $this->findFormatClass($formatArray['format'], VideoFormat::class);
+		$format = $this->findFormatClass($demuxing->format['format'], VideoFormat::class);
 		
 		if ( ! is_subclass_of($format, VideoFormatInterface::class))
 		{
-			throw new TranscoderException('Invalid format type.');
+			throw new TranscoderException(sprintf('This format unsupported in the "%s" wrapper.', __CLASS__));
 		}
+		
+		$streams = [];
+		
+		foreach ($demuxing->streams as $number => $stream)
+		{
+			$stream['type'] = isset($stream['type']) ? strtolower($stream['type']) : null;
+			
+			$stream['type'] = isset($stream['type']) ? strtolower($stream['type']) : null;
+			
+			if ($stream['type'] == 'audio')
+			{
+				$streams[] = AudioStream::create($this, $stream);
+			}
+			else if ($stream['type'] == 'video')
+			{
+				if ($this instanceof AudioInterface && $this instanceof VideoInterface)
+				{
+					$streams[] = VideoStream::create($this, $stream);
+				}
+				else
+				{
+					$streams[] = FrameStream::create($this, $stream);
+				}
+			}
+			else if ($stream['type'] == 'subtitle')
+			{
+				$streams[] = SubtitleStream::create($this, $stream);
+			}
+		}
+		
+		$this->setStreams(new Collection($streams));
 		
 		foreach ($this->getStreams(self::STREAM_AUDIO | self::STREAM_VIDEO) as $stream)
 		{
@@ -181,32 +214,26 @@ class Video extends Audio implements VideoInterface
 			{
 				if ($key != 'metadata')
 				{
-					$formatArray[$key] = $value;
+					$demuxing->format[$key] = $value;
 				}
 				
 				if (in_array($key, ['codec', 'bitrate'], false))
 				{
-					$formatArray[$prefix.$key] = $value;
+					$demuxing->format[$prefix.$key] = $value;
 				}
 			}
 		}
 		
-		return $format::fromArray(array_filter($formatArray, function ($value) {
+		if (isset($demuxing->format['codecs']) && is_array($demuxing->format['codecs']))
+		{
+			$demuxing->format['available_video_codecs'] = array_keys(array_filter($demuxing->format['codecs'], function ($mask) {
+				return $mask & 2;
+			}));
+		}
+		
+		$this->setFormat($format::fromArray(array_filter($demuxing->format, function ($value) {
 			return $value !== null;
-		}));
-	}
-	
-	/**
-	 * Initializing.
-	 *
-	 * @param \StdClass $demuxing
-	 *
-	 * @return void
-	 */
-	protected function initialize(\StdClass $demuxing)
-	{
-		$this->setStreams(new Collection($this->ensureStreams($demuxing->streams)));
-		$this->setFormat($this->createFormat($demuxing->format));
+		})));
 	}
 	
 	/**
