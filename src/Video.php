@@ -218,7 +218,7 @@ class Video extends Audio implements VideoInterface
 	 */
 	protected function isSupportedFormat(FormatInterface $format)
 	{
-	
+		return $format instanceof VideoFormatInterface;
 	}
 	
 }
