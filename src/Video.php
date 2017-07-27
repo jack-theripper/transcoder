@@ -19,6 +19,7 @@ use Arhitector\Transcoder\Filter\FilterInterface;
 use Arhitector\Transcoder\Filter\FrameFilterInterface;
 use Arhitector\Transcoder\Format\VideoFormat;
 use Arhitector\Transcoder\Format\VideoFormatInterface;
+use Arhitector\Transcoder\Stream\Collection;
 use Arhitector\Transcoder\Stream\VideoStreamInterface;
 
 /**
@@ -166,6 +167,19 @@ class Video extends Audio implements VideoInterface
 		return $format::fromArray(array_filter($formatArray, function ($value) {
 			return $value !== null;
 		}));
+	}
+	
+	/**
+	 * Initializing.
+	 *
+	 * @param \StdClass $demuxing
+	 *
+	 * @return void
+	 */
+	protected function initialize(\StdClass $demuxing)
+	{
+		$this->setStreams(new Collection($this->ensureStreams($demuxing->streams)));
+		$this->setFormat($this->createFormat($demuxing->format));
 	}
 	
 }
