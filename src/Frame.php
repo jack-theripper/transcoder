@@ -237,7 +237,7 @@ class Frame implements FrameInterface
 		if ($this->getFormat() instanceof VideoFormatInterface)
 		{
 			$this->addFilter(new SimpleFilter([
-				'frames'     => 1,
+				'frames:v'   => 1,
 				'seek_start' => 0,
 			]), 0);
 		}
