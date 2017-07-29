@@ -118,20 +118,7 @@ class Encoder implements EncoderInterface
 			$_options['map'][] = sprintf('%s:%d', $input, $stream->getIndex());
 		}
 		
-		$options = array_diff_key($_options, $this->getAliasOptions() + ['output' => null]);
-		
-		foreach ($this->getAliasOptions() as $option => $value)
-		{
-			if (isset($_options[$option]))
-			{
-				$options[$value] = $_options[$option];
-				
-				if (is_bool($_options[$option]))
-				{
-					$options[$value] = '';
-				}
-			}
-		}
+		$options = $this->resolveOptionsAlias($_options);
 		
 		if ( ! empty($_options['metadata']))
 		{
@@ -204,6 +191,33 @@ class Encoder implements EncoderInterface
 		}
 		
 		return $options;
+	}
+	
+	/**
+	 * Returns the options without aliases.
+	 *
+	 * @param array $options
+	 *
+	 * @return array
+	 */
+	protected function resolveOptionsAlias(array $options)
+	{
+		$haystack = array_diff_key($options, $this->getAliasOptions() + ['output' => null]);
+		
+		foreach ($this->getAliasOptions() as $option => $value)
+		{
+			if (isset($options[$option]))
+			{
+				$haystack[$value] = $options[$option];
+				
+				if (is_bool($options[$option]))
+				{
+					$haystack[$value] = '';
+				}
+			}
+		}
+		
+		return $haystack;
 	}
 	
 	/**
