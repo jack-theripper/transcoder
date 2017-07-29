@@ -21,6 +21,22 @@ class OptionsHeap extends \SplHeap
 {
 	
 	/**
+	 * @var array The input options.
+	 */
+	protected $haystack = [
+		'y',
+		'stream_loop',
+		'sseof',
+		'itsoffset',
+		'thread_queue_size',
+		'seek_timestamp',
+		'accurate_seek',
+		'ss',
+		'seek_start',
+		'i'
+	];
+	
+	/**
 	 * Return current node pointed by the iterator
 	 *
 	 * @return mixed The current node value.
@@ -67,11 +83,9 @@ class OptionsHeap extends \SplHeap
 	 */
 	protected function compare($value1, $value2)
 	{
-		$options = ['y', 'ss', 'i'];
-		
-		if (($value1 = array_search(ltrim($value1[0], '-'), $options, false)) !== false)
+		if (($value1 = array_search(ltrim($value1[0], '-'), $this->haystack, false)) !== false)
 		{
-			return ($value2 = array_search(ltrim($value2[0], '-'), $options)) !== false && $value1 > $value2 ? -1 : 1;
+			return ($value2 = array_search(ltrim($value2[0], '-'), $this->haystack)) !== false && $value1 > $value2 ? -1 : 1;
 		}
 		
 		return -1;
