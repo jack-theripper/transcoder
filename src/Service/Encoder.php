@@ -114,6 +114,7 @@ class Encoder implements EncoderInterface
 				$input = count($_options['input']) - 1;
 			}
 			
+			// TODO: -map [-]input_file_id[:stream_specifier][?][,sync_file_id[:stream_specifier]] | [linklabel] (output)
 			$_options['map'][] = sprintf('%s:%d', $input, $stream->getIndex());
 		}
 		
