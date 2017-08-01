@@ -153,7 +153,7 @@ class FilterChain implements FilterChainInterface
 		
 		foreach ($options as $option => &$value)
 		{
-			if (stripos($option, 'filter') === 0 && count($value) > 1)
+			if (stripos($option, 'filter') === 0)
 			{
 				$value = $labels[self::TYPE_INPUT].implode(', ', array_map(function ($value, $filter) {
 					return $filter.'='.implode(', '.$filter.'=', (array) $value);
