@@ -40,7 +40,7 @@ class FilterChain implements FilterChainInterface
 	protected $chains = [];
 	
 	/**
-	 * @var \SplPriorityQueue Collection of filters.
+	 * @var \SplPriorityQueue|FilterInterface[] The collection of filters.
 	 */
 	protected $filters;
 	
