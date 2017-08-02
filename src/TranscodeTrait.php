@@ -203,7 +203,7 @@ trait TranscodeTrait
 		
 		foreach (clone $this->filters as $filter)
 		{
-			$options = array_replace_recursive($options, $filter->apply($this, $format));
+			$options = array_merge_recursive($options, $filter->apply($this, $format));
 		}
 		
 		/** @noinspection ExceptionsAnnotatingAndHandlingInspection */

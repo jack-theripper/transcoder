@@ -23,6 +23,20 @@ class Graph extends SplPriorityQueue
 {
 	
 	/**
+	 * @var FilterChain The filter chain that is used by default.
+	 */
+	protected $defaultChain;
+	
+	/**
+	 * Graph constructor.
+	 */
+	public function __construct()
+	{
+		$this->defaultChain = new FilterChain();
+		$this->insert($this->defaultChain, -1);
+	}
+	
+	/**
 	 * Inserts an element in the queue by sifting it up.
 	 *
 	 * @param FilterInterface $filter
@@ -39,13 +53,14 @@ class Graph extends SplPriorityQueue
 			throw new \InvalidArgumentException('The filter must be an instance of FilterInterface.');
 		}
 		
-		if ( ! $filter instanceof FilterChainInterface)
+		if ($filter instanceof FilterChainInterface)
 		{
-			/** @noinspection CallableParameterUseCaseInTypeContextInspection */
-			$filter = new FilterChain($filter);
+			parent::insert($filter, $priority);
 		}
-		
-		parent::insert($filter, $priority);
+		else
+		{
+			$this->defaultChain->addFilter($filter, $priority);
+		}
 		
 		return $this;
 	}
