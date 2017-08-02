@@ -75,11 +75,11 @@ class Rotate implements FrameFilterInterface
 		return [
 			'filter:v' => [
 				'rotate' => http_build_query([
-					'angle'            => str_replace(array_keys($expressions), $expressions, $this->getAngle()),
-					'bilinear'         => $this->isBilinear(),
-					'fillcolor'        => $this->getColor()
-				], null, ':')
-			]
+					'angle'     => str_replace(array_keys($expressions), $expressions, $this->getAngle()),
+					'bilinear'  => $this->isBilinear(),
+					'fillcolor' => $this->getColor(),
+				], null, ':'),
+			],
 		];
 	}
 	
@@ -192,11 +192,14 @@ class Rotate implements FrameFilterInterface
 	 * @param string $color
 	 *
 	 * @return Rotate
-	 *
-	 * // TODO: добавить валидацию цвета
 	 */
 	public function setColor($color)
 	{
+		if ( ! $this->isValidColor($color))
+		{
+			throw new \InvalidArgumentException('Invalid color format.');
+		}
+		
 		$this->color = (string) $color;
 		
 		return $this;
@@ -210,6 +213,173 @@ class Rotate implements FrameFilterInterface
 	public function getColor()
 	{
 		return $this->color;
+	}
+	
+	/**
+	 * Returns a string representing the name of the color.
+	 *
+	 * @return array
+	 */
+	public function getColors()
+	{
+		return [
+			'AliceBlue',
+			'AntiqueWhite',
+			'Aqua',
+			'Aquamarine',
+			'Azure',
+			'Beige',
+			'Bisque',
+			'Black',
+			'BlanchedAlmond',
+			'Blue',
+			'BlueViolet',
+			'Brown',
+			'BurlyWood',
+			'CadetBlue',
+			'Chartreuse',
+			'Chocolate',
+			'Coral',
+			'CornflowerBlue',
+			'Cornsilk',
+			'Crimson',
+			'Cyan',
+			'DarkBlue',
+			'DarkCyan',
+			'DarkGoldenRod',
+			'DarkGray',
+			'DarkGreen',
+			'DarkKhaki',
+			'DarkMagenta',
+			'DarkOliveGreen',
+			'Darkorange',
+			'DarkOrchid',
+			'DarkRed',
+			'DarkSalmon',
+			'DarkSeaGreen',
+			'DarkSlateBlue',
+			'DarkSlateGray',
+			'DarkTurquoise',
+			'DarkViolet',
+			'DeepPink',
+			'DeepSkyBlue',
+			'DimGray',
+			'DodgerBlue',
+			'FireBrick',
+			'FloralWhite',
+			'ForestGreen',
+			'Fuchsia',
+			'Gainsboro',
+			'GhostWhite',
+			'Gold',
+			'GoldenRod',
+			'Gray',
+			'Green',
+			'GreenYellow',
+			'HoneyDew',
+			'HotPink',
+			'IndianRed',
+			'Indigo',
+			'Ivory',
+			'Khaki',
+			'Lavender',
+			'LavenderBlush',
+			'LawnGreen',
+			'LemonChiffon',
+			'LightBlue',
+			'LightCoral',
+			'LightCyan',
+			'LightGoldenRodYellow',
+			'LightGreen',
+			'LightGrey',
+			'LightPink',
+			'LightSalmon',
+			'LightSeaGreen',
+			'LightSkyBlue',
+			'LightSlateGray',
+			'LightSteelBlue',
+			'LightYellow',
+			'Lime',
+			'LimeGreen',
+			'Linen',
+			'Magenta',
+			'Maroon',
+			'MediumAquaMarine',
+			'MediumBlue',
+			'MediumOrchid',
+			'MediumPurple',
+			'MediumSeaGreen',
+			'MediumSlateBlue',
+			'MediumSpringGreen',
+			'MediumTurquoise',
+			'MediumVioletRed',
+			'MidnightBlue',
+			'MintCream',
+			'MistyRose',
+			'Moccasin',
+			'NavajoWhite',
+			'Navy',
+			'OldLace',
+			'Olive',
+			'OliveDrab',
+			'Orange',
+			'OrangeRed',
+			'Orchid',
+			'PaleGoldenRod',
+			'PaleGreen',
+			'PaleTurquoise',
+			'PaleVioletRed',
+			'PapayaWhip',
+			'PeachPuff',
+			'Peru',
+			'Pink',
+			'Plum',
+			'PowderBlue',
+			'Purple',
+			'Red',
+			'RosyBrown',
+			'RoyalBlue',
+			'SaddleBrown',
+			'Salmon',
+			'SandyBrown',
+			'SeaGreen',
+			'SeaShell',
+			'Sienna',
+			'Silver',
+			'SkyBlue',
+			'SlateBlue',
+			'SlateGray',
+			'Snow',
+			'SpringGreen',
+			'SteelBlue',
+			'Tan',
+			'Teal',
+			'Thistle',
+			'Tomato',
+			'Turquoise',
+			'Violet',
+			'Wheat',
+			'White',
+			'WhiteSmoke',
+			'Yellow',
+			'YellowGreen',
+		];
+	}
+	
+	/**
+	 * Test on a valid color.
+	 *
+	 * @param string $color
+	 *
+	 * @return bool
+	 */
+	protected function isValidColor($color)
+	{
+		$regexp = '\(([01]?\d\d?|2[0-4]\d|25[0-5])\W+([01]?\d\d?|2[0-4]\d|25[0-5])\W+([01]?\d\d?|2[0-4]\d|25[0-5])\)';
+		
+		return preg_grep("/{$color}/i", $this->getColors()) || preg_match('/^#(\d|a|b|c|d|e|f){3}$/i', $color)
+			|| preg_match('/^#(\d|a|b|c|d|e|f){6}$/i', $color) || preg_match('/^(rgb)'.$regexp.'$/i', $color)
+			|| preg_match('/^(rgba)'.$regexp.'?\W+([01](\.\d+)?)\)$/i', $color);
 	}
 	
 }
