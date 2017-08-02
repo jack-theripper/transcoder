@@ -1,16 +1,12 @@
+# Transcoder [![Latest Version](https://img.shields.io/github/release/jack-theripper/transcoder.svg?style=flat-square)](https://github.com/jack-theripper/transcoder/releases) 
+Tools to transcoding/encoding audio or video, inspect and convert media formats.
 
-# Transcoder
+Инструмент для кодирования аудио или видео, получения информации и конвертирования в другие форматы.
 
-[![Latest Version](https://img.shields.io/github/release/jack-theripper/transcoder.svg?style=flat-square)](https://github.com/jack-theripper/transcoder/releases)
-[![Software License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Build Status](https://img.shields.io/travis/jack-theripper/transcoder/master.svg?style=flat-square)](https://travis-ci.org/jack-theripper/transcoder)
-[![Coverage Status](https://img.shields.io/scrutinizer/coverage/g/jack-theripper/transcoder.svg?style=flat-square)](https://scrutinizer-ci.com/g/jack-theripper/transcoder/code-structure)
-[![Quality Score](https://img.shields.io/scrutinizer/g/jack-theripper/transcoder.svg?style=flat-square)](https://scrutinizer-ci.com/g/jack-theripper/transcoder)
-[![Total Downloads](https://img.shields.io/packagist/dt/arhitector/transcoder.svg?style=flat-square)](https://packagist.org/packages/arhitector/transcoder)
+## Содержание
 
-#### Tools to transcoding/encoding audio or video, inspect and convert media formats.
-
-Инструмент для кодирования, конвертации, и получения метаинформации для аудио и видео.
+- [Требования](#Требования)
+- [Установка](#Установка)
 
 ## Требования
 
