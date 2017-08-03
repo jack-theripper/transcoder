@@ -209,7 +209,7 @@ trait TranscodeTrait
 		/** @noinspection ExceptionsAnnotatingAndHandlingInspection */
 		$processes = $this->getService()->getEncoderService()->transcoding($this, $format, $options);
 		
-		if ($format->emit('before')->isPropagationStopped())
+		if ($format->emit('before', $this, $format, $filePath)->isPropagationStopped())
 		{
 			return $this;
 		}
@@ -224,17 +224,17 @@ trait TranscodeTrait
 				}
 			}
 			
-			$format->emit('success');
+			$format->emit('success', $this, $format, $filePath);
 		}
 		catch (ProcessFailedException $exc)
 		{
-			$format->emit('failure');
+			$format->emit('failure', $exc);
 			
 			throw new ExecutionFailureException($exc->getMessage(), $exc->getProcess(), $exc->getCode(), $exc);
 		}
 		finally
 		{
-			$format->emit('after');
+			$format->emit('after', $this, $format, $filePath);
 		}
 		
 		return $this;
