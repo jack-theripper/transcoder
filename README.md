@@ -11,18 +11,18 @@ Tools to transcoding/encoding audio or video, inspect and convert media formats.
 	- [Требования](#Требования)
 - [События](#События)
 	- [before](#Событие-before)
-	- [before.pass](#Событие-before.pass)
-	- [before.queue](#Событие-before.queue)
+	- [before.pass](#Событие-beforepass)
+	- [before.queue](#Событие-beforequeue)
 	- [successful](#Событие-successful)
 	- [failure](#Событие-failure)
-	- [failure.codec](#Событие-failure.codec)
+	- [failure.codec](#Событие-failurecodec)
 	- [after](#Событие-after)
-	- [after.pass](#Событие-after.pass)
-	- [after.queue](#Событие-after.queue)
+	- [after.pass](#Событие-afterpass)
+	- [after.queue](#Событие-afterqueue)
 	- [progress](#Событие-progress)
 	- [stream](#Событие-stream)
 - [Фильтры](#Фильтры)
-	- [Простой фильтр](#Простой-фильтр,-SimpleFilter)
+	- [Простой фильтр](#Простой-фильтр-simplefilter)
 	- [Задержка звука](#Задержка-звука)
 - [Примеры](#Примеры)
 	
@@ -327,18 +327,15 @@ $audio->save($audio->getFormat(), 'sample-with-new-cover.mp3');
 
 ## Фильтры
 
-Фильтры используются для изменения исходного медиа контента. Могут иметь один или несколько входов и выходов. 
-Фильтры могут быть организованы в цепочки фильтров для изоляции некоторый фильтров друг от друга.
+Фильтры необходимы для изменения исходного медиа контента. Могут иметь один или несколько входов и выходов, а также быть организованы в цепочки для изоляции некоторых фильтров друг от друга.
 
 ```php
-public < ... >::addFilter(FilterInterface $filter, $priority = 0);
+public TranscodeInterface::addFilter(FilterInterface $filter, $priority = 0);
 ```
 
-`$filter` экземпляр фильтра.
+Аудио фильтры реализуют интерфейс `AudioFilterInterface` и могут использоваться совместно только с `Audio` или `Video`.
 
-`$priority` вы можете задать приоритет для фильтров. На основе приоритета определяется порядок использования фильтра. По умолчанию `0`.
-
-**Пример №1**
+Видео фильтры реализуют интерфейсы `FrameFilterInterface` или `VideoFilterInterface`, используются либо с `Frame` либо с `Video`.
 
 ```php
 // добавляем любой фильтр
@@ -350,7 +347,7 @@ $audio->addFilter($filter, 99);
 
 #### Простой фильтр, SimpleFilter
 
-Это самый простой фильтр, который позволяет устанавливать свои параметры для командной строки ffmpeg.
+Это самый простой фильтр, который позволяет устанавливать свои параметры для командной строки `ffmpeg`.
 
 ```php
 use Arhitector\Transcoder\Filter\SimpleFilter;
@@ -362,18 +359,13 @@ use Arhitector\Transcoder\Filter\SimpleFilter;
 public SimpleFilter::__construct(array $parameters = [])
 ```
 
-**Пример №1**
-
 Создадим экземпляр и добавим параметр 'video_codec'.
 
 ```php
-// 
 $filter = new SimpleFilter([
 	'video_codec' => 'h264'
 ]);
 ```
-
-**Пример №2**
 
 Этот метод перезапишет ранее установленные значения.
 
@@ -385,16 +377,6 @@ $filter->setParameters([
 // ArrayAccess
 $filter['video_codec'] = 'x264';
 ```
-
-### Типы фильтров
-
-* Аудио фильтры
-
-Такие фильтры реализуют интерфейс `AudioFilterInterface` и могут использоваться совместно только с `Audio` или `Video`.
-
-* Видео фильтры
-
-Реализуют интерфейсы `FrameFilterInterface` или `VideoFilterInterface`, используются либо с `Frame` либо с `Video`.
 
 ### Фильтр Cut
 
