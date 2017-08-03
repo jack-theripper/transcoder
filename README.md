@@ -1,39 +1,31 @@
 # Transcoder [![Latest Version](https://img.shields.io/github/release/jack-theripper/transcoder.svg?style=flat-square)](https://github.com/jack-theripper/transcoder/releases) 
+
 Tools to transcoding/encoding audio or video, inspect and convert media formats.
 
 Инструмент для кодирования аудио или видео, получения информации и конвертирования в другие форматы.
 
 ## Содержание
 
-- [Требования](#Требования)
-- [Установка](#Установка)
-
-## Требования
-
-* PHP 5.6 или новее
-* Установленный [FFMpeg](http://ffmpeg.org)
-
-## Установка
-
-Поддерживается установка с помощью менеджера пакетов [Composer](http://getcomposer.org/).
-
-```bash
-$ composer require arhitector/transcoder dev-master
-```
-
-Вы также можете внести зависимость в уже существующий файл `composer.json` самостоятельно.
-
-```json
-{
-	"require": {
-		"arhitector/transcoder": "dev-master"
-	}
-}
-```
-
-## Оказать содействие
-
-Нашли ошибку или есть идея для новой функции? Пожалуйста, [откройте новый вопрос](https://github.com/jack-theripper/transcoder/issues).
+- [С чего начать](#С-чего-начать)
+	- [Установка](#Установка)
+	- [Требования](#Требования)
+- [События](#События)
+	- [before](#Событие-before)
+	- [before.pass](#Событие-before.pass)
+	- [before.queue](#Событие-before.queue)
+	- [successful](#Событие-successful)
+	- [failure](#Событие-failure)
+	- [failure.codec](#Событие-failure.codec)
+	- [after](#Событие-after)
+	- [after.pass](#Событие-after.pass)
+	- [after.queue](#Событие-after.queue)
+	- [progress](#Событие-progress)
+	- [stream](#Событие-stream)
+- [Фильтры](#Фильтры)
+	- [Простой фильтр](#Простой-фильтр,-SimpleFilter)
+	- [Задержка звука](#Задержка-звука)
+- [Примеры](#Примеры)
+	
 
 ## С чего начать
 
@@ -88,57 +80,103 @@ $service = new ServiceFactory([
 $video = new Video('sample.avi', $service);
 ```
 
-### События
+## Установка
 
-Экземпляр формата позволяет регистрировать обработчики событий. Читать подробнее [League\Event](http://event.thephpleague.com/2.0/).
+```bash
+$ composer require --prefer-dist arhitector/transcoder dev-master
+```
 
-**Пример №1**
+## Требования
 
-Добавим обработчик на событие.
+* PHP >= 5.6
+* Установленный [FFMpeg](http://ffmpeg.org)
+
+## События
+
+Экземпляр формата регистрирует обработчики, такой обработчик будет выполнен при наступлении определённого события.
+Методы `addListener` или `addOneListener` регистрируют обработчик на событие. Читать подробнее [League\Event](http://event.thephpleague.com/2.0/).
 
 ```php
 $format = new VideoFormat();
 $format->addListener('*', function ($event) {
-	// обработчик сработает на любое событие
+	// "*" - обработчик сработает на любое событие
 });
 ```
 
-#### Поддерживаемые события
-
-- `before` выполняется перед началом кодирования. Вы можете отменить процесс вызвав `$event->stopPropagation()`.
-
-**Пример №2**
-
-Операция будет отменена и вызов последующих событий НЕ произойдёт.
+В зависимости от события, обработчик может повлиять на дальнейший ход выполнения операции.
 
 ```php
-$format = new AudioFormat();
 $format->addListener('before', function ($event) {
-	$event->stopPropagation();
+	$event->stopPropagation(); // дальнейшее выполнение будет остановлено
 });
 ```
 
-- `before.pass` событие вызывается перед каждым проходом при многопроходном кодировании. Будет вызвано минимум 1 раз.
+### Событие before
 
-- `success` сработает в случае если операция успешна.
-
-- `progress` срабатывает в ходе выполнения операции.
-
-**Пример №3**
+Выполняется перед началом кодирования. Дальнейшее выполнение может быть остановлено.
 
 ```php
-$format = new VideoFormat();
-$format->addListener('progress', function ($event) {
-	/* @var Arhitector/Transcoder/Event/EventProgress $event */
-	var_dump($event->getPercent());
+$format->addListener('before', function ($event, $media, $format, $filePath) {
+	// обработчик сработает после вызова `$media->save($format, ...`
 });
 ```
 
-- `failure` если что-то пошло не так.
+### Событие before.pass
 
-- `after` обработчик будет вызван когда операция завершится, не зависимо от того была ли операция завершена успешно или нет.
+### Событие before.queue
 
-- `after.pass` срабатывает после завершения прохода при многопроходном кодировании. Будет вызвано минимум 1 раз.
+### Событие successful
+
+Событие наступает в том случае, если кодирование завершино без ошибок.
+При использовании очередей - в том случае, если задание добавлено в очередь.
+
+```php
+$format->addListener('successful', function ($event, $media, $format, $filePath) {
+	// работа завершена без ошибок
+});
+```
+
+### Событие failure
+
+Операция завершилась с ошибкой или не может корректно завершиться.
+
+```php
+use Symfony\Component\Process\Exception\ProcessFailedException;
+
+$format->addListener('failure', function ($event, ProcessFailedException $exception) {
+	// кодирование не может быть завершено из-за возникшей ошибки
+});
+```
+
+### Событие failure.codec
+
+### Событие after
+
+Обработчик будет вызван когда операция завершится, не зависимо от того была ли операция завершена успешно или нет. 
+
+```php
+$format->addListener('after', function ($event, $media, $format, $filePath) {
+	// операция завершилась, но мы не знаем успешно или нет
+});
+```
+
+### Событие after.pass
+
+### Событие after.queue
+
+### Событие progress
+
+Событие наступает во время выполнения операции кодирования.
+
+```php
+use Arhitector/Transcoder/Event/EventProgress;
+
+$format->addListener('progress', function (EventProgress $event) {
+	// $event->getPercent();
+});
+```
+
+### Событие stream
 
 ### Поддержка очередей
 
