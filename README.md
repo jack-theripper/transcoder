@@ -29,7 +29,14 @@ Tools to transcoding/encoding audio or video, inspect and convert media formats.
 
 ## С чего начать
 
-В зависимости от контента, вы можете использовать `Audio` для работы с аудио-файлами, `Frame` для изображений, а `Video` и `Subtitle` соответственно для видео-файлов и субтитров.
+В зависимости от контента, вы можете использовать `Audio` для работы с аудио-файлами, `Frame` для изображений, а `Video` и `Subtitle` соответственно для работы с видео-файлами и субтитрами.
+
+```php
+use Arhitector\Transcoder\Audio;
+use Arhitector\Transcoder\Video;
+use Arhitector\Transcoder\Frame;
+use Arhitector\Transcoder\Subtitle;
+```
 
 Конструктор в общем виде выглядит так:
 
@@ -43,28 +50,12 @@ public < ... >::__construct(string $filePath, ServiceFactoryInterface $service =
 
 `$service` - параметр не обязателен. Экземпляр сервиса. По умолчанию   `ServiceFactory`.
 
-**Пример №1**
-
 ```php
-use Arhitector\Transcoder\Audio;
-use Arhitector\Transcoder\Video;
-use Arhitector\Transcoder\Frame;
-use Arhitector\Transcoder\Subtitle;
-
-// аудио
 $audio = new Audio('sample.mp3');
-
-// видео
 $video = new Video('sample.avi');
-
-// изображения
 $frame = new Frame('sample.jpg');
-
-// субтитры
 $subtitle = new Subtitle('sample.srt');
 ```
-
-**Пример №2**
 
 Вы можете использовать свою сервис-фабрику или изменить некоторые опции.
 
@@ -72,8 +63,8 @@ $subtitle = new Subtitle('sample.srt');
 use Arhitector\Transcoder\Service\ServiceFactory;
 
 $service = new ServiceFactory([
-	'ffprobe.path'   => 'E:\devtools\bin\ffprobe.exe',
-	'ffmpeg.path'    => 'E:\devtools\bin\ffmpeg.exe'
+	'ffprobe.path' => 'E:\devtools\bin\ffprobe.exe',
+	'ffmpeg.path'  => 'E:\devtools\bin\ffmpeg.exe'
 ]);
 
 // используем это
@@ -123,6 +114,19 @@ $format->addListener('before', function ($event, $media, $format, $filePath) {
 
 ### Событие before.pass
 
+При многопроходном кодировании обработчик будет вызван перед каждым проходом.
+Событие срабатывает минимум 1 раз.
+
+Событие срабатывает после `before` и не может отменить процесс кодирования.
+
+```php
+use Symfony\Component\Process\Process;
+
+$format->addListener('before.pass', function ($event, $media, $format, Process $process) {
+	
+});
+```
+
 ### Событие before.queue
 
 ### Событие successful
@@ -161,6 +165,16 @@ $format->addListener('after', function ($event, $media, $format, $filePath) {
 ```
 
 ### Событие after.pass
+
+Срабатывает после завершения прохода при многопроходном кодировании. Будет вызвано минимум 1 раз.
+
+```php
+use Symfony\Component\Process\Process;
+
+$format->addListener('after.pass', function ($event, $media, $format, Process $process) {
+	
+});
+```
 
 ### Событие after.queue
 
