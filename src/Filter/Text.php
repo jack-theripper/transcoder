@@ -14,6 +14,7 @@ namespace Arhitector\Transcoder\Filter;
 
 use Arhitector\Transcoder\Format\FormatInterface;
 use Arhitector\Transcoder\Format\FrameFormatInterface;
+use Arhitector\Transcoder\Point;
 use Arhitector\Transcoder\Traits\ConvertEncodingTrait;
 use Arhitector\Transcoder\TranscodeInterface;
 
@@ -40,7 +41,15 @@ class Text implements FrameFilterInterface
 	 * @var string The color to be used for drawing fonts.
 	 */
 	protected $color = 'black';
-
+	
+	/**
+	 * @var array The offsets where text will be drawn within the video frame.
+	 */
+	protected $position = [
+		'x' => 0,
+		'y' => 0
+	];
+	
 	/**
 	 * Text constructor.
 	 *
@@ -127,6 +136,48 @@ class Text implements FrameFilterInterface
 	}
 	
 	/**
+	 * Sets the offsets where text will be drawn within the video frame.
+	 *
+	 * @param Point $point
+	 *
+	 * @return Text
+	 */
+	public function setPosition(Point $point)
+	{
+		$this->position = $point->toArray();
+		
+		return $this;
+	}
+	
+	/**
+	 * Sets the expressions which specify the offsets where text will be drawn within the video frame.
+	 *
+	 * @param string $xCoord
+	 * @param string $yCoord
+	 *
+	 * @return Text
+	 */
+	public function setPositionExpression($xCoord, $yCoord)
+	{
+		$this->position = [
+			'x' => (string) $xCoord,
+			'y' => (string) $yCoord
+		];
+		
+		return $this;
+	}
+	
+	/**
+	 * Returns the expressions.
+	 *
+	 * @return array
+	 */
+	public function getPosition()
+	{
+		return $this->position;
+	}
+	
+	/**
 	 * Apply filter.
 	 *
 	 * @param TranscodeInterface $media
@@ -141,16 +192,13 @@ class Text implements FrameFilterInterface
 			throw new \InvalidArgumentException('The filter text can be used only with the format of the frame.');
 		}
 		
-		$text = "text='{$this->convertEncoding($this->getContent())}':";
-		
 		return [
 			'filter:v' => [
-				'drawtext' => $text.http_build_query([
+				'drawtext' => urldecode(http_build_query([
+						'text'      => $this->convertEncoding($this->getContent()),
 						'fontsize'  => $this->getSize(),
 						'fontcolor' => $this->getColor(),
-						'x'         => 0,
-						'y'         => 0,
-					], null, ':')
+					] + $this->getPosition(), null, ':'))
 			]
 		];
 	}
