@@ -145,7 +145,6 @@ class Encoder implements EncoderInterface
 		for ($pass = 1; $pass <= $format->getPasses(); ++$pass)
 		{
 			$options = $_options;
-			$format->emit('before.pass');
 			
 			if ($format->getPasses() > 1)
 			{
@@ -154,13 +153,16 @@ class Encoder implements EncoderInterface
 			}
 			
 			$options[] = $filePath;
-			
-			yield $pass => (new ProcessBuilder($options))
+			$process = (new ProcessBuilder($options))
 				->setPrefix($this->options['ffmpeg.path'])
 				->setTimeout($this->options['timeout'])
 				->getProcess();
+
+			$format->emit('before.pass', $media, $format, $process);
 			
-			$format->emit('after.pass');
+			yield $pass => $process;
+			
+			$format->emit('after.pass', $media, $format, $process);
 		}
 	}
 	
