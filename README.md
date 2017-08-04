@@ -25,6 +25,7 @@ Tools to transcoding/encoding audio or video, inspect and convert media formats.
 	- [Простой фильтр](#Простой-фильтр-simplefilter)
 	- [Задержка звука](#Задержка-звука)
 - [Примеры](#Примеры)
+	- [Наложение текста](#Наложение-текста)
 	
 
 ## С чего начать
@@ -321,6 +322,23 @@ $new_cover = (new Frame(__DIR__.'/sample.jpg'))
 $streams[1] = $new_cover;
 
 $audio->save($audio->getFormat(), 'sample-with-new-cover.mp3');
+```
+
+### Наложение текста
+
+```php
+use Arhitector\Transcoder\Video;
+use Arhitector\Transcoder\Filter\Text;
+use Arhitector\Transcoder\Point;
+
+$filter = new Text('Наложение текста на кадр');
+$filter->setSize(24);
+$filter->setColor('red');
+$filter->setPosition(new Point(100, 100));
+
+$video = new Video('sample.mp4');
+$video->addFilter($filter);
+$video->save($video->getFormat(), 'sample-with-text.mp4');
 ```
 
 ## ООП-обёртки над форматами
