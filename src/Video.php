@@ -144,7 +144,7 @@ class Video extends Audio implements VideoInterface
 		}
 		
 		$frame = new Frame($this->getFilePath(), $this->getService());
-		$frame->addFilter(new SimpleFilter(['seek_start' => $interval->__toString()]));
+		$frame->addFilter(new SimpleFilter(['seek_start' => $interval->__toString()]), 99);
 		
 		return $frame;
 	}
