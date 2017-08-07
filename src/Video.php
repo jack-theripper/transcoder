@@ -181,8 +181,6 @@ class Video extends Audio implements VideoInterface
 		{
 			$stream['type'] = isset($stream['type']) ? strtolower($stream['type']) : null;
 			
-			$stream['type'] = isset($stream['type']) ? strtolower($stream['type']) : null;
-			
 			if ($stream['type'] == 'audio')
 			{
 				$streams[] = AudioStream::create($this, $stream);
