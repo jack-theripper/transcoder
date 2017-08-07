@@ -194,6 +194,17 @@ class Decoder implements DecoderInterface
 		$properties['metadata'] = (array) $properties['tags'];
 		$properties['frequency'] = (int) $properties['sample_rate'];
 		$properties['codec'] = new Codec($properties['codec_name'], $properties['codec_long_name']);
+		$properties['frame_rate'] = isset($properties['r_frame_rate']) ? $properties['r_frame_rate'] : 0.0;
+		
+		if (strpos($properties['frame_rate'], '/') > 0)
+		{
+			list($val1, $val2) = explode('/', $properties['frame_rate']);
+			
+			if ($val1 > 0 && $val2 > 0)
+			{
+				$properties['frame_rate'] = (float) $val1 / (float) $val2;
+			}
+		}
 		
 		return $properties;
 	}
