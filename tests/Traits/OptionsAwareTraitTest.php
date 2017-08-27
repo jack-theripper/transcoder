@@ -25,6 +25,7 @@ class OptionsAwareTraitTest extends \PHPUnit_Framework_TestCase
 	
 	public function testSuccessful()
 	{
+		/** @var OptionsAwareTrait $mock */
 		$mock = $this->getMockForTrait(OptionsAwareTrait::class);
 		$this->assertInstanceOf(get_class($mock), $mock->setOptions(['key' => 'value']));
 		$this->assertEquals(['key' => 'value'], $mock->getOptions());
@@ -36,10 +37,17 @@ class OptionsAwareTraitTest extends \PHPUnit_Framework_TestCase
 	public function testFailure($value)
 	{
 		$this->expectException(get_class(new PHPUnit_Framework_Error('', 0, '', 1)));
+		
+		/** @var OptionsAwareTrait $mock */
 		$mock = $this->getMockForTrait(OptionsAwareTrait::class);
 		$mock->setOptions($value);
 	}
 	
+	/**
+	 * The data provider.
+	 *
+	 * @return array
+	 */
 	public function dataProviderFailure()
 	{
 		return [
