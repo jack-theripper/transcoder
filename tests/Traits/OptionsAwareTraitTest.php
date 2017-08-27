@@ -23,6 +23,9 @@ use PHPUnit_Framework_Error;
 class OptionsAwareTraitTest extends \PHPUnit_Framework_TestCase
 {
 	
+	/**
+	 * Test on successful.
+	 */
 	public function testSuccessful()
 	{
 		/** @var OptionsAwareTrait $mock */
@@ -32,6 +35,9 @@ class OptionsAwareTraitTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	/**
+	 * Test on failure.
+	 *
+	 * @param mixed $value
 	 * @dataProvider dataProviderFailure
 	 */
 	public function testFailure($value)
