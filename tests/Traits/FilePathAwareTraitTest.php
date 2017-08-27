@@ -27,25 +27,57 @@ class FilePathAwareTraitTest extends \PHPUnit_Framework_TestCase
 	 */
 	protected $awareTrait;
 	
+	/**
+	 * The set up method.
+	 */
 	public function setUp()
 	{
 		$this->awareTrait = $this->getObjectForTrait(FilePathAwareTrait::class);
 	}
 	
-	public function testSuccess()
+	/**
+	 * Test on successful.
+	 */
+	public function testSuccessful()
 	{
 		$this->getReflection(__FILE__);
 		$this->assertEquals($this->awareTrait->getFilePath(), __FILE__);
 	}
 	
 	/**
+	 * Test on failure.
+	 *
+	 * @param mixed $value
+	 *
+	 * @dataProvider dataProviderFailure
 	 * @expectedException \InvalidArgumentException
+	 */
+	public function testFailure($value)
+	{
+		$this->getReflection($value);
+	}
+	
+	/**
+	 * Test on failure if the file path not found.
+	 *
 	 * @expectedException \Arhitector\Transcoder\Exception\TranscoderException
 	 */
-	public function testFailure()
+	public function testFailureNotFound()
 	{
-		$this->getReflection(new \stdClass);
 		$this->getReflection(__FILE__.mt_rand());
+	}
+	
+	/**
+	 * The data provider.
+	 *
+	 * @return array
+	 */
+	public function dataProviderFailure()
+	{
+		return [
+			[new \stdClass],
+			['https://example.com/file.ext']
+		];
 	}
 	
 	/**
