@@ -199,20 +199,13 @@ trait TranscodeTrait
 			throw new TranscoderException('File path already exists.');
 		}
 		
-		$options = ['output' => $filePath];
-		
-		foreach (clone $this->filters as $filter)
-		{
-			$options = array_merge_recursive($options, $filter->apply($this, $format));
-		}
-		
 		if ($format->emit('before', $this, $format, $filePath)->isPropagationStopped())
 		{
 			return $this;
 		}
 		
 		/** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-		$processes = $this->getService()->getEncoderService()->transcoding($this, $format, $options);
+		$processes = $this->getService()->getEncoderService()->transcoding($this, $format, ['output' => $filePath]);
 		
 		try
 		{
