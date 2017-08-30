@@ -206,13 +206,13 @@ trait TranscodeTrait
 			$options = array_merge_recursive($options, $filter->apply($this, $format));
 		}
 		
-		/** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-		$processes = $this->getService()->getEncoderService()->transcoding($this, $format, $options);
-		
 		if ($format->emit('before', $this, $format, $filePath)->isPropagationStopped())
 		{
 			return $this;
 		}
+		
+		/** @noinspection ExceptionsAnnotatingAndHandlingInspection */
+		$processes = $this->getService()->getEncoderService()->transcoding($this, $format, $options);
 		
 		try
 		{
