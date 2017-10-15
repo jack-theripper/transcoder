@@ -36,37 +36,19 @@ interface FilterChainInterface extends AudioFilterInterface, FrameFilterInterfac
 	/**
 	 * Attach other chains as input.
 	 *
-	 * @param FilterChainInterface $chain
-	 * @param mixed                $label
+	 * @param string $label
 	 *
 	 * @return FilterChainInterface
 	 */
-	public function attach(FilterChainInterface $chain, $label = null);
+	public function addInputLabel($label);
 	
 	/**
-	 * Detach input.
+	 * Attach other chains as output.
 	 *
-	 * @param FilterChainInterface $chain
+	 * @param string $label
 	 *
 	 * @return FilterChainInterface
 	 */
-	public function detach(FilterChainInterface $chain);
-	
-	/**
-	 * Receive update from subject.
-	 *
-	 * @param FilterChainInterface $chain The subject.
-	 * @param mixed                $label
-	 *
-	 * @return FilterChainInterface
-	 */
-	public function update(FilterChainInterface $chain, $label = null);
-	
-	/**
-	 * Returns the label of chain.
-	 *
-	 * @return string
-	 */
-	public function getLabel();
+	public function addOutputLabel($label);
 	
 }

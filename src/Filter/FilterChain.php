@@ -25,29 +25,19 @@ class FilterChain implements FilterChainInterface
 {
 	
 	/**
-	 * @var int Type of input.
-	 */
-	const TYPE_INPUT = 0;
-	
-	/**
-	 * @var int Type of output.
-	 */
-	const TYPE_OUTPUT = 1;
-	
-	/**
-	 * @var array List of chains.
-	 */
-	protected $chains = [];
-	
-	/**
 	 * @var \SplPriorityQueue|FilterInterface[] The collection of filters.
 	 */
 	protected $filters;
 	
 	/**
-	 * @var string The label of chain.
+	 * @var array List of inputs.
 	 */
-	protected $label;
+	protected $inputs = [];
+	
+	/**
+	 * @var array List of outputs.
+	 */
+	protected $outputs = [];
 	
 	/**
 	 * FilterChain constructor.
@@ -65,8 +55,6 @@ class FilterChain implements FilterChainInterface
 		{
 			$this->addFilter($filter, 0);
 		}
-		
-		$this->label = hash('crc32', spl_object_hash($this));
 	}
 	
 	/**
@@ -87,46 +75,29 @@ class FilterChain implements FilterChainInterface
 	}
 	
 	/**
-	 * Attach other chains on the output.
+	 * Attach other chains as input.
 	 *
-	 * @param FilterChainInterface $chain
-	 * @param mixed                $label
+	 * @param string $label
 	 *
 	 * @return FilterChainInterface
 	 */
-	public function attach(FilterChainInterface $chain, $label = null)
+	public function addInputLabel($label)
 	{
-		$this->chains[] = [self::TYPE_INPUT, $label ?: 0, $chain];
-		$chain->update($this, $label);
+		$this->inputs[] = (string) $label;
 		
 		return $this;
 	}
 	
 	/**
-	 * Detach input.
+	 * Attach other chains as output.
 	 *
-	 * @param FilterChainInterface $chain
-	 *
-	 * @return FilterChain
-	 */
-	public function detach(FilterChainInterface $chain)
-	{
-		// TODO
-		
-		return $this;
-	}
-	
-	/**
-	 * Receive update from subject.
-	 *
-	 * @param FilterChainInterface $chain The subject.
-	 * @param mixed                $label
+	 * @param string $label
 	 *
 	 * @return FilterChainInterface
 	 */
-	public function update(FilterChainInterface $chain, $label = null)
+	public function addOutputLabel($label)
 	{
-		$this->chains[] = [self::TYPE_OUTPUT, $label ?: 0, $chain];
+		$this->outputs[] = (string) $label;
 		
 		return $this;
 	}
@@ -141,58 +112,7 @@ class FilterChain implements FilterChainInterface
 	 */
 	public function apply(TranscodeInterface $media, FormatInterface $format)
 	{
-		$labels = $this->getLabels();
-		$labels[self::TYPE_INPUT] = implode('', $labels[self::TYPE_INPUT]);
-		$labels[self::TYPE_OUTPUT] = implode('', $labels[self::TYPE_OUTPUT]);
-		$options = [];
-		
-		foreach (clone $this->filters as $filter)
-		{
-			$options = array_replace_recursive($filter->apply($media, $format), $options);
-		}
-		
-		foreach ($options as $option => &$value)
-		{
-			if (stripos($option, 'filter') === 0)
-			{
-				$value = $labels[self::TYPE_INPUT].implode(', ', array_map(function ($value, $filter) {
-					return $filter.'='.implode(', '.$filter.'=', (array) $value);
-				}, (array) $value, array_keys((array) $value))).$labels[self::TYPE_OUTPUT];
-			}
-		}
-		
-		return $options;
-	}
 	
-	/**
-	 * Returns the label of chain.
-	 *
-	 * @return string
-	 */
-	public function getLabel()
-	{
-		return $this->label;
-	}
-	
-	/**
-	 * Returns all labels in a format compatible with ffmpeg.
-	 *
-	 * @return array
-	 */
-	protected function getLabels()
-	{
-		$labels = [
-			self::TYPE_INPUT  => [],
-			self::TYPE_OUTPUT => [],
-		];
-		
-		foreach ($this->chains as list($type, $label, $chain))
-		{
-			$labels[$type][] = sprintf('[%s:%s]',
-				$type == self::TYPE_INPUT ? $chain->getLabel() : $this->getLabel(), $label);
-		}
-		
-		return $labels;
 	}
 	
 }
