@@ -23,17 +23,16 @@ class Graph extends SplPriorityQueue
 {
 	
 	/**
-	 * @var FilterChain The filter chain that is used by default.
+	 * @var int The counter sequence.
 	 */
-	protected $defaultChain;
+	protected $serial = PHP_INT_MAX;
 	
 	/**
 	 * Graph constructor.
 	 */
 	public function __construct()
 	{
-		$this->defaultChain = new FilterChain();
-		$this->insert($this->defaultChain, -1);
+	
 	}
 	
 	/**
@@ -55,11 +54,16 @@ class Graph extends SplPriorityQueue
 		
 		if ($filter instanceof FilterChainInterface)
 		{
-			parent::insert($filter, $priority);
+			parent::insert($filter, [-$priority, $this->serial--]);
 		}
 		else
 		{
-			$this->defaultChain->addFilter($filter, $priority);
+			if ($this->isEmpty())
+			{
+				parent::insert(new FilterChain(), 0);
+			}
+			
+			$this->top()->addFilter($filter, $priority);
 		}
 		
 		return $this;
