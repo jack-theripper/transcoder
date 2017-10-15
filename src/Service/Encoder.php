@@ -133,6 +133,11 @@ class Encoder implements EncoderInterface
 					{
 						if (stripos($option, 'filter') !== false)
 						{
+							if ($queue->count() > 1 && stripos($option, 'filter_complex') === false)
+							{
+								$option = str_replace('filter', 'filter_complex', $option);
+							}
+							
 							$heap->push($option, $value);
 							
 							continue;
