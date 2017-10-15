@@ -14,6 +14,7 @@ namespace Arhitector\Transcoder\Service;
 
 use Arhitector\Transcoder\Exception\ExecutableNotFoundException;
 use Arhitector\Transcoder\Exception\TranscoderException;
+use Arhitector\Transcoder\Filter\FilterInterface;
 use Arhitector\Transcoder\Format\AudioFormatInterface;
 use Arhitector\Transcoder\Format\FormatInterface;
 use Arhitector\Transcoder\Format\FrameFormatInterface;
@@ -88,72 +89,95 @@ class Encoder implements EncoderInterface
 	 */
 	public function transcoding(TranscodeInterface $media, FormatInterface $format, array $options = [])
 	{
-		$_options = array_merge_recursive(array_merge([
-			'y'      => '',
-			'input'  => [$media->getFilePath()],
-			'strict' => '-2'
-		], $this->getForceFormatOptions($format), $this->getFormatOptions($format)), $options);
+		$heap = new Heap(array_merge([
+			'y'              => true,
+			'input'          => $media,
+			'strict'         => -2,
+			'ignore_unknown' => true
+		], $this->getForceFormatOptions($format), $this->getFormatOptions($format), $options));
 		
-		if ( ! isset($options['output']))
+		if ( ! $heap->has('output'))
 		{
 			throw new TranscoderException('Output file path not found.');
 		}
 		
-		$filePath = $options['output'];
+		$heaps = [];
+		$queue = new \SplQueue();
 		
-		if ( ! isset($options['metadata']) && $format->getMetadata())
+		foreach ($heap->get('input') as $value)
 		{
-			$_options['metadata'] = $format->getMetadata();
+			$queue->push($value);
 		}
 		
-		foreach ($media->getStreams() as $stream)
+		/** @var TranscodeInterface $localMedia */
+		foreach ($queue as $position => $localMedia)
 		{
-			if (($input = array_search($stream->getFilePath(), $_options['input'], false)) === false)
+			$reflection = new \ReflectionProperty($localMedia, 'filters');
+			$reflection->setAccessible(true);
+			
+			$localHeap = new Heap(['input' => $localMedia->getFilePath()]);
+			
+			/** @var FilterInterface $filter */
+			foreach (clone $reflection->getValue($localMedia) as $filter)
 			{
-				$_options['input'][] = $stream->getFilePath();
-				$input = count($_options['input']) - 1;
+				foreach ($filter->apply($localMedia, $format) as $option => $values)
+				{
+					if ($option == 'input')
+					{
+						$queue->push($values[0]);
+						
+						continue;
+					}
+					
+					foreach ((array) $values as $value)
+					{
+						if (stripos($option, 'filter') !== false)
+						{
+							$heap->push($option, $value);
+							
+							continue;
+						}
+						
+						$localHeap->push($option, $value);
+					}
+				}
 			}
 			
-			// TODO: -map [-]input_file_id[:stream_specifier][?][,sync_file_id[:stream_specifier]] | [linklabel] (output)
-			$_options['map'][] = sprintf('%s:%d', $input, $stream->getIndex());
+			$heaps[$position] = $localHeap;
 		}
 		
-		$options = $this->resolveOptionsAlias($_options);
+		$filePath = $heap->get('output');
+		$options = array_merge(...iterator_to_array($heap));
 		
-		if ( ! empty($_options['metadata']))
+		if (($position = array_search('-i', $options)) !== false) // inject inputs to list of options
 		{
-			$options['map_metadata'] = '-1';
-			$options['-metadata'] = array_map([$this, 'convertEncoding'], $_options['metadata']);
+			foreach (array_reverse($heaps) as $heap)
+			{
+				array_splice($options, $position + 1, 0, array_merge(...iterator_to_array($heap)));
+			}
+			
+			unset($options[$position]);
 		}
-		
-		$heap = new OptionsHeap();
-		
-		foreach ($options as $option => $value)
-		{
-			$heap->insert([$option, $value]);
-		}
-		
-		$_options = array_merge(...iterator_to_array($heap));
 		
 		if ($format->getPasses() > 1)
 		{
 			// TODO: FFMpeg создает файлы вида <filename>-0.log, чтобы их очистить проще создать папку.
-			$_options[] = '-passlogfile';
-			$_options[] = tempnam(sys_get_temp_dir(), 'ffmpeg');
+			$options[] = '-passlogfile';
+			$options[] = tempnam(sys_get_temp_dir(), 'ffmpeg');
 		}
 		
 		for ($pass = 1; $pass <= $format->getPasses(); ++$pass)
 		{
-			$options = $_options;
+			$_options = $options;
 			
 			if ($format->getPasses() > 1)
 			{
-				$options[] = '-pass';
-				$options[] = $pass;
+				$_options[] = '-pass';
+				$_options[] = $pass;
 			}
 			
-			$options[] = $filePath;
-			$process = (new ProcessBuilder($options))
+			$_options[] = $filePath[0];
+			$process = (new ProcessBuilder($_options))
 				->setPrefix($this->options['ffmpeg.path'])
 				->setTimeout($this->options['timeout'])
 				->getProcess();
@@ -268,7 +292,6 @@ class Encoder implements EncoderInterface
 		if ($format instanceof AudioFormatInterface)
 		{
 			$options['audio_codec'] = (string) $format->getAudioCodec() ?: 'copy';
-			$options['video_codec'] = 'copy';
 			
 			if ($format->getAudioBitrate() > 0)
 			{
@@ -303,17 +326,7 @@ class Encoder implements EncoderInterface
 				$options['video_bitrate'] = $format->getVideoBitrate();
 			}
 			
-			$options['refs'] = 6;
-			$options['coder'] = 1;
-			$options['sc_threshold'] = 40;
-			$options['flags'] = '+loop';
 			$options['movflags'] = '+faststart';
-			$options['me_range'] = 16;
-			$options['subq'] = 7;
-			$options['i_qfactor'] = .71;
-			$options['qcomp'] = .6;
-			$options['qdiff'] = 4;
-			$options['trellis'] = 1;
 		}
 		
 		return $options;
