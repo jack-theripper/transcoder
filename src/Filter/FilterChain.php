@@ -112,7 +112,34 @@ class FilterChain implements FilterChainInterface
 	 */
 	public function apply(TranscodeInterface $media, FormatInterface $format)
 	{
-	
+		$options = [];
+		
+		foreach (clone $this->filters as $filter)
+		{
+			foreach ($filter->apply($media, $format) as $option => $value)
+			{
+				if (stripos($option, 'filter') !== false)
+				{
+					$option = 'filter';
+				}
+				
+				$options[$option][] = $value;
+			}
+		}
+		
+		if (isset($options['filter']))
+		{
+			$option = [];
+			
+			foreach (array_merge_recursive(...$options['filter']) as $filter => $value)
+			{
+				$option[] = $filter.'='.implode(', '.$filter.'=', (array) $value);
+			}
+			
+			$options['filter'] = implode('', $this->inputs).implode(', ', $option).implode('', $this->outputs);
+		}
+		
+		return $options;
 	}
 	
 }
