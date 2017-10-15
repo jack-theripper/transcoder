@@ -82,7 +82,7 @@ class Graph extends SplPriorityQueue
 	/**
 	 * Peeks at the node from the top of the queue.
 	 *
-	 * @return FilterInterface
+	 * @return FilterChainInterface
 	 */
 	public function top()
 	{
