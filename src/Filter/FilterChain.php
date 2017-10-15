@@ -40,6 +40,11 @@ class FilterChain implements FilterChainInterface
 	protected $outputs = [];
 	
 	/**
+	 * @var int The counter sequence.
+	 */
+	protected $serial = PHP_INT_MAX;
+	
+	/**
 	 * FilterChain constructor.
 	 *
 	 * @param FilterInterface[] ...$filters
@@ -69,7 +74,7 @@ class FilterChain implements FilterChainInterface
 	 */
 	public function addFilter(FilterInterface $filter, $priority = 0)
 	{
-		$this->filters->insert($filter, $priority);
+		$this->filters->insert($filter, [-$priority, $this->serial--]);
 		
 		return $this;
 	}
