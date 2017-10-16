@@ -60,7 +60,7 @@ class Graph extends SplPriorityQueue
 		{
 			if ($this->isEmpty())
 			{
-				parent::insert(new FilterChain(), 0);
+				parent::insert(new FilterChain(), [0, $this->serial--]);
 			}
 			
 			$this->top()->addFilter($filter, $priority);
