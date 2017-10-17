@@ -46,6 +46,11 @@ class Heap extends \SplHeap
 	 */
 	public function push($option, $value)
 	{
+		if ( ! is_string($option))
+		{
+			throw new \InvalidArgumentException('The option value must be a string type.');
+		}
+		
 		$this->heap[$option][] = $value;
 	}
 	
