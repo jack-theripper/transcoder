@@ -101,6 +101,36 @@ class Encoder implements EncoderInterface
 			throw new TranscoderException('Output file path not found.');
 		}
 		
+		if ( ! $heap->has('metadata') && $format->getMetadata())
+		{
+			$heap->push('metadata', $format->getMetadata());
+		}
+		
+		foreach ($media->getStreams() as $stream)
+		{
+			$position = false;
+			
+			/** @var TranscodeInterface $value */
+			foreach ($heap->get('input') as $option => $value)
+			{
+				if ($value->getFilePath() == $stream->getFilePath())
+				{
+					$position = $option;
+				}
+			}
+			
+			if ($position === false)
+			{
+				$reflection = new \ReflectionProperty($stream, 'media');
+				$reflection->setAccessible(true);
+				
+				$heap->push('input', $reflection->getValue($stream));
+				$position = count($heap->get('input')) - 1;
+			}
+			
+			$heap->push('map', sprintf('%s:%d', $position, $stream->getIndex()));
+		}
+		
 		$heaps = [];
 		$queue = new \SplQueue();
 		
@@ -138,6 +168,8 @@ class Encoder implements EncoderInterface
 								$option = str_replace('filter', 'filter_complex', $option);
 							}
 							
+							// [file_index:stream_specifier]
+							// -map [-]input_file_id[:stream_specifier][?][,sync_file_id[:stream_specifier]] | [linklabel]
 							$heap->push($option, $value);
 							
 							continue;
