@@ -146,19 +146,19 @@ class Volume implements AudioFilterInterface
 	/**
 	 * Set the volume value.
 	 *
-	 * @param mixed $volume
+	 * @param mixed $expression
 	 *
 	 * @return Volume
 	 * @throws \InvalidArgumentException
 	 */
-	public function setVolume($volume)
+	public function setVolume($expression)
 	{
-		if ( ! is_scalar($volume))
+		if ( ! is_scalar($expression))
 		{
 			throw new \InvalidArgumentException('The volume value must be a scalar.');
 		}
 		
-		$this->volume = $volume;
+		$this->volume = $expression;
 		
 		return $this;
 	}
