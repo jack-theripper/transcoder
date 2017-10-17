@@ -131,6 +131,12 @@ class Encoder implements EncoderInterface
 			$heap->push('map', sprintf('%s:%d', $position, $stream->getIndex()));
 		}
 		
+		if (count($heap->get('metadata')) > 0)
+		{
+			$heap->push('map_metadata', -1);
+			//$heap->push('metadata', array_map([$this, 'convertEncoding'], $heap->get('metadata')));
+		}
+		
 		$heaps = [];
 		$queue = new \SplQueue();
 		
