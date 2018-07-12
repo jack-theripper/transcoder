@@ -10,12 +10,14 @@
  * @license   http://opensource.org/licenses/MIT MIT
  * @copyright Copyright (c) 2017 Dmitry Arhitector <dmitry.arhitector@yandex.ru>
  */
+
 namespace Arhitector\Transcoder\Service;
 
 use Arhitector\Transcoder\Format\FormatInterface;
 use Arhitector\Transcoder\TranscodeInterface;
-use SimpleQueue\Job;
-use SimpleQueue\QueueAdapterInterface as QueueInterface;
+
+//use SimpleQueue\Job;
+//use SimpleQueue\QueueAdapterInterface as QueueInterface;
 
 /**
  * Class EncoderQueue.
@@ -28,7 +30,7 @@ class EncoderQueue extends Encoder
 	/**
 	 * @var QueueInterface
 	 */
-	protected $queue;
+	// protected $queue;
 	
 	/**
 	 * Encoder constructor.
@@ -38,12 +40,12 @@ class EncoderQueue extends Encoder
 	 *
 	 * @throws \Arhitector\Transcoder\Exception\ExecutableNotFoundException
 	 */
-	public function __construct(QueueInterface $queue, array $options = [])
-	{
-		parent::__construct($options);
-		
-		$this->queue = $queue;
-	}
+	//	public function __construct(QueueInterface $queue, array $options = [])
+	//	{
+	//		parent::__construct($options);
+	//
+	//		$this->queue = $queue;
+	//	}
 	
 	/**
 	 * Constructs and returns the iterator with instances of 'Process'.
@@ -55,26 +57,26 @@ class EncoderQueue extends Encoder
 	 * @return \Iterator|\Symfony\Component\Process\Process[] returns the instances of 'Process'.
 	 * @throws \RuntimeException
 	 */
-	public function transcoding(TranscodeInterface $media, FormatInterface $format, array $options = [])
-	{
-		$commandLines = [];
-		
-		foreach (parent::transcoding($media, $format, $options) as $pass => $process)
-		{
-			$commandLines[$pass] = $process->getCommandLine();
-			
-			// fix: because Symfony uses private properties without setters methods :-(((
-			$property = new \ReflectionProperty($process, 'status');
-			$property->setAccessible(true);
-			$property->setValue($process, $process::STATUS_TERMINATED);
-			
-			yield $pass => $process;
-		}
-		
-		if ($commandLines)
-		{
-			$this->queue->push(new Job(['transcoding', 'command_line' => $commandLines], 'transcoding'));
-		}
-	}
+	//	public function transcoding(TranscodeInterface $media, FormatInterface $format, array $options = [])
+	//	{
+	//		$commandLines = [];
+	//
+	//		foreach (parent::transcoding($media, $format, $options) as $pass => $process)
+	//		{
+	//			$commandLines[$pass] = $process->getCommandLine();
+	//
+	//			// fix: because Symfony uses private properties without setters methods :-(((
+	//			$property = new \ReflectionProperty($process, 'status');
+	//			$property->setAccessible(true);
+	//			$property->setValue($process, $process::STATUS_TERMINATED);
+	//
+	//			yield $pass => $process;
+	//		}
+	//
+	//		if ($commandLines)
+	//		{
+	//			$this->queue->push(new Job(['transcoding', 'command_line' => $commandLines], 'transcoding'));
+	//		}
+	//	}
 	
 }
