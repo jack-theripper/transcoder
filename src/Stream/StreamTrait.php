@@ -15,6 +15,7 @@ namespace Arhitector\Transcoder\Stream;
 use Arhitector\Transcoder\Codec;
 use Arhitector\Transcoder\Filter\SimpleFilter;
 use Arhitector\Transcoder\Format\FormatInterface;
+use Arhitector\Transcoder\Protocol\ProtocolInterface;
 use Arhitector\Transcoder\TimeInterval;
 use Arhitector\Transcoder\Traits\FilePathAwareTrait;
 use Arhitector\Transcoder\Traits\MetadataTrait;
@@ -106,6 +107,11 @@ trait StreamTrait
 	protected $media;
 	
 	/**
+	 * @var ProtocolInterface
+	 */
+	protected $source;
+	
+	/**
 	 * Stream constructor.
 	 *
 	 * @param TranscodeInterface $media
@@ -115,7 +121,7 @@ trait StreamTrait
 	 */
 	private function __construct(TranscodeInterface $media)
 	{
-		$this->setFilePath($media->getFilePath());
+		$this->setSource($media->getSource());
 		$this->media = $media;
 	}
 	
@@ -211,6 +217,25 @@ trait StreamTrait
 	public function getDuration()
 	{
 		return $this->duration;
+	}
+	
+	/**
+	 * @return ProtocolInterface
+	 */
+	public function getSource()
+	{
+		return $this->source;
+	}
+	
+	/**
+	 * @param ProtocolInterface $source
+	 * @return StreamTrait
+	 */
+	public function setSource($source)
+	{
+		$this->source = $source;
+		
+		return $this;
 	}
 	
 	/**
