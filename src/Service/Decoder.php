@@ -81,9 +81,10 @@ class Decoder implements DecoderInterface
 			'-show_streams',
 			'-show_error',
 			'-i',
-			$media->getFilePath()
+			'-'
 		]))
 			->setPrefix($this->options['ffprobe.path'])
+			->setInput($media->getSource())
 			->getProcess()
 			->mustRun()
 			->getOutput();
