@@ -17,7 +17,7 @@ namespace Arhitector\Transcoder\Protocol;
  *
  * @package Arhitector\Transcoder\Protocol
  */
-interface ProtocolInterface
+interface ProtocolInterface extends \IteratorAggregate
 {
 	
 }
