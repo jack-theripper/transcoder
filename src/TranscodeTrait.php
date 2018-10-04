@@ -8,7 +8,7 @@
  * @author    Dmitry Arhitector <dmitry.arhitector@yandex.ru>
  *
  * @license   http://opensource.org/licenses/MIT MIT
- * @copyright Copyright (c) 2017 Dmitry Arhitector <dmitry.arhitector@yandex.ru>
+ * @copyright Copyright (c) 2017-2018 Dmitry Arhitector <dmitry.arhitector@yandex.ru>
  */
 namespace Arhitector\Transcoder;
 
@@ -17,6 +17,8 @@ use Arhitector\Transcoder\Exception\ExecutionFailureException;
 use Arhitector\Transcoder\Exception\TranscoderException;
 use Arhitector\Transcoder\Filter\Graph;
 use Arhitector\Transcoder\Format\FormatInterface;
+use Arhitector\Transcoder\Protocol\FileSystem;
+use Arhitector\Transcoder\Protocol\ProtocolInterface;
 use Arhitector\Transcoder\Service\ServiceFactory;
 use Arhitector\Transcoder\Service\ServiceFactoryInterface;
 use Arhitector\Transcoder\Stream\AudioStream;
@@ -60,17 +62,22 @@ trait TranscodeTrait
 	protected $filters;
 	
 	/**
+	 * @var ProtocolInterface
+	 */
+	protected $source;
+	
+	/**
 	 * The constructor.
 	 *
-	 * @param string                  $filePath
-	 * @param ServiceFactoryInterface $service
+	 * @param ProtocolInterface|string $source
+	 * @param ServiceFactoryInterface  $service
 	 *
 	 * @throws \Arhitector\Transcoder\Exception\TranscoderException
 	 * @throws \InvalidArgumentException
 	 */
-	public function __construct($filePath, ServiceFactoryInterface $service = null)
+	public function __construct($source, ServiceFactoryInterface $service = null)
 	{
-		$this->setFilePath($filePath);
+		$this->setSource($source instanceof ProtocolInterface ? $source : new FileSystem($source));
 		$this->setServiceFactory($service ?: new ServiceFactory());
 		
 		/** @noinspection ExceptionsAnnotatingAndHandlingInspection */
@@ -83,6 +90,16 @@ trait TranscodeTrait
 		
 		$this->filters = new Graph();
 		$this->initialize($demuxing);
+	}
+	
+	/**
+	 * Returns the current source.
+	 *
+	 * @return ProtocolInterface
+	 */
+	public function getSource()
+	{
+		return $this->source;
 	}
 	
 	/**
@@ -254,7 +271,25 @@ trait TranscodeTrait
 	 */
 	protected function getMimeType()
 	{
-		return mime_content_type($this->getFilePath());
+		if ($this->getSource() instanceof FileSystem)
+		{
+			return mime_content_type($this->getSource()->getFilePath());
+		}
+		
+		return '';
+	}
+	
+	/**
+	 *
+	 * @param ProtocolInterface $source
+	 *
+	 * @return $this
+	 */
+	protected function setSource(ProtocolInterface $source)
+	{
+		$this->source = $source;
+		
+		return $this;
 	}
 	
 	/**
