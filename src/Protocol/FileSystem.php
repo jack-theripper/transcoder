@@ -80,4 +80,24 @@ class FileSystem implements ProtocolInterface
 		return $this;
 	}
 	
+	/**
+	 * Retrieve an external iterator
+	 *
+	 * @link  https://php.net/manual/en/iteratoraggregate.getiterator.php
+	 * @return \Traversable An instance of an object implementing Iterator or Traversable
+	 */
+	public function getIterator()
+	{
+		$handle = fopen($this->getFilePath(), 'rb');
+		
+		while ( ! feof($handle))
+		{
+			yield fread($handle, 2097152);
+		}
+		
+		fclose($handle);
+		
+		return ;
+	}
+	
 }
