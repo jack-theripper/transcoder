@@ -1,14 +1,23 @@
 {
-    "name": "arhitector/jumper",
-    "description": "Tools to transcoding/encoding audio or video, inspect and convert media formats.",
-    "type": "library",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Dmitry Arhitector",
-            "email": "dmitry.arhitector@yandex.ru"
-        }
-    ],
+	"name": "arhitector/transcoder",
+	"description": "Tools to transcoding/encoding audio or video, inspect and convert media formats",
+	"type": "library",
+	"license": "MIT",
+	"keywords": [
+		"ffmpeg",
+		"video",
+		"transcoder",
+		"audio",
+		"converting",
+		"transcoding"
+	],
+	"homepage": "https://github.com/jack-theripper/transcoder",
+	"authors": [
+		{
+			"name": "Dmitry Arhitector",
+			"email": "dmitry.arhitector@yandex.ru"
+		}
+	],
 	"autoload": {
 		"psr-4": {
 			"Arhitector\\Transcoder\\": "src"
@@ -17,17 +26,23 @@
 	"autoload-dev": {
 		"Arhitector\\Transcoder\\Tests\\": "tests"
 	},
-    "require": {
-	    "php": ">=5.6",
-	    "ralouphie/mimey": "^1.0",
-        "league/event": "^2.1",
-        "symfony/process": "^3.2"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "5.*"
-    },
+	"require": {
+		"php": ">=5.6",
+		"ralouphie/mimey": "^1.0",
+		"league/event": "^2.1",
+		"symfony/process": "^3.2"
+	},
+	"require-dev": {
+		"phpunit/phpunit": "5.*"
+	},
 	"config": {
-		"bin-dir": "vendor/bin"
+		"bin-dir": "vendor/bin",
+		"sort-packages": true
+	},
+	"extra": {
+		"branch-alias": {
+			"dev-master": "1.0-dev"
+		}
 	},
 	"scripts": {
 		"test": "phpunit --colors=auto"
