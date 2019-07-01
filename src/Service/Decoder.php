@@ -19,7 +19,6 @@ use Arhitector\Transcoder\Traits\OptionsAwareTrait;
 use Arhitector\Transcoder\TranscodeInterface;
 use Symfony\Component\Process\ExecutableFinder;
 use Symfony\Component\Process\Process;
-use Symfony\Component\Process\ProcessBuilder;
 
 /**
  * Class Decoder.
@@ -72,7 +71,8 @@ class Decoder implements DecoderInterface
 	 */
 	public function demuxing(TranscodeInterface $media)
 	{
-		$output = (new ProcessBuilder([
+		$output = (new Process([
+			$this->options['ffprobe.path'],
 			'-loglevel',
 			'quiet',
 			'-print_format',
@@ -83,9 +83,7 @@ class Decoder implements DecoderInterface
 			'-i',
 			'-'
 		]))
-			->setPrefix($this->options['ffprobe.path'])
 			->setInput($media->getSource())
-			->getProcess()
 			->mustRun()
 			->getOutput();
 		

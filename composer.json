@@ -19,9 +19,9 @@
 	},
     "require": {
 	    "php": ">=7.1",
-	    "ralouphie/mimey": "^1.0",
-        "league/event": "^2.1",
-        "symfony/process": "^3.2"
+	    "ralouphie/mimey": "^2.1",
+        "league/event": "^2.2",
+        "symfony/process": "^4.3"
     },
     "require-dev": {
         "phpunit/phpunit": "5.*"

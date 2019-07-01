@@ -23,7 +23,7 @@ use Arhitector\Transcoder\Traits\ConvertEncodingTrait;
 use Arhitector\Transcoder\Traits\OptionsAwareTrait;
 use Arhitector\Transcoder\TranscodeInterface;
 use Symfony\Component\Process\ExecutableFinder;
-use Symfony\Component\Process\ProcessBuilder;
+use Symfony\Component\Process\Process;
 
 /**
  * Class Encoder.
@@ -220,11 +220,9 @@ class Encoder implements EncoderInterface
 			}
 			
 			$_options[] = $filePath[0];
-			$process = (new ProcessBuilder($_options))
-				->setPrefix($this->options['ffmpeg.path'])
+			$process = (new Process(array_merge([$this->options['ffmpeg.path']], $_options)))
 				->setTimeout($this->options['timeout'])
-				->setInput($media->getSource())
-				->getProcess();
+				->setInput($media->getSource());
 
 			$format->emit('before.pass', $media, $format, $process);
 			
