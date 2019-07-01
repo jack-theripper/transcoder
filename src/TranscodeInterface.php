@@ -15,6 +15,7 @@ namespace Arhitector\Transcoder;
 use Arhitector\Transcoder\Exception\InvalidFilterException;
 use Arhitector\Transcoder\Filter\FilterInterface;
 use Arhitector\Transcoder\Format\FormatInterface;
+use Arhitector\Transcoder\Protocol\ProtocolInterface;
 use Arhitector\Transcoder\Service\ServiceFactoryInterface;
 use Arhitector\Transcoder\Stream\Collection;
 use Arhitector\Transcoder\Stream\EnumerationInterface;
@@ -102,5 +103,12 @@ interface TranscodeInterface extends EnumerationInterface
 	 * @return TranscodeInterface
 	 */
 	public function addStream(StreamInterface $stream);
+	
+	/**
+	 * Returns the current source.
+	 *
+	 * @return ProtocolInterface
+	 */
+	public function getSource(): ProtocolInterface;
 	
 }

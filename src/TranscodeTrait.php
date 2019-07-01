@@ -97,7 +97,7 @@ trait TranscodeTrait
 	 *
 	 * @return ProtocolInterface
 	 */
-	public function getSource()
+	public function getSource(): ProtocolInterface
 	{
 		return $this->source;
 	}
