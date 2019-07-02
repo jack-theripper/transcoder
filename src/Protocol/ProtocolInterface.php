@@ -20,4 +20,11 @@ namespace Arhitector\Transcoder\Protocol;
 interface ProtocolInterface extends \IteratorAggregate
 {
 	
+	/**
+	 * Returns a specific Protocol option as a string.
+	 *
+	 * @return string
+	 */
+	public function __toString();
+	
 }

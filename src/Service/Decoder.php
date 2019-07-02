@@ -81,9 +81,8 @@ class Decoder implements DecoderInterface
 			'-show_streams',
 			'-show_error',
 			'-i',
-			'-'
+			$media->getSource()
 		]))
-			->setInput($media->getSource())
 			->mustRun()
 			->getOutput();
 		

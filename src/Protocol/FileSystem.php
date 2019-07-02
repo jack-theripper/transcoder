@@ -22,6 +22,7 @@ use InvalidArgumentException;
  */
 class FileSystem implements ProtocolInterface
 {
+	
 	/**
 	 * @var string  The full path to the file.
 	 */
@@ -32,7 +33,7 @@ class FileSystem implements ProtocolInterface
 	 *
 	 * @param string $filePath
 	 */
-	public function __construct($filePath)
+	public function __construct(string $filePath)
 	{
 		$this->setFilePath($filePath);
 	}
@@ -42,37 +43,24 @@ class FileSystem implements ProtocolInterface
 	 *
 	 * @return string
 	 */
-	public function getFilePath()
+	public function getFilePath(): string
 	{
 		return $this->filePath;
 	}
 	
 	/**
-	 * Set file path.
+	 * Set the file path.
 	 *
 	 * @param string $filePath
 	 *
 	 * @return FileSystem
 	 * @throws InvalidArgumentException
-	 * @throws TranscoderException
 	 */
-	protected function setFilePath($filePath)
+	protected function setFilePath(string $filePath): self
 	{
-		if ( ! is_string($filePath))
-		{
-			throw new InvalidArgumentException('File path must be a string type.');
-		}
-		
 		if (preg_match('~^(\w+:)?//~', $filePath) || is_link($filePath))
 		{
-			throw new InvalidArgumentException('File path must be a local path.');
-		}
-		
-		$filePath = realpath($filePath);
-		
-		if ( ! is_file($filePath))
-		{
-			throw new TranscoderException('File path not found.');
+			throw new InvalidArgumentException('The file path must be a local path.');
 		}
 		
 		$this->filePath = $filePath;
@@ -83,12 +71,18 @@ class FileSystem implements ProtocolInterface
 	/**
 	 * Retrieve an external iterator
 	 *
-	 * @link  https://php.net/manual/en/iteratoraggregate.getiterator.php
 	 * @return \Traversable An instance of an object implementing Iterator or Traversable
 	 */
 	public function getIterator()
 	{
-		$handle = fopen($this->getFilePath(), 'rb');
+		$filePath = realpath($this->getFilePath());
+		
+		if ( ! is_file($filePath)) // @todo check for readability?
+		{
+			throw new TranscoderException('The file path not found.');
+		}
+		
+		$handle = fopen($filePath, 'rb');
 		
 		while ( ! feof($handle))
 		{
@@ -97,7 +91,17 @@ class FileSystem implements ProtocolInterface
 		
 		fclose($handle);
 		
-		return ;
+		return;
+	}
+	
+	/**
+	 * Returns a specific Protocol option as a string.
+	 *
+	 * @return string
+	 */
+	public function __toString()
+	{
+		return sprintf('file:%s', $this->getFilePath());
 	}
 	
 }

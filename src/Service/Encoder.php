@@ -151,7 +151,7 @@ class Encoder implements EncoderInterface
 			$reflection = new \ReflectionProperty($localMedia, 'filters');
 			$reflection->setAccessible(true);
 			
-			$localHeap = new Heap(['input' => '-'/*$localMedia->getFilePath()*/]);
+			$localHeap = new Heap(['input' => (string) $localMedia->getSource()]);
 			
 			/** @var FilterInterface $filter */
 			foreach (clone $reflection->getValue($localMedia) as $filter)
@@ -219,11 +219,10 @@ class Encoder implements EncoderInterface
 				$_options[] = $pass;
 			}
 			
-			$_options[] = $filePath[0];
+			$_options[] = (string) $filePath[0];
 			$process = (new Process(array_merge([$this->options['ffmpeg.path']], $_options)))
-				->setTimeout($this->options['timeout'])
-				->setInput($media->getSource());
-
+				->setTimeout($this->options['timeout']);
+			
 			$format->emit('before.pass', $media, $format, $process);
 			
 			yield $pass => $process;

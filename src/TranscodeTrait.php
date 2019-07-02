@@ -206,15 +206,15 @@ trait TranscodeTrait
 			throw new TranscoderException(sprintf('This format unsupported in the "%s" wrapper.', static::class));
 		}
 		
-		if ( ! is_string($filePath) || empty($filePath))
+		if ( ! ($filePath instanceof ProtocolInterface))
 		{
-			throw new \InvalidArgumentException('File path must not be an empty string.');
+			$filePath = new FileSystem($filePath);
 		}
 		
-		if ( ! $overwrite && file_exists($filePath))
+		/*if ( ! $overwrite && file_exists($filePath))
 		{
 			throw new TranscoderException('File path already exists.');
-		}
+		}*/
 		
 		if ($format->emit('before', $this, $format, $filePath)->isPropagationStopped())
 		{
