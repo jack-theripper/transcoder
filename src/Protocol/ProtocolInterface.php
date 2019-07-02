@@ -21,6 +21,13 @@ interface ProtocolInterface extends \IteratorAggregate
 {
 	
 	/**
+	 * Return the mime type or `NULL`.
+	 *
+	 * @return string|null
+	 */
+	public function getMimeType(): ?string;
+	
+	/**
 	 * Returns a specific Protocol option as a string.
 	 *
 	 * @return string

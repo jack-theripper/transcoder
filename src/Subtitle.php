@@ -95,7 +95,7 @@ class Subtitle implements SubtitleInterface
 	 */
 	protected function isSupportedFileType()
 	{
-		return ! (stripos($this->getMimeType(), 'text/plain') !== 0);
+		return ! (stripos($this->getSource()->getMimeType(), 'text/plain') !== 0);
 	}
 	
 	/**

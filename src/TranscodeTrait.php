@@ -27,8 +27,7 @@ use Arhitector\Transcoder\Stream\FrameStream;
 use Arhitector\Transcoder\Stream\StreamInterface;
 use Arhitector\Transcoder\Stream\SubtitleStream;
 use Arhitector\Transcoder\Stream\VideoStream;
-use Arhitector\Transcoder\Traits\FilePathAwareTrait;
-use Mimey\MimeTypes;
+use Symfony\Component\Mime\MimeTypes;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
 /**
@@ -39,7 +38,6 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
  */
 trait TranscodeTrait
 {
-	use FilePathAwareTrait;
 	
 	/**
 	 * @var FormatInterface|mixed
@@ -265,21 +263,6 @@ trait TranscodeTrait
 	}
 	
 	/**
-	 * Gets the MIME Content-type value.
-	 *
-	 * @return string
-	 */
-	protected function getMimeType()
-	{
-		if ($this->getSource() instanceof FileSystem)
-		{
-			return mime_content_type($this->getSource()->getFilePath());
-		}
-		
-		return '';
-	}
-	
-	/**
 	 *
 	 * @param ProtocolInterface $source
 	 *
@@ -300,27 +283,24 @@ trait TranscodeTrait
 	 *
 	 * @return string|mixed
 	 */
-	protected function findFormatClass($possibleFormat = null, $default = null)
+	protected function findFormatClass(?string $possibleFormat = null, $default = null)
 	{
-		static $mimeTypes = null;
-		
 		if ($possibleFormat !== null)
 		{
 			$className = __NAMESPACE__.'\\Format\\'.ucfirst($possibleFormat);
 			
-			if (class_exists($className))
+			if (class_exists($className, true))
 			{
 				return $className;
 			}
 		}
 		
-		if ( ! $mimeTypes)
-		{
-			$mimeTypes = new MimeTypes();
-		}
+		$extensions = MimeTypes::getDefault()->getExtensions($this->getSource()->getMimeType());
 		
-		$extensions = $mimeTypes->getAllExtensions($this->getMimeType());
-		$extensions[] = pathinfo($this->getFilePath(), PATHINFO_EXTENSION);
+		if (get_class($this->getSource()) == FileSystem::class) // @todo maybe remove detect by path extension?
+		{
+			$extensions[] = pathinfo($this->getSource()->getFilePath(), PATHINFO_EXTENSION);
+		}
 		
 		foreach ($extensions as $extension)
 		{

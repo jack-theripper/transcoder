@@ -200,7 +200,7 @@ class Audio implements AudioInterface
 	 */
 	protected function isSupportedFileType()
 	{
-		return ! (stripos($this->getMimeType(), 'audio/') !== 0);
+		return ! (stripos($this->getSource()->getMimeType(), 'audio/') !== 0);
 	}
 	
 	/**

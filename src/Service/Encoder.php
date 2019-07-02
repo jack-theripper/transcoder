@@ -113,10 +113,10 @@ class Encoder implements EncoderInterface
 			/** @var TranscodeInterface $value */
 			foreach ($heap->get('input') as $option => $value)
 			{
-				if ($value->getFilePath() == $stream->getFilePath())
+				/*if ($value->getFilePath() == $stream->getFilePath())
 				{
 					$position = $option;
-				}
+				}*/
 			}
 			
 			if ($position === false)

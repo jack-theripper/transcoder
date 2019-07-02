@@ -156,7 +156,7 @@ class Video extends Audio implements VideoInterface
 	 */
 	protected function isSupportedFileType()
 	{
-		return ! (stripos($this->getMimeType(), 'video/') !== 0);
+		return ! (stripos($this->getSource()->getMimeType(), 'video/') !== 0);
 	}
 	
 	/**

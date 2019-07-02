@@ -14,6 +14,7 @@ namespace Arhitector\Transcoder\Protocol;
 
 use Arhitector\Transcoder\Exception\TranscoderException;
 use InvalidArgumentException;
+use Symfony\Component\Mime\MimeTypes;
 
 /**
  * Class FileSystem
@@ -95,6 +96,16 @@ class FileSystem implements ProtocolInterface
 	}
 	
 	/**
+	 * Return the mime type or `NULL`.
+	 *
+	 * @return string|null
+	 */
+	public function getMimeType(): ?string
+	{
+		return MimeTypes::getDefault()->guessMimeType($this->getFilePath());
+	}
+	
+	/**
 	 * Returns a specific Protocol option as a string.
 	 *
 	 * @return string
@@ -103,5 +114,7 @@ class FileSystem implements ProtocolInterface
 	{
 		return sprintf('file:%s', $this->getFilePath());
 	}
+	
+
 	
 }

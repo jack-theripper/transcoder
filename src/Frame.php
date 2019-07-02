@@ -190,7 +190,7 @@ class Frame implements FrameInterface
 	 */
 	protected function isSupportedFileType()
 	{
-		return ! (stripos($this->getMimeType(), 'image/') !== 0);
+		return ! (stripos($this->getSource()->getMimeType(), 'image/') !== 0);
 	}
 	
 	/**

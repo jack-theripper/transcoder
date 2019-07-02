@@ -30,13 +30,6 @@ interface TranscodeInterface extends EnumerationInterface
 {
 	
 	/**
-	 * Get the full path to the file.
-	 *
-	 * @return string
-	 */
-	public function getFilePath();
-	
-	/**
 	 * Get duration value.
 	 *
 	 * @return float
